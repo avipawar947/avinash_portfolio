@@ -8,7 +8,7 @@ import type { FooterContent } from '@/types/content';
 export default function ContactCTA({ footer }: { footer: FooterContent }) {
   const linkedin = footer.socialLinks.find((s) => s.platform === 'linkedin');
   return (
-    <section className="relative w-full bg-bg px-6 py-24 md:px-12 md:py-40">
+    <section id="contact" className="relative w-full bg-bg px-6 py-24 md:px-12 md:py-40">
       <div className="mx-auto max-w-canvas">
         <AnimatedSection variant="fadeIn">
           <SectionTag>Get In Touch</SectionTag>

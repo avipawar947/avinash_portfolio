@@ -27,6 +27,10 @@ export interface ClientLogoItem {
   name: string;
   logoUrl: string;
   logoPublicId?: string;
+  /** Figma frame width at the shared 60px logo height. */
+  width: number;
+  /** 1:76 carries mix-blend-mode: luminosity in the design. */
+  luminosity?: boolean;
   order: number;
 }
 
@@ -36,6 +40,15 @@ export interface ProjectItem {
   tag: string;
   imageUrl: string;
   imagePublicId?: string;
+  /** Which side of the two-column stagger this card sits on. */
+  column: 'left' | 'right';
+  /** Vertical crop the design applies inside the 738x468 frame — Figma
+   *  scales the fill taller than the frame and offsets it upward, so these
+   *  are the same (height%, top%) values read from the file. */
+  cropHeight: number;
+  cropTop: number;
+  /** 1:151 alone carries an extra black-to-grey wash over the image. */
+  wash?: boolean;
   link: string;
   order: number;
 }
@@ -58,9 +71,21 @@ export interface GalleryImageItem {
 export interface StatItem {
   _id: string;
   label: string;
+  labelMuted?: string;
   value: string;
   suffix: string;
+  column: 1 | 3;
   order: number;
+}
+
+export interface ProjectMixItem {
+  label: string;
+  width: number;
+}
+
+export interface WhyChooseMeContent {
+  projectMix: ProjectMixItem[];
+  domains: string[];
 }
 
 export interface JourneyLine {
@@ -117,6 +142,7 @@ export interface HomeContent {
   process: ProcessStepItem[];
   gallery: GalleryImageItem[];
   stats: StatItem[];
+  whyChooseMe: WhyChooseMeContent;
   journey: JourneyContent;
   lifeBehindText: LifeBehindTextItemContent[];
   tools: ToolItem[];

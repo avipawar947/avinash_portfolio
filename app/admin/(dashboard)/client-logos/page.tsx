@@ -7,7 +7,14 @@ import ImageUploader from '@/components/admin/ImageUploader';
 import FormField from '@/components/admin/FormField';
 import type { ClientLogoItem } from '@/types/content';
 
-const EMPTY: Omit<ClientLogoItem, '_id'> = { name: '', logoUrl: '', logoPublicId: '', order: 0 };
+const EMPTY: Omit<ClientLogoItem, '_id'> = {
+  name: '',
+  logoUrl: '',
+  logoPublicId: '',
+  width: 0,
+  luminosity: false,
+  order: 0,
+};
 
 export default function ClientLogosAdminPage() {
   const { data: items } = useSWR<ClientLogoItem[]>('/api/clientlogos', fetcher);
@@ -105,6 +112,27 @@ export default function ClientLogosAdminPage() {
                     Delete
                   </button>
                 </div>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 text-xs text-white/60">
+                    Width
+                    <input
+                      type="number"
+                      min={0}
+                      className="w-20 rounded-lg border border-white/10 bg-black px-2 py-1.5 text-sm"
+                      value={logo.width ?? 0}
+                      onChange={(e) => updateLogo(logo._id, { width: Number(e.target.value) })}
+                    />
+                  </label>
+                  <label className="flex items-center gap-2 text-xs text-white/60">
+                    <input
+                      type="checkbox"
+                      checked={!!logo.luminosity}
+                      onChange={(e) => updateLogo(logo._id, { luminosity: e.target.checked })}
+                      className="h-4 w-4"
+                    />
+                    Luminosity blend
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -126,6 +154,25 @@ export default function ClientLogosAdminPage() {
             value={draft.logoUrl || ''}
             onChange={(url, publicId) => setDraft({ ...draft, logoUrl: url, logoPublicId: publicId ?? '' })}
           />
+        </div>
+        <div className="mt-3 flex gap-4">
+          <FormField label="Width (px at 60px height, 0 = auto)">
+            <input
+              type="number"
+              min={0}
+              className="w-28 rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
+              value={draft.width ?? 0}
+              onChange={(e) => setDraft({ ...draft, width: Number(e.target.value) })}
+            />
+          </FormField>
+          <FormField label="Luminosity blend">
+            <input
+              type="checkbox"
+              checked={!!draft.luminosity}
+              onChange={(e) => setDraft({ ...draft, luminosity: e.target.checked })}
+              className="mt-2 h-4 w-4"
+            />
+          </FormField>
         </div>
         <button
           onClick={addLogo}

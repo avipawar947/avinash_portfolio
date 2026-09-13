@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   DESIGN TOKENS — read from Figma
+   file 9xrwqBcDya9fKHm00hb9Tw, frame "Homepage" (1:2), 1920 x 11835
+
+   The file defines no Figma variables, so every value below is read from
+   the node's raw fill / stroke / effect / text properties.
+   ========================================================================== */
+
+:root {
+  /* --- The Figma unit -------------------------------------------------
+     The design is authored at exactly 1920px wide and its sections are
+     absolutely composed. `--fig` converts one Figma pixel into a
+     viewport-proportional length, so a value measured in Figma can be
+     written verbatim: `left: calc(604 * var(--fig))`.
+
+     That keeps every number in the codebase directly auditable against
+     the Figma inspector, and scales the whole composition together
+     rather than letting parts drift apart. */
+  --fig: calc(100vw / 1920);
+
+  /* --- Color: surfaces (1:25 gradient stop, 1:27 pill fill) ------------ */
+  --color-bg: #0b0b0b;
+  --color-surface: #010101;
+
+  /* --- Color: text ----------------------------------------------------- */
+  --color-text: #ffffff;
+  --color-text-inverse: #010101;
+  /* 1:22 / 1:23 "PRODUCT" / "DESIGNER" ghost type */
+  --color-text-ghost: rgba(224, 224, 224, 0.8);
+
+  /* --- Color: lines ---------------------------------------------------- */
+  /* 1:34 navbar bottom rule */
+  --color-border-nav: #3a3a3a;
+  /* 1:27 / 1:29 pill strokes */
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  /* Grid overlay lines (hero-grid.svg) */
+  --color-grid-line: rgba(208, 208, 208, 0.05);
+  /* 1:31 "Open to Work" status dot */
+  --color-status: #33ce0d;
+
+  /* --- Elevation (1:27, 1:29, 1:42) ------------------------------------ */
+  --shadow-glow: 1px 1px 40px 1px rgba(255, 255, 255, 0.2);
+
+  /* --- Gradients --------------------------------------------------------
+     The white CTA fill from node 1:42, shared by the navbar, the mobile
+     menu and the footer. */
+  --gradient-cta: radial-gradient(
+    circle at 30% 6%,
+    #ffffff 0%,
+    #dedede 26.4%,
+    #bdbdbd 52.9%,
+    #dedede 76.4%,
+    #ffffff 100%
+  );
+
+  /* --- Radius ---------------------------------------------------------- */
+  --radius-pill: 100px;
+
+  /* --- Layout ----------------------------------------------------------
+     Content column runs x=140 -> x=1780 (1640 wide); the 8-column
+     guide grid sits inside it at 160 with 200px columns. */
+  --navbar-h: calc(80 * var(--fig));
+  --gutter: calc(140 * var(--fig));
+
+  /* --- Vertical rhythm ---------------------------------------------
+     Sections are padded 140 Figma px top and bottom. That scales to
+     ~28px at phone width, which reads as cramped, so both this and the
+     eyebrow-to-heading gap carry a floor. */
+  --section-pad: max(3.5rem, calc(140 * var(--fig)));
+  --heading-gap: max(0.75rem, calc(24 * var(--fig)));
+  --container-max: calc(1920 * var(--fig));
+
+  /* --- Motion ----------------------------------------------------------
+     The file contains no prototype interactions, so these are the
+     project's own curves rather than values read from Figma. */
+  --duration-fast: 300ms;
+  --duration-base: 600ms;
+  --duration-slow: 1000ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Z-index scale --------------------------------------------------- */
+  --z-webgl: 0;
+  --z-content: 10;
+  --z-navbar: 50;
+  --z-menu: 60;
+  --z-cursor: 100;
+  --z-preloader: 200;
+}
+
+/* Below the desktop breakpoint the compositions are rebuilt rather than
+   scaled — but `--fig` keeps tracking the viewport even there.
+
+   Freezing it at 1px was a mistake worth recording: every type size on
+   the page is written as `calc(N * var(--fig))`, so a frozen unit made
+   `calc(160 * var(--fig))` resolve to a literal 160px on a 390px screen
+   and the section headings were clipped by the body's overflow guard.
+
+   Small type still needs a floor, because 20 Figma px at phone width is
+   ~4px. That floor lives at each use site as
+   `max(<readable minimum>, calc(N * var(--fig)))`.
+
+   Only the two values that cannot scale linearly are overridden: the
+   navbar would shrink to 16px, and the gutter wants a comfortable
+   minimum regardless of width. */
+@media (max-width: 1023px) {
+  :root {
+    --navbar-h: 4rem;
+    --gutter: 1.25rem;
+  }
+}
+
+/* Stop the composition growing without bound on very wide displays. */
+@media (min-width: 2560px) {
+  :root {
+    --fig: calc(2560px / 1920);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-text: var(--color-text);
+  --color-text-inverse: var(--color-text-inverse);
+  --color-text-ghost: var(--color-text-ghost);
+  --color-border-nav: var(--color-border-nav);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-status: var(--color-status);
+
+  --shadow-glow: var(--shadow-glow);
+
+  /* Inter ships via next/font; `--font-inter` is set on <html>.
+     SF Pro is Apple-licensed and cannot be embedded, so display type
+     resolves to the real SF Pro on Apple platforms and to Inter — its
+     metric-compatible open counterpart, already used for body copy in
+     this same design — everywhere else. */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    "SF Pro Text", var(--font-inter), system-ui, sans-serif;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Lenis drives scrolling; native smooth-scroll would fight it. */
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Structural guarantee against horizontal overflow. Anything that
+     legitimately exceeds the viewport gets its own overflow-x wrapper. */
+  overflow-x: hidden;
+}
+
+/* Lenis sets overflow on the root and translates a wrapper, so the root
+   must not also be a scroll container. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--color-text);
+  outline-offset: 3px;
+}
+
+.sr-only:not(:focus):not(:active) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none;
+  }
+}

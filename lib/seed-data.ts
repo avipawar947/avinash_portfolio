@@ -28,18 +28,18 @@ export const seedContent: HomeContent = {
     characterImageUrl: '',
   },
   clientLogos: [
-    { _id: 'c1', name: 'Fabled', logoUrl: '', order: 0 },
-    { _id: 'c2', name: 'Tata', logoUrl: '', order: 1 },
-    { _id: 'c3', name: 'MET', logoUrl: '', order: 2 },
-    { _id: 'c4', name: 'HRX', logoUrl: '', order: 3 },
-    { _id: 'c5', name: 'Zango', logoUrl: '', order: 4 },
-    { _id: 'c6', name: 'Awfis', logoUrl: '', order: 5 },
+    { _id: 'c1', name: 'Fabled', logoUrl: '', width: 136, order: 0 },
+    { _id: 'c2', name: 'Tata', logoUrl: '', width: 65, order: 1 },
+    { _id: 'c3', name: 'MET', logoUrl: '', width: 142, order: 2 },
+    { _id: 'c4', name: 'HRX', logoUrl: '', width: 126, luminosity: true, order: 3 },
+    { _id: 'c5', name: 'Zango', logoUrl: '', width: 156, order: 4 },
+    { _id: 'c6', name: 'Awfis', logoUrl: '', width: 176, order: 5 },
   ],
   projects: [
-    { _id: 'p1', title: 'HRX', tag: 'Case Study', imageUrl: '', link: '#', order: 0 },
-    { _id: 'p2', title: 'NSL Luxe', tag: 'Case Study', imageUrl: '', link: '#', order: 1 },
-    { _id: 'p3', title: 'Synclature', tag: 'Case Study', imageUrl: '', link: '#', order: 2 },
-    { _id: 'p4', title: 'Synclature', tag: 'Case Study', imageUrl: '', link: '#', order: 3 },
+    { _id: 'p1', title: 'HRX', tag: 'Case Study', imageUrl: '', column: 'left', cropHeight: 118.12, cropTop: -8.95, wash: true, link: '#', order: 0 },
+    { _id: 'p2', title: 'NSL Luxe', tag: 'Case Study', imageUrl: '', column: 'right', cropHeight: 105.67, cropTop: -2.73, link: '#', order: 1 },
+    { _id: 'p3', title: 'Synclature', tag: 'Case Study', imageUrl: '', column: 'left', cropHeight: 104.59, cropTop: -2.19, link: '#', order: 2 },
+    { _id: 'p4', title: 'Synclature', tag: 'Case Study', imageUrl: '', column: 'right', cropHeight: 105.18, cropTop: -2.48, link: '#', order: 3 },
   ],
   process: [
     { _id: 'd1', phase: 'Discover', label: 'Stakeholder interviews & briefing', order: 0 },
@@ -59,11 +59,20 @@ export const seedContent: HomeContent = {
     order: i,
   })),
   stats: [
-    { _id: 's1', label: 'Years of Experience', value: '04', suffix: '+', order: 0 },
-    { _id: 's2', label: 'Clients Satisfaction', value: '90', suffix: '%', order: 1 },
-    { _id: 's3', label: 'Consistent on all screens', value: '95', suffix: '%', order: 2 },
-    { _id: 's4', label: 'Successful projects delivered', value: '80', suffix: '+', order: 3 },
+    { _id: 's1', label: 'Years of Experience', value: '04', suffix: '+', column: 1, order: 0 },
+    { _id: 's2', label: 'Clients Satisfaction', value: '90', suffix: '%', column: 1, order: 1 },
+    { _id: 's3', label: 'Consistent on all screens', value: '95', suffix: '%', column: 3, order: 2 },
+    { _id: 's4', label: 'Successful projects delivered', labelMuted: 'digital products.', value: '80', suffix: '+', column: 3, order: 3 },
   ],
+  whyChooseMe: {
+    projectMix: [
+      { label: 'Mobile App', width: 138 },
+      { label: 'Web App', width: 299 },
+      { label: 'Websites', width: 370 },
+      { label: 'landing Pages', width: 244 },
+    ],
+    domains: ['FinTech', 'Insurance', 'Healthcare', 'E-Com'],
+  },
   journey: {
     heading: 'My Journey',
     lines: [

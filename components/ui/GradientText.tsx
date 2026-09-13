@@ -4,15 +4,18 @@ import { clsx } from 'clsx';
 export default function GradientText({
   as: Tag = 'span',
   className,
+  style,
   children,
 }: {
   as?: keyof JSX.IntrinsicElements;
   className?: string;
+  style?: React.CSSProperties;
   children: React.ReactNode;
 }) {
   return (
     <Tag
       className={clsx('bg-text-gradient bg-clip-text text-transparent', className)}
+      style={style}
     >
       {children}
     </Tag>

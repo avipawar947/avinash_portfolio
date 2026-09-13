@@ -8,6 +8,90 @@
   font-display: swap;
 }
 
+:root {
+  /* Converts one Figma pixel (1920px canvas) into a viewport-proportional
+     length, so `calc(140 * var(--fig))` == a literal 140px at 1920px wide
+     and scales down cleanly below that — this is what keeps the navbar
+     from overflowing/drifting at in-between widths. Used only by
+     components that need pixel-exact Figma positions (currently: Navbar). */
+  --fig: calc(100vw / 1920);
+
+  /* --- Design tokens, read from Figma (navbar + shared chrome) ---------- */
+  --color-bg: #0b0b0b;
+  --color-surface: #010101;        /* navbar bar bg, mobile menu */
+  --color-text: #ffffff;
+  --color-text-inverse: #010101;
+  /* Ghost hero type ("PRODUCT" / "DESIGNER") */
+  --color-text-ghost: rgba(224, 224, 224, 0.8);
+
+  /* Navbar bottom rule — node 1:34 */
+  --color-border-nav: #3a3a3a;
+  /* Pill / badge strokes */
+  --color-border-subtle: rgba(255, 255, 255, 0.1);
+  /* Grid overlay lines (hero-grid.svg) */
+  --color-grid-line: rgba(208, 208, 208, 0.05);
+  /* "Open to Work" status dot */
+  --color-status: #33ce0d;
+
+  /* --- Elevation --- */
+  --shadow-glow: 1px 1px 40px 1px rgba(255, 255, 255, 0.2);
+
+  /* --- Gradients ---
+     The white CTA fill (node 1:42), shared by navbar, mobile menu, footer. */
+  --gradient-cta: radial-gradient(
+    circle at 30% 6%,
+    #ffffff 0%,
+    #dedede 26.4%,
+    #bdbdbd 52.9%,
+    #dedede 76.4%,
+    #ffffff 100%
+  );
+
+  /* --- Radius --- */
+  --radius-pill: 100px;
+
+  /* --- Layout --- */
+  --navbar-h: calc(80 * var(--fig));
+  --gutter: calc(140 * var(--fig));
+  --container-max: calc(1920 * var(--fig));
+  /* Section vertical rhythm + motion, read from Figma (Projects etc.) */
+  --section-pad: max(3.5rem, calc(140 * var(--fig)));
+  --heading-gap: max(0.75rem, calc(24 * var(--fig)));
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    sans-serif;
+
+  /* --- Z-index --- */
+  --z-navbar: 50;
+  --z-menu: 60;
+}
+
+/* Below 1024 the design has no mobile counterpart, so the bar collapses to
+   a comfortable fixed height and the gutter gets a floor. */
+@media (max-width: 1023px) {
+  :root {
+    --navbar-h: 4rem;
+    --gutter: 1.25rem;
+  }
+}
+
+/* Stop scaling up indefinitely on ultra-wide displays. */
+@media (min-width: 2560px) {
+  :root {
+    --fig: calc(2560px / 1920);
+  }
+}
+
+/* The pill/CTA glow (`1px 1px 40px 1px rgba(255,255,255,0.2)`).
+   Deliberately a plain class rather than Tailwind's `shadow-[var(...)]`:
+   v3 reads a `var()` arbitrary shadow as a shadow *color* and produces
+   `--tw-shadow-color` instead of `box-shadow`, silently dropping the glow. */
+@layer utilities {
+  .glow-shadow {
+    box-shadow: var(--shadow-glow);
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }

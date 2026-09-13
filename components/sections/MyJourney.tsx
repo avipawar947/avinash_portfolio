@@ -6,7 +6,7 @@ import type { JourneyContent } from '@/types/content';
 
 export default function MyJourney({ content }: { content: JourneyContent }) {
   return (
-    <section className="relative w-full bg-bg px-6 py-24 text-center md:px-12 md:py-40">
+    <section id="about" className="relative w-full bg-bg px-6 py-24 text-center md:px-12 md:py-40">
       <GridOverlay />
       <div className="relative mx-auto max-w-canvas">
         <AnimatedSection variant="fadeIn" className="flex justify-center">

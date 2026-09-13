@@ -6,6 +6,8 @@ const ClientLogoSchema = new Schema(
     name: { type: String, required: true },
     logoUrl: { type: String, default: '' },
     logoPublicId: { type: String, default: '' },
+    width: { type: Number, default: 0 },
+    luminosity: { type: Boolean, default: false },
     order: { type: Number, default: 0 },
   },
   { timestamps: true }

@@ -12,7 +12,15 @@ const paths: Record<string, string> = {
 };
 
 /** Circular social icon button, used in Navbar / Contact CTA / Footer. */
-export default function SocialIcon({ platform, url }: { platform: keyof typeof paths; url: string }) {
+export default function SocialIcon({
+  platform,
+  url,
+  className = '',
+}: {
+  platform: keyof typeof paths;
+  url: string;
+  className?: string;
+}) {
   const d = paths[platform];
   if (!d) return null;
   return (
@@ -20,7 +28,7 @@ export default function SocialIcon({ platform, url }: { platform: keyof typeof p
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-btn-gradient shadow-glow transition-transform hover:scale-105"
+      className={`inline-flex h-12 w-12 items-center justify-center rounded-full bg-btn-gradient shadow-glow transition-transform hover:scale-105 ${className}`}
       aria-label={platform}
     >
       <svg viewBox="0 0 24 24" className="h-[18px] w-[19px] fill-[#010101]">

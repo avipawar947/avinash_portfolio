@@ -12,6 +12,10 @@ const EMPTY: Omit<ProjectItem, '_id'> = {
   tag: 'Case Study',
   imageUrl: '',
   imagePublicId: '',
+  column: 'left',
+  cropHeight: 100,
+  cropTop: 0,
+  wash: false,
   link: '',
   order: 0,
 };
@@ -77,6 +81,51 @@ export default function ProjectsAdminPage() {
                 Delete
               </button>
             </div>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <label className="flex flex-col gap-1 text-xs text-white/60">
+                Column
+                <select
+                  className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
+                  value={p.column ?? 'left'}
+                  onChange={(e) => updateProject(p._id, { column: e.target.value as 'left' | 'right' })}
+                >
+                  <option value="left">Left</option>
+                  <option value="right">Right</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1 text-xs text-white/60">
+                Wash
+                <span className="flex items-center gap-2 pt-1">
+                  <input
+                    type="checkbox"
+                    checked={!!p.wash}
+                    onChange={(e) => updateProject(p._id, { wash: e.target.checked })}
+                    className="h-4 w-4"
+                  />
+                  Dark-to-grey wash over image
+                </span>
+              </label>
+              <label className="flex flex-col gap-1 text-xs text-white/60">
+                Crop height %
+                <input
+                  type="number"
+                  step="0.01"
+                  className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
+                  value={p.cropHeight ?? 100}
+                  onChange={(e) => updateProject(p._id, { cropHeight: Number(e.target.value) })}
+                />
+              </label>
+              <label className="flex flex-col gap-1 text-xs text-white/60">
+                Crop top %
+                <input
+                  type="number"
+                  step="0.01"
+                  className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
+                  value={p.cropTop ?? 0}
+                  onChange={(e) => updateProject(p._id, { cropTop: Number(e.target.value) })}
+                />
+              </label>
+            </div>
           </div>
         ))}
       </div>
@@ -90,6 +139,47 @@ export default function ProjectsAdminPage() {
             onChange={(e) => setDraft({ ...draft, title: e.target.value })}
           />
         </FormField>
+        <div className="mt-3 grid grid-cols-2 gap-3">
+          <FormField label="Column">
+            <select
+              className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
+              value={draft.column}
+              onChange={(e) => setDraft({ ...draft, column: e.target.value as 'left' | 'right' })}
+            >
+              <option value="left">Left</option>
+              <option value="right">Right</option>
+            </select>
+          </FormField>
+          <FormField label="Wash">
+            <span className="flex items-center gap-2 pt-2">
+              <input
+                type="checkbox"
+                checked={!!draft.wash}
+                onChange={(e) => setDraft({ ...draft, wash: e.target.checked })}
+                className="h-4 w-4"
+              />
+              Dark-to-grey wash over image
+            </span>
+          </FormField>
+          <FormField label="Crop height %">
+            <input
+              type="number"
+              step="0.01"
+              className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
+              value={draft.cropHeight}
+              onChange={(e) => setDraft({ ...draft, cropHeight: Number(e.target.value) })}
+            />
+          </FormField>
+          <FormField label="Crop top %">
+            <input
+              type="number"
+              step="0.01"
+              className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
+              value={draft.cropTop}
+              onChange={(e) => setDraft({ ...draft, cropTop: Number(e.target.value) })}
+            />
+          </FormField>
+        </div>
         <button
           onClick={addProject}
           disabled={adding || !draft.title}
