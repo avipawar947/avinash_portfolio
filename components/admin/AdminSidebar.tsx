@@ -5,6 +5,7 @@ const links = [
   { href: '/admin/navbar', label: 'Navbar' },
   { href: '/admin/hero', label: 'Hero' },
   { href: '/admin/projects', label: 'Projects' },
+  { href: '/admin/client-logos', label: 'Client Logos' },
   { href: '/admin/process', label: 'Process' },
   { href: '/admin/gallery', label: 'Gallery' },
   { href: '/admin/stats', label: 'Stats' },
