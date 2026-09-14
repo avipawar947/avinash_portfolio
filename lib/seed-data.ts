@@ -121,9 +121,9 @@ export const seedContent: HomeContent = {
     roleTags: ['UI/UX Designer', 'Product Designer'],
     location: 'Mumbai, India',
     socialLinks: [
-      { platform: 'linkedin', url: '#' },
-      { platform: 'behance', url: '#' },
-      { platform: 'gmail', url: 'mailto:hello@example.com' },
+      { platform: 'linkedin', url: '#', iconUrl: '', iconPublicId: '' },
+      { platform: 'behance', url: '#', iconUrl: '', iconPublicId: '' },
+      { platform: 'gmail', url: 'mailto:hello@example.com', iconUrl: '', iconPublicId: '' },
     ],
   },
   contactCTA: {

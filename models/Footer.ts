@@ -4,6 +4,8 @@ const SocialLinkSchema = new Schema(
   {
     platform: { type: String, required: true }, // "linkedin" | "behance" | "gmail" | "twitter"
     url: { type: String, required: true },
+    iconUrl: { type: String, default: '' }, // uploaded icon image (backend-driven glyph)
+    iconPublicId: { type: String, default: '' },
   },
   { _id: false }
 );

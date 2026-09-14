@@ -147,6 +147,9 @@ export interface ToolItem {
 export interface SocialLink {
   platform: 'linkedin' | 'behance' | 'gmail' | 'twitter';
   url: string;
+  /** Uploaded icon image shown in place of the built-in SVG glyph. */
+  iconUrl?: string;
+  iconPublicId?: string;
 }
 
 export interface FooterContent {
