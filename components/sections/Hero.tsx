@@ -57,6 +57,7 @@ export default function Hero({ content }: { content: HeroContent }) {
         <div
           className="absolute inset-0 hidden lg:block"
           style={{
+            backgroundColor: "#FFFFFF",
             backgroundImage:
               "linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(102,102,102,0.02) 100%), radial-gradient(50% 50% at 50% 50%, rgba(20,20,20,0.8) 0%, #010101 100%)",
           }}
@@ -147,8 +148,8 @@ export default function Hero({ content }: { content: HeroContent }) {
         {/* 1:27 / 1:29 */}
         <HeroPill
           label={content.badgeText || "Hello, My Name Is"}
-          centerX={438.48}
-          centerY={825.54}
+          centerX={435.5}
+          centerY={830.5}
           widthPx={158}
           rotate={13.22}
           variant="solid"
@@ -157,8 +158,8 @@ export default function Hero({ content }: { content: HeroContent }) {
         {content.statusActive && (
           <HeroPill
             label={content.statusText || "Open to Work"}
-            centerX={1226.28}
-            centerY={824.22}
+            centerX={1220}
+            centerY={829}
             widthPx={162}
             rotate={17.33}
             variant="dashed"
