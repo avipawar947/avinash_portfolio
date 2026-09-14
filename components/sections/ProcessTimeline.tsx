@@ -1,58 +1,203 @@
-import AnimatedSection from '@/components/motion/AnimatedSection';
-import SectionTag from '@/components/ui/SectionTag';
-import GradientText from '@/components/ui/GradientText';
-import GridOverlay from '@/components/ui/GridOverlay';
-import type { ProcessStepItem } from '@/types/content';
+import GradientText from "@/components/ui/GradientText";
+import type { ProcessStepItem, ProcessIntroContent } from "@/types/content";
+import ProcessPill from "./ProcessPill";
 
-const phases: ProcessStepItem['phase'][] = ['Discover', 'Define', 'Deliver'];
+/**
+ * "Our Process" — Figma node 1:163 (1920 x 1366).
+ *
+ * Desktop table: 1640 x 645 at (140, 581), 1px rgba(208,208,208,0.2)
+ * border, a solid vertical rule at x=252, dashed rules at y=217 and y=435.
+ * Each phase labels its column; its steps cascade rightward as pills.
+ * Narrow screens show a flat stacked list instead.
+ */
+export default function ProcessTimeline({
+  items,
+  intro,
+}: {
+  items: ProcessStepItem[];
+  intro: ProcessIntroContent;
+}) {
+  const phases = ['Discover', 'Define', 'Deliver'] as const;
+  const grouped = phases.map((p) => ({
+    name: p,
+    steps: items.filter((s) => s.phase === p).sort((a, b) => a.order - b.order),
+  }));
 
-export default function ProcessTimeline({ items }: { items: ProcessStepItem[] }) {
   return (
-    <section className="relative w-full bg-bg px-6 py-24 md:px-12 md:py-40">
-      <GridOverlay />
-      <div className="relative mx-auto max-w-canvas">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
+    <section
+      id="process"
+      aria-labelledby="process-heading"
+      className="relative w-full overflow-hidden bg-[var(--color-bg)]"
+      style={{
+        paddingTop: "var(--section-pad)",
+        paddingBottom: "var(--section-pad)",
+      }}
+    >
+      {/* the guide grid, offset exactly as in the design (node 1:164) */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-0"
+        style={{
+          width: "calc(1920 * var(--fig))",
+          height: "calc(1190 * var(--fig))",
+          backgroundImage: "url(/svg/hero-grid.svg)",
+          backgroundSize: "100% 100%",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+
+      <div
+        className="relative mx-auto w-full"
+        style={{
+          maxWidth: "var(--container-max)",
+          paddingInline: "var(--gutter)",
+        }}
+      >
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <AnimatedSection variant="fadeIn">
-              <SectionTag>How I Work</SectionTag>
-            </AnimatedSection>
-            <AnimatedSection variant="fadeUp" delay={0.1} className="mt-6">
-              <h2 className="font-display text-[14vw] font-medium leading-none tracking-wide text-heading md:text-h1">
-                Our
-                <br />
+            <span
+              className="inline-flex items-center justify-center rounded-[8px] border border-[rgba(224,224,224,0.1)] bg-[#0d0d0d] text-center font-semibold whitespace-nowrap text-[var(--color-text)]"
+              style={{
+                padding: "calc(10 * var(--fig))",
+                fontSize: "max(0.75rem, calc(16 * var(--fig)))",
+              }}
+            >
+              How I Work
+            </span>
+            <h2
+              id="process-heading"
+              className="m-0 font-display font-medium text-[var(--color-text)]"
+              style={{
+                marginTop: "var(--heading-gap)",
+                fontSize: "max(2.5rem, calc(160 * var(--fig)))",
+                lineHeight: 1.1,
+                letterSpacing: "calc(3.2 * var(--fig))",
+              }}
+            >
+              Our
+              <span className="block lg:w-[calc(576*var(--fig))] lg:text-right">
                 Process
-              </h2>
-            </AnimatedSection>
+              </span>
+            </h2>
           </div>
 
-          <AnimatedSection variant="fadeUp" delay={0.15} className="max-w-md md:pt-10 md:text-right">
-            <GradientText as="h3" className="text-h2Mobile md:text-h2">
-              A Thoughtful Process.
+          <div
+            className="lg:shrink-0"
+            style={{
+              marginTop: "clamp(2rem, calc(120 * var(--fig)), calc(120 * var(--fig)))",
+              width: "min(100%, calc(531 * var(--fig)))",
+            }}
+          >
+            <GradientText
+              as="h3"
+              className="m-0 font-semibold capitalize"
+              style={{
+                fontSize: "max(1.25rem, calc(32 * var(--fig)))",
+                lineHeight: 1.75,
+                letterSpacing: "calc(0.64 * var(--fig))",
+              }}
+            >
+              {intro.heading}
             </GradientText>
-            <p className="mt-2 text-h3 text-body">
-              We combine research, strategic thinking, and visual execution into a
-              streamlined workflow that keeps every decision aligned with business goals.
+            <p
+              className="m-0 capitalize"
+              style={{
+                marginTop: "calc(12 * var(--fig))",
+                fontSize: "max(0.875rem, calc(20 * var(--fig)))",
+                lineHeight: 1.6,
+                letterSpacing: "calc(0.4 * var(--fig))",
+              }}
+            >
+              <GradientText>{intro.lead}</GradientText>{" "}
+              <span className="text-[rgba(176,176,176,0.3)]">
+                {intro.rest.join(" ")}
+              </span>
             </p>
-          </AnimatedSection>
+          </div>
         </div>
 
-        <div className="mt-16 divide-y divide-dashed divide-lineStrong rounded-card border border-lineStrong md:mt-24">
-          {phases.map((phase, i) => (
-            <div key={phase} className="grid grid-cols-1 gap-4 p-8 md:grid-cols-3 md:p-12">
-              <GradientText as="h4" className="text-h2Mobile md:text-h2">
-                {phase}
-              </GradientText>
-              <div className="col-span-2 flex flex-wrap gap-x-8 gap-y-4">
-                {items
-                  .filter((s) => s.phase === phase)
-                  .map((step) => (
-                    <AnimatedSection key={step._id} variant="fadeUp" delay={0.05 * i}>
-                      <span className="border-l border-white/10 pl-4 text-h3 text-body">
-                        {step.label}
-                      </span>
-                    </AnimatedSection>
+        {/* Desktop table (1:185) */}
+        <div
+          className="relative hidden border border-[rgba(208,208,208,0.2)] lg:block"
+          style={{
+            marginTop: "calc(40 * var(--fig))",
+            height: "calc(645 * var(--fig))",
+          }}
+        >
+          {/* Solid rule separating labels from steps (1:186) */}
+          <div
+            aria-hidden="true"
+            className="absolute top-0 h-full"
+            style={{
+              left: "calc(252 * var(--fig))",
+              width: "1px",
+              backgroundColor: "rgba(208,208,208,0.2)",
+            }}
+          />
+          {/* Dashed phase separators (1:187, 1:188) */}
+          {[217, 435].map((top) => (
+            <div
+              key={top}
+              aria-hidden="true"
+              className="absolute left-0 w-full"
+              style={{
+                top: `calc(${top} * var(--fig))`,
+                height: "1px",
+                backgroundImage:
+                  "repeating-linear-gradient(to right, rgba(208,208,208,0.4) 0 2px, transparent 2px 4px)",
+              }}
+            />
+          ))}
+
+          {grouped.map((phase) => {
+            // Phase label centres vertically on the first pill: pill top + 21px (half of 42).
+            const phaseLabelTop = phase.steps.length
+              ? Math.min(...phase.steps.map((s) => s.top)) + 21
+              : 50;
+            return (
+              <div key={phase.name}>
+                <GradientText
+                  as="h3"
+                  className="absolute m-0 font-semibold capitalize"
+                  style={{
+                    left: "calc(30 * var(--fig))",
+                    top: `calc(${phaseLabelTop} * var(--fig))`,
+                    transform: "translateY(-50%)",
+                    fontSize: "calc(32 * var(--fig))",
+                    lineHeight: 1.75,
+                    letterSpacing: "calc(0.64 * var(--fig))",
+                  }}
+                >
+                  {phase.name}
+                </GradientText>
+                <ul className="m-0 list-none p-0">
+                  {phase.steps.map((step) => (
+                    <ProcessPill key={step._id} step={step} />
                   ))}
+                </ul>
               </div>
+            );
+          })}
+        </div>
+
+        {/* Narrow-screen stack */}
+        <div className="mt-10 flex flex-col gap-8 lg:hidden">
+          {grouped.map((phase) => (
+            <div
+              key={phase.name}
+              className="border-t border-[rgba(208,208,208,0.2)] pt-5"
+            >
+              <GradientText
+                as="h3"
+                className="m-0 mb-3 text-[1.375rem] font-semibold capitalize"
+              >
+                {phase.name}
+              </GradientText>
+              <ul className="m-0 flex list-none flex-col gap-2 p-0">
+                {phase.steps.map((step) => (
+                  <ProcessPill key={step._id} step={step} positioned={false} />
+                ))}
+              </ul>
             </div>
           ))}
         </div>

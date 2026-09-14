@@ -57,7 +57,22 @@ export interface ProcessStepItem {
   _id: string;
   phase: 'Discover' | 'Define' | 'Deliver';
   label: string;
+  /** Inside the desktop table: offset from its left edge, Figma px. */
+  left: number;
+  /** Offset from the table's top edge, Figma px. */
+  top: number;
+  width: number;
+  /** Pill gradient white-stop percentage. */
+  from: number;
   order: number;
+}
+
+export interface ProcessIntroContent {
+  heading: string;
+  /** Gradient-filled line. */
+  lead: string;
+  /** Flat muted lines. */
+  rest: string[];
 }
 
 export interface GalleryImageItem {
@@ -65,6 +80,12 @@ export interface GalleryImageItem {
   imageUrl: string;
   imagePublicId?: string;
   caption: string;
+  /** Figma left offset within the 1920 frame. */
+  left: number;
+  /** Figma top offset within the 1099-tall frame. */
+  top: number;
+  /** Tile height in Figma px (width is constant 287). */
+  height: number;
   order: number;
 }
 
@@ -90,7 +111,8 @@ export interface WhyChooseMeContent {
 
 export interface JourneyLine {
   text: string;
-  opacity: number;
+  /** Layer opacity, 0-1. Absent/null on the first line marks the gradient fill treatment. */
+  opacity?: number | null;
 }
 
 export interface JourneyContent {
@@ -140,6 +162,7 @@ export interface HomeContent {
   clientLogos: ClientLogoItem[];
   projects: ProjectItem[];
   process: ProcessStepItem[];
+  processIntro: ProcessIntroContent;
   gallery: GalleryImageItem[];
   stats: StatItem[];
   whyChooseMe: WhyChooseMeContent;

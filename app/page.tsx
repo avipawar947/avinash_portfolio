@@ -32,7 +32,7 @@ export default async function HomePage() {
         <ClientMarquee logos={content.clientLogos} />
         <Projects items={content.projects} />
         <StatsGrid items={content.stats} config={content.whyChooseMe} />
-        <ProcessTimeline items={content.process} />
+        <ProcessTimeline items={content.process} intro={content.processIntro} />
         <Gallery items={content.gallery} />
         <MyJourney content={content.journey} />
         <ToolsGrid items={content.tools} />

@@ -4,6 +4,7 @@ import NavbarModel from "@/models/Navbar";
 import ClientLogoModel from "@/models/ClientLogo";
 import ProjectModel from "@/models/Project";
 import ProcessStepModel from "@/models/ProcessStep";
+import ProcessIntroModel from "@/models/ProcessIntro";
 import GalleryImageModel from "@/models/GalleryImage";
 import StatModel from "@/models/Stat";
 import WhyChooseMeModel from "@/models/WhyChooseMe";
@@ -31,6 +32,7 @@ export async function getHomeContent(): Promise<HomeContent> {
       clientLogos,
       projects,
       process,
+      processIntro,
       gallery,
       stats,
       whyChooseMe,
@@ -45,6 +47,7 @@ export async function getHomeContent(): Promise<HomeContent> {
       ClientLogoModel.find().sort("order").lean(),
       ProjectModel.find().sort("order").lean(),
       ProcessStepModel.find().sort("order").lean(),
+      ProcessIntroModel.findOne().lean(),
       GalleryImageModel.find().sort("order").lean(),
       StatModel.find().sort("order").lean(),
       WhyChooseMeModel.findOne().lean(),
@@ -63,6 +66,7 @@ export async function getHomeContent(): Promise<HomeContent> {
         : seedContent.clientLogos,
       projects: projects?.length ? (projects as any) : seedContent.projects,
       process: process?.length ? (process as any) : seedContent.process,
+      processIntro: (processIntro as any) || seedContent.processIntro,
       gallery: gallery?.length ? (gallery as any) : seedContent.gallery,
       stats: stats?.length ? (stats as any) : seedContent.stats,
       whyChooseMe: (whyChooseMe as any) || seedContent.whyChooseMe,
