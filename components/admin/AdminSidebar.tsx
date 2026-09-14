@@ -10,7 +10,9 @@ const links = [
   { href: '/admin/gallery', label: 'Gallery' },
   { href: '/admin/stats', label: 'Stats' },
   { href: '/admin/journey', label: 'My Journey' },
+  { href: '/admin/life', label: 'Life Behind Text' },
   { href: '/admin/tools', label: 'Tools' },
+  { href: '/admin/contact', label: 'Contact CTA' },
   { href: '/admin/footer', label: 'Footer' },
   { href: '/admin/settings', label: 'Settings / Resume' },
 ];

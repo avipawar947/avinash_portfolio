@@ -33,19 +33,6 @@ export default function ProcessTimeline({
         paddingBottom: "var(--section-pad)",
       }}
     >
-      {/* the guide grid, offset exactly as in the design (node 1:164) */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-0"
-        style={{
-          width: "calc(1920 * var(--fig))",
-          height: "calc(1190 * var(--fig))",
-          backgroundImage: "url(/svg/hero-grid.svg)",
-          backgroundSize: "100% 100%",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
-
       <div
         className="relative mx-auto w-full"
         style={{
@@ -82,7 +69,7 @@ export default function ProcessTimeline({
           </div>
 
           <div
-            className="lg:shrink-0"
+            className="lg:shrink-0 lg:self-end"
             style={{
               marginTop: "clamp(2rem, calc(120 * var(--fig)), calc(120 * var(--fig)))",
               width: "min(100%, calc(531 * var(--fig)))",

@@ -133,6 +133,14 @@ export interface ToolItem {
   iconKey: string;
   iconUrl: string;
   iconPublicId?: string;
+  /** Offset of the 94px tile inside the 1416 x 485 constellation plot, Figma px. */
+  left: number;
+  /** Offset from the plot's top edge, Figma px. */
+  top: number;
+  /** The glyph box inside the 94x94 tile — most are 60x60 inset 17px. */
+  iconSize: number;
+  iconLeft: number;
+  iconTop: number;
   order: number;
 }
 
@@ -146,6 +154,16 @@ export interface FooterContent {
   roleTags: string[];
   location: string;
   socialLinks: SocialLink[];
+}
+
+export interface ContactCTATab {
+  label: string;
+  imageUrl: string;
+  imagePublicId?: string;
+}
+
+export interface ContactCTAContent {
+  tabs: ContactCTATab[];
 }
 
 export interface SettingsContent {
@@ -169,6 +187,7 @@ export interface HomeContent {
   journey: JourneyContent;
   lifeBehindText: LifeBehindTextItemContent[];
   tools: ToolItem[];
+  contactCTA: ContactCTAContent;
   footer: FooterContent;
   settings: SettingsContent;
 }

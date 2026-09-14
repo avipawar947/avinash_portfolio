@@ -11,6 +11,7 @@ import WhyChooseMeModel from "@/models/WhyChooseMe";
 import JourneyModel from "@/models/Journey";
 import LifeBehindTextItemModel from "@/models/LifeBehindTextItem";
 import ToolModel from "@/models/Tool";
+import ContactCTAModel from "@/models/ContactCTA";
 import FooterModel from "@/models/Footer";
 import SettingsModel from "@/models/Settings";
 import { seedContent } from "./seed-data";
@@ -39,6 +40,7 @@ export async function getHomeContent(): Promise<HomeContent> {
       journey,
       lifeBehindText,
       tools,
+      contactCTA,
       footer,
       settings,
     ] = await Promise.all([
@@ -54,6 +56,7 @@ export async function getHomeContent(): Promise<HomeContent> {
       JourneyModel.findOne().lean(),
       LifeBehindTextItemModel.find().sort("order").lean(),
       ToolModel.find().sort("order").lean(),
+      ContactCTAModel.findOne().lean(),
       FooterModel.findOne().lean(),
       SettingsModel.findOne().lean(),
     ]);
@@ -75,6 +78,7 @@ export async function getHomeContent(): Promise<HomeContent> {
         ? (lifeBehindText as any)
         : seedContent.lifeBehindText,
       tools: tools?.length ? (tools as any) : seedContent.tools,
+      contactCTA: (contactCTA as any) || seedContent.contactCTA,
       footer: (footer as any) || seedContent.footer,
       settings: (settings as any) || seedContent.settings,
     };
