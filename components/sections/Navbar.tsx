@@ -222,29 +222,42 @@ export default function Navbar({
             Download Resume
           </motion.a>
 
-          {/* Mobile trigger — below 1024px (no mobile counterpart in Figma). */}
+          {/* Mobile trigger — Figma "Menu 1" (40×40 circle, gradient fill,
+              1px white/10 stroke, three white rounded bars). */}
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="relative grid size-10 place-items-center lg:hidden"
-            style={{ zIndex: "calc(var(--z-menu) + 1)" }}
+            className="relative grid size-10 place-items-center rounded-[var(--radius-pill)] border lg:hidden"
+            style={{
+              borderColor: "rgba(255,255,255,0.1)",
+              backgroundImage:
+                "linear-gradient(180deg, rgba(19,19,19,0.1) 0%, rgba(44,44,44,0.1) 100%)",
+              zIndex: "calc(var(--z-menu) + 1)",
+            }}
           >
-            <span aria-hidden className="relative block h-4 w-6">
+            <span aria-hidden className="absolute -top-px -left-px block size-10">
+              {/* Rectangle 39312 — 17.5%/40% → 17×2px */}
               <motion.span
-                className="absolute left-0 block h-px w-full bg-[var(--color-text)]"
-                animate={
-                  menuOpen ? { top: 8, rotate: 45 } : { top: 2, rotate: 0 }
-                }
+                className="absolute rounded-[100px] bg-white"
+                style={{ left: 7, top: 12, width: 17, height: 2 }}
+                animate={menuOpen ? { top: 19, rotate: 45 } : { top: 12, rotate: 0 }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               />
+              {/* Rectangle 39313 — 27.5%/27.5% → 18×2px, centre */}
               <motion.span
-                className="absolute left-0 block h-px w-full bg-[var(--color-text)]"
-                animate={
-                  menuOpen ? { top: 8, rotate: -45 } : { top: 13, rotate: 0 }
-                }
+                className="absolute rounded-[100px] bg-white"
+                style={{ left: 11, top: 19, width: 18, height: 2 }}
+                animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+              />
+              {/* Rectangle 39314 — 40%/17.5% → 17×2px */}
+              <motion.span
+                className="absolute rounded-[100px] bg-white"
+                style={{ left: 16, top: 26, width: 17, height: 2 }}
+                animate={menuOpen ? { top: 19, rotate: -45 } : { top: 26, rotate: 0 }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               />
             </span>
