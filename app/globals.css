@@ -16,6 +16,12 @@
      components that need pixel-exact Figma positions (currently: Navbar). */
   --fig: calc(100vw / 1920);
 
+  /* The same idea on the 393px mobile frame: `--fig` above 600px, the
+     design's mobile canvas below it. Sections that ship a separate mobile
+     composition (marquee, recent work) size themselves from one of the two
+     so nothing snaps when the breakpoint is crossed. */
+  --fig-m: var(--fig);
+
   /* --- Design tokens, read from Figma (navbar + shared chrome) ---------- */
   --color-bg: #0b0b0b;
   --color-surface: #010101;        /* navbar bar bg, mobile menu */
@@ -75,10 +81,421 @@
   }
 }
 
+/* Re-base the mobile canvas, as `--mq` does for the marquee. */
+@media (max-width: 600px) {
+  :root {
+    --fig-m: calc(100vw / 393);
+  }
+}
+
 /* Stop scaling up indefinitely on ultra-wide displays. */
 @media (min-width: 2560px) {
   :root {
     --fig: calc(2560px / 1920);
+  }
+}
+
+/* --- Client logo marquee ------------------------------------------------
+   One design pixel, `--mq`, on whichever canvas is active. Desktop is the
+   1920px frame: 60px-tall logos on a 140px pitch. Below 600px the frame
+   re-bases onto the 393px mobile frame: 40px-tall logos on a 72px pitch.
+   Every dimension of the strip is written as `calc(<design px> * var(--mq))`
+   rather than in `vw`, so the browser re-derives the whole strip on resize
+   and the scroll offset can never drift away from the logos it scrolls.
+   `--mq` is capped at 1px so, like the design, the strip stops growing
+   once the canvas is filled rather than inflating on ultra-wide displays. */
+:root {
+  --mq: min(var(--fig), 1px);
+  --mq-logo-h: 60;       /* logo cap height at this canvas */
+  --mq-logo-scale: 1;    /* logo width relative to its 60px cap height */
+  --mq-gap: 140;         /* pitch between logos */
+  --mq-pad-top: 100;     /* 260px band, logos centred in it */
+  --mq-pad-bottom: 100;
+  /* Seconds per design pixel. The design crosses its 3277px strip in 70s;
+     deriving the duration from the measured strip instead of hard-coding
+     70s keeps the logos travelling at exactly that speed however many of
+     them the CMS holds. */
+  --mq-secs-per-px: calc(70 / 3277 * 1s);
+}
+
+@media (max-width: 600px) {
+  :root {
+    --mq: calc(100vw / 393);
+    --mq-logo-h: 40;
+    --mq-logo-scale: 0.666667; /* 40 / 60 — same aspect ratios as desktop */
+    --mq-gap: 72;
+    --mq-pad-top: 40;          /* 194px band */
+    --mq-pad-bottom: 114;
+    --mq-secs-per-px: calc(60 / 1971 * 1s);
+  }
+}
+
+/* Two copies of the strip, translated by exactly one copy's width
+   (`--mq-shift`, set per strip by the component) — which is where copy two
+   starts, so the loop is seamless. */
+@keyframes brand-marquee {
+  to {
+    transform: translateX(calc(-1 * var(--mq-shift) * var(--mq)));
+  }
+}
+
+.marquee-track {
+  animation-name: brand-marquee;
+  animation-duration: calc(var(--mq-shift) * var(--mq-secs-per-px));
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+/* Hovering (or tabbing to) the strip holds it still, so a logo can be
+   looked at and a keyboard user can stop the motion. Scoped to hover:
+   capable pointers, because :hover sticks on touch. */
+@media (hover: hover) {
+  .marquee-strip:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+.marquee-strip:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-strip:focus-visible {
+  outline: 1px solid #777;
+  outline-offset: -4px;
+}
+
+/* Reduced motion: the strip still renders, it just stops moving. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+/* --- Recent work (Case Study) -------------------------------------------
+   Two canvases, like the marquee: the desktop frame is 1920 x 2028, and
+   below 600px the whole section re-bases onto the 393 x 1588 mobile frame.
+   Every length is written `calc(<design px> * var(--fig))` on the first and
+   `calc(<design px> * var(--fig-m))` on the second, so the composition
+   scales continuously instead of snapping at the breakpoint.
+
+   The rules live here rather than in the component because each one has a
+   mobile twin; Projects.tsx keeps the structure and the CMS wiring only. */
+
+#work {
+  /* 1:145 — the label above the heading */
+  --work-copy-gradient: linear-gradient(90deg, #ffffff 9.8%, #505050 100%);
+
+  padding-block: var(--section-pad);
+  /* Design height. `min-height`, not `height`: the supplied grid artwork is
+     stretched to the box, so a longer CMS list still grows instead of
+     clipping the way a fixed height would. */
+  min-height: calc(2028 * var(--fig));
+  background-color: #0b0b0b;
+  /* The supplied 1920 x 2028 guide grid, faded at the top and bottom seams. */
+  background-image: url("/svg/case-study-overlay-desktop.svg"),
+    url("/svg/case-study-background-desktop.svg");
+  background-size: 100% 100%, 100% 100%;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+#work .eyebrow {
+  width: calc(122 * var(--fig));
+  height: calc(41 * var(--fig));
+  margin-bottom: calc(20 * var(--fig));
+  padding: 0;
+  border: 1px solid #212121;
+  border-radius: calc(6 * var(--fig));
+  background: #0c0c0c;
+  font-size: calc(16 * var(--fig));
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* "Case Study" — one 160px line at 172px leading */
+#work .section-heading h2 {
+  font-size: calc(160 * var(--fig));
+  line-height: calc(172 * var(--fig));
+  letter-spacing: calc(3.2 * var(--fig));
+}
+
+#work .section-heading p {
+  margin-top: calc(20 * var(--fig));
+  font-size: calc(32 * var(--fig));
+  font-weight: 600;
+  line-height: calc(40 * var(--fig));
+  letter-spacing: 0;
+  color: #373737;
+}
+
+/* The first line is gradient-clipped to its own width (`display: table`
+   shrink-wraps it); the second sits flat below it. */
+#work .work-copy-mobile {
+  display: none;
+}
+
+#work .case-study-intro,
+#work .case-study-mobile-intro {
+  display: table;
+  margin: auto;
+  background: var(--work-copy-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+#work .case-study-outro,
+#work .case-study-mobile-outro {
+  display: block;
+  margin-top: calc(8 * var(--fig));
+  color: #373737;
+}
+
+/* Two columns of cards; the right one is dropped 120px. */
+#work .projects {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: calc(132 * var(--fig));
+  margin-top: calc(68 * var(--fig));
+}
+
+#work .project-column {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: calc(121 * var(--fig));
+  min-width: 0;
+}
+
+#work .project-column + .project-column {
+  margin-top: calc(120 * var(--fig));
+}
+
+/* The whole card is the hit target, so the caption keeps its heading role
+   and only an overlay button carries the click. */
+#work .project {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+#work .project:focus-within {
+  outline: 1px solid #777;
+  outline-offset: 4px;
+}
+
+#work .project-image {
+  display: block;
+  aspect-ratio: 754 / 484;
+  padding: calc(8 * var(--fig));
+  border-radius: calc(8 * var(--fig));
+  /* 1:150 — a hairline inside the frame, not a border: a border would eat
+     into the padding box and thicken the frame on fractional canvases. */
+  box-shadow: inset 0 0 0 calc(1 * var(--fig)) #ffffff24;
+  overflow: hidden;
+}
+
+#work .project-media {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(7 * var(--fig));
+  overflow: hidden;
+}
+
+#work .project-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The hover hold. It is the individual `scale` property, not `transform`,
+     because the image's transform belongs to the drift below — the two
+     compose, so the hover zoom is not overwritten when the card scrolls. */
+  scale: 1;
+  transition: scale 0.35s;
+}
+
+#work .project:hover .project-media img,
+#work .project:focus-within .project-media img {
+  scale: 1.025;
+}
+
+/* 1:151 alone carries this wash over the image. */
+#work .project-wash {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 30.638%,
+    rgba(102, 102, 102, 0.2) 100%
+  );
+}
+
+#work .project-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: calc(24 * var(--fig));
+  font-size: calc(24 * var(--fig));
+  font-weight: 600;
+  line-height: calc(40 * var(--fig));
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+}
+
+#work .project-open {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+#work .project:hover .project-open,
+#work .project:focus-within .project-open {
+  opacity: 1;
+}
+
+/* Mobile composition: one column, the mobile copy, and the 236px-tall card. */
+@media (max-width: 600px) {
+  #work {
+    padding-block: calc(80 * var(--fig-m));
+    min-height: calc(1588 * var(--fig-m));
+    /* The mobile sheet keeps its own grid pitch and a shorter overlay. */
+    background-image: url("/svg/case-study-overlay-mobile.svg"),
+      url("/svg/case-study-grid-mobile.svg");
+    background-size: 100% 100%, 100% calc(1214 * var(--fig-m));
+  }
+
+  #work .eyebrow {
+    width: calc(114 * var(--fig-m));
+    height: calc(40 * var(--fig-m));
+    margin-bottom: calc(20 * var(--fig-m));
+    font-size: calc(14 * var(--fig-m));
+  }
+
+  #work .section-heading h2 {
+    font-size: calc(64 * var(--fig-m));
+    line-height: calc(80 * var(--fig-m));
+    letter-spacing: 0;
+  }
+
+  #work .section-heading p {
+    margin-top: calc(16 * var(--fig-m));
+    font-size: calc(24 * var(--fig-m));
+    line-height: calc(32 * var(--fig-m));
+  }
+
+  #work .work-copy-desktop {
+    display: none;
+  }
+
+  #work .work-copy-mobile {
+    display: block;
+  }
+
+  #work .case-study-mobile-outro {
+    margin-top: calc(8 * var(--fig-m));
+  }
+
+  #work .projects {
+    flex-direction: column;
+    gap: calc(24 * var(--fig-m));
+    margin-top: calc(40 * var(--fig-m));
+  }
+
+  #work .project-column {
+    flex: none;
+    width: 100%;
+    gap: calc(24 * var(--fig-m));
+  }
+
+  #work .project-column + .project-column {
+    margin-top: 0;
+  }
+
+  #work .project-image {
+    height: calc(236 * var(--fig-m));
+    aspect-ratio: auto;
+    padding: calc(6 * var(--fig-m));
+    border-radius: calc(8 * var(--fig-m));
+    box-shadow: inset 0 0 0 calc(1 * var(--fig-m)) #ffffff24;
+  }
+
+  #work .project-media,
+  #work .project-media img {
+    border-radius: calc(8 * var(--fig-m));
+  }
+
+  #work .project-caption {
+    margin-top: calc(12 * var(--fig-m));
+    font-size: calc(18 * var(--fig-m));
+    line-height: calc(24 * var(--fig-m));
+  }
+}
+
+/* --- Case study dialog ---------------------------------------------------
+   A native <dialog>, so the top layer, the backdrop, ESC and the focus trap
+   come from the platform. Shown when a project has no `link` yet. */
+.case-study-dialog {
+  width: min(900px, calc(100% - 32px));
+  max-height: 88vh;
+  overflow: auto;
+  padding: 40px;
+  border: 1px solid #414141;
+  border-radius: 16px;
+  background: #121212;
+  color: #ffffff;
+}
+
+.case-study-dialog::backdrop {
+  background: #000b;
+  backdrop-filter: blur(8px);
+}
+
+.case-study-dialog-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 32px;
+  line-height: 1;
+  color: inherit;
+}
+
+.case-study-dialog-title {
+  margin: 4px 0 16px;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.case-study-dialog-image {
+  display: block;
+  width: 100%;
+  max-height: 65vh;
+  margin: 16px auto;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .case-study-dialog {
+    padding: 32px 20px;
+  }
+
+  .case-study-dialog-image {
+    max-height: 60vh;
+  }
+
+  .case-study-dialog-title {
+    font-size: 24px;
   }
 }
 

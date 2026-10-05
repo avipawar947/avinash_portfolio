@@ -1,28 +1,35 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useId, useRef, useState } from "react";
 
 import { gsap, ScrollTrigger } from "@/lib/animations";
 import { useIsomorphicLayoutEffect } from "@/lib/hooks/useIsomorphicLayoutEffect";
 import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
-import GradientText from "@/components/ui/GradientText";
+import CaseStudyDialog from "@/components/ui/CaseStudyDialog";
 import type { ProjectItem } from "@/types/content";
 
 /**
  * A single case study — Figma nodes 1:150/1:151 and siblings.
  *
- * Card    754 x 484, 1px rgba(208,208,208,0.2), radius 8, clipped
- * Image   738 x 468 inset 7px, radius 8, cropped per `project.crop`
- * Title   24px SF Pro Semibold below the card, gradient-clipped
+ * Card    754 x 484, hairline inside the frame, radius 8, clipped
+ * Image   inset 8px, radius 7, cover-fitted, held at 1.025 on hover
+ * Title   24px SF Pro Semibold below the card, with the ↗ on hover
  *
- * The design has no hover or scroll states, so the reveal and the hover
- * lift are this project's own. Both stay inside the design's vocabulary:
- * a mask wipe rather than a slide, and a scale small enough that the 1px
- * border does not visibly thicken.
+ * Every length is in the `#work` block in app/globals.css, including the
+ * 393px mobile twin. The design has no hover or scroll states, so the
+ * reveal and the image drift are this project's own; both stay inside the
+ * design's vocabulary — a mask wipe rather than a slide, and a drift small
+ * enough that the frame never appears to move.
+ *
+ * The card is one hit target: an overlay button over the whole card, so the
+ * caption can keep its heading role. It opens the case study dialog, or
+ * follows `link` once the CMS has one.
  */
 export default function ProjectCard({ project }: { project: ProjectItem }) {
   const root = useRef<HTMLElement>(null);
+  const captionId = useId();
+  const [previewOpen, setPreviewOpen] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useIsomorphicLayoutEffect(() => {
@@ -40,19 +47,28 @@ export default function ProjectCard({ project }: { project: ProjectItem }) {
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
       });
 
-      // Parallax: the image drifts slower than the card it sits in.
-      const image = el.querySelector<HTMLElement>("[data-card-image]");
+      // Drift: the image trails the card it sits in. It grows as it drifts,
+      // which is what keeps the bottom edge covered at the far end of the
+      // scrub. The drift rides the media box rather than the <img>, because
+      // GSAP writes the individual `scale` property inline as it animates —
+      // which would cancel the hover hold that CSS sets on the image itself.
+      const image = el.querySelector<HTMLElement>("[data-card-media]");
       if (image) {
-        gsap.to(image, {
-          yPercent: -6,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
+        gsap.fromTo(
+          image,
+          { scale: 1 },
+          {
+            yPercent: -2,
+            scale: 1.05,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
           },
-        });
+        );
       }
     }, root);
 
@@ -63,63 +79,66 @@ export default function ProjectCard({ project }: { project: ProjectItem }) {
     };
   }, [prefersReducedMotion]);
 
+  const href = externalHref(project.link);
+
   return (
-    <article ref={root} className="group w-full">
-      <div
-        data-cursor="project"
-        className="relative w-full overflow-hidden rounded-[8px] border border-[rgba(208,208,208,0.2)] transition-transform duration-500 ease-[var(--ease-out)] group-hover:scale-[1.01]"
-        style={{
-          aspectRatio: "754 / 484",
-          padding: "calc(7 * var(--fig))",
-        }}
-      >
-        <div className="relative size-full overflow-hidden rounded-[8px]">
+    <article ref={root} className="project group">
+      <span className="project-image" data-cursor="project">
+        <span className="project-media" data-card-media>
           {project.imageUrl ? (
             <Image
-              data-card-image
               src={project.imageUrl}
               alt={project.title}
-              width={1600}
-              height={1014}
-              sizes="(max-width: 1023px) 100vw, 39vw"
-              className="absolute left-0 max-w-none transition-transform duration-700 ease-[var(--ease-out)] group-hover:scale-[1.04]"
-              style={{
-                width: "100%",
-                // The design scales each fill taller than its frame and
-                // nudges it up; these are that crop, per card.
-                height: `${project.cropHeight ?? 100}%`,
-                top: `${project.cropTop ?? 0}%`,
-              }}
+              fill
+              sizes="(max-width: 600px) calc(100vw - 40px), 40vw"
+              className="object-cover"
+              style={{ objectPosition: `center ${project.cropTop ?? 0}%` }}
             />
           ) : (
-            <div data-card-image className="size-full bg-[#131313]" />
+            <span className="size-full bg-[#131313]" />
           )}
-          {/* 1:151 alone carries this wash over the image. */}
-          {project.wash && (
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 rounded-[8px]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to bottom, rgba(0,0,0,0.2) 30.638%, rgba(102,102,102,0.2) 100%)",
-              }}
-            />
-          )}
-        </div>
-      </div>
+          {project.wash && <span aria-hidden="true" className="project-wash" />}
+        </span>
+      </span>
 
-      <GradientText
-        as="h3"
-        className="m-0 font-semibold capitalize"
-        style={{
-          marginTop: "calc(24 * var(--fig))",
-          fontSize: "max(1.125rem, calc(24 * var(--fig)))",
-          lineHeight: 1.6,
-          letterSpacing: "calc(0.48 * var(--fig))",
-        }}
-      >
+      <h3 id={captionId} className="project-caption font-display">
         {project.title}
-      </GradientText>
+        <span aria-hidden="true" className="project-open">
+          ↗
+        </span>
+      </h3>
+
+      <button
+        type="button"
+        className="absolute inset-0"
+        aria-labelledby={captionId}
+        onClick={() => {
+          if (href) {
+            window.open(href, "_blank", "noopener,noreferrer");
+            return;
+          }
+          setPreviewOpen(true);
+        }}
+      />
+
+      {previewOpen && (
+        <CaseStudyDialog
+          title={project.title}
+          imageUrl={project.imageUrl}
+          onClose={() => setPreviewOpen(false)}
+        />
+      )}
     </article>
   );
+}
+
+/** Only http(s) leaves the site; anything else is treated as no link yet. */
+function externalHref(link: string): string | null {
+  if (!link) return null;
+  try {
+    const url = new URL(link);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : null;
+  } catch {
+    return null;
+  }
 }

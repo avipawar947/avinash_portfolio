@@ -1,0 +1,17 @@
+{
+  "source_revision": "652e674413802dbe5b857a6ccf8e4424dea40544",
+  "website_files": 151,
+  "website_bytes": 81852173,
+  "local_references_checked": 107,
+  "missing_local_references": [],
+  "javascript_syntax": "passed",
+  "reference_screenshots_included": 18,
+  "website_files_verified_against_source": true,
+  "excluded": [
+    ".git",
+    "temporary preview/publishing scripts",
+    "credentials",
+    "account authentication",
+    "synced sources directory"
+  ]
+}

@@ -1,0 +1,145 @@
+AVINASH PAWAR PORTFOLIO — IMPLEMENTATION HANDOVER
+
+1. SNAPSHOT AND SCOPE
+Source revision: 652e674413802dbe5b857a6ccf8e4424dea40544
+Current published URL: https://avinash-pawar-portfolio.azman-haque895515.chatgpt.site/
+Last completed change: full-screen mobile navigation matching the supplied 393 x 780 design.
+This package contains a copy of the complete current website. No site changes or
+new deployment were made to create this handover. The original repository stays
+in place. Website files in this package match the source revision byte for byte.
+
+2. TECHNOLOGY AND FILES
+Vanilla semantic HTML, CSS and browser JavaScript; static hosting; no build step.
+website/index.html: all page sections, inline SVG logos/connector artwork, dialogs.
+website/styles.css: font declarations, base styles, responsive layouts and later
+section-specific overrides. Read the whole relevant cascade before editing.
+website/app.js: navigation, dialogs, galleries, contact tabs and destination links.
+website/config.js: empty personal/project destinations to fill when supplied.
+website/assets/: supplied SVG layers, PNG photos, WebP imagery and four OTF fonts.
+The source repository calls the deployable folder dist; it is named website here.
+The code is editable source, although many HTML/CSS lines are compact. There are
+no React/Vue components, package.json, node_modules, API routes or database.
+
+3. PAGE ORDER AND IMPLEMENTATION MAP
+Header/navigation: .site-header; desktop navigation and the #mobile-menu modal.
+Mobile menu: #mobile-nav, .mobile-menu-header, .mobile-menu-actions; mobile only.
+Hero: #home; name, portrait, role text, greeting and availability artwork.
+Brand strip: .brand-strip; supplied logo compositions.
+Case Study: #work; HRX, NSL Luxe, Synclature, Akruti Luxe projects.
+Beyond The Numbers: .numbers-section; six statistic/chart/domain cards.
+How I Work / Our Process: .process-section; Discover, Define and Deliver rows.
+Gallery: .gallery-section; supplied portrait/mockup composition plus project targets.
+About / My Journey: #about; separate desktop/mobile copy with intentional fades.
+Tools: #tools; .tools-network--live, .tool-card, .tool-connector and .tool-hub.
+Let's Talk: #contact; text/actions and Desktop, Mobile, Tablet preview tabs.
+Beyond the Pixels: #beyond-the-pixels; .photo-track and six .photo-card buttons.
+Footer: .site-footer; .footer-top, .footer-socials and .footer-bottom.
+
+4. RESPONSIVE DESIGN CONTRACT
+Mobile rules use max-width:600px; desktop section overrides start at 601px.
+The mobile reference width is 393px. The desktop reference width is 1920px;
+many original screenshots are exported at double those logical dimensions.
+body defines --u as min(.052083333cqw,1px) for desktop and --m as
+.254452926cqw for mobile. Dimensions use calc(value * var(--u/--m)).
+The main content is capped at 1920px. Test against content width rather than
+outer browser-window width; a desktop scrollbar may consume approximately 15px.
+Preserve the requested compositions, section order, logo positions and spacing.
+Do not turn the whole page or Tools section into a single screenshot.
+
+5. VISUAL ASSETS AND SPECIAL CASES
+Supplied layer order is normally overlay, grid, background in CSS backgrounds.
+Use exact provided SVGs and photos; replacement exports supersede earlier ones.
+Fonts: Portfolio SF, regular/medium/semibold/bold under assets/figma/.
+The dark backgrounds, white headings and deliberately fading gray text are
+design choices from the references, especially About, Tools and Let's Talk.
+Tools logos and connector paths are independent HTML/inline SVG animation targets.
+No additional Tools motion is implemented merely because animation was requested
+as a future capability. Preserve exact desktop and mobile node coordinates.
+Gallery uses separate supplied desktop/mobile artwork compositions.
+Let's Talk has supplied desktop/mobile surfaces, overlays and device mockups.
+Its three tabs are real interactive controls, not screenshot labels.
+
+Beyond the Pixels desktop: 1920 x 1177 logical section; badge at y140;
+two-line heading, film cards 380 x 372 with image insets 24 horizontal / 8 vertical.
+Latest desktop frame is the supplied Card background Frame 2.svg.
+Mobile: 393 x 840; badge y160, heading box y216 with three 84px lines;
+photo strip y508, cards 224 x 210, 24px gap and 20px track padding.
+Images use 20px horizontal / 4px vertical insets, producing 184 x 202 photo areas.
+Native-size film perforations are cropped from the mobile frame SVG at each edge.
+First photo retains color; photos 2–6 use the #photo-muted SVG color matrix.
+The supplied photo bytes remain unchanged. Mobile image fit matches the reference.
+Current mobile overlay is Beyond the Pixel - Mobile Overlay 1.svg.
+
+Desktop footer: 1920 x 263 reference; padding 43 top and 100 horizontal;
+latest background Footer Desktop 1.svg; 16px supporting text; outlined social
+buttons, dashed divider, copyright and policy controls.
+Mobile footer: 393 x 530; supplied Footer Mobile Background.svg;
+logo box x130.5,y80,w132,h40; description box y144 with 28px line-height;
+social circles y275,54px diameter,19px gap; policy row near y369;
+divider y429; copyright box y470,20px line-height; supporting text 16px.
+
+6. INTERACTIONS AND ACCESSIBILITY
+Mobile menu uses a native dialog (#mobile-menu) opened by .menu-toggle.
+It is a full-screen, mobile-only panel, not the old compact dropdown.
+Home/Work/About/Contact map to #home/#work/#about/#contact. Selecting a link
+closes the menu, restores page scrolling and focuses the destination section.
+The X button and Escape close the menu and return focus to the menu toggle.
+The native modal handles background inertness and keyboard focus containment.
+Changing to desktop (>600px) automatically closes the menu and clears scroll lock.
+LinkedIn and Download Resume use the same config destinations as the rest of the page.
+At 393 x 780: header 80px, logo 117px wide, close circle 40px, navigation rows
+120px high, text 40px/48px bold, separators at y200/320/440, actions at y692.
+The menu uses --menu-unit:.254452926vw and 100dvh. Shorter screens scroll within
+its own panel; all actions stay reachable. Background is a CSS radial gradient.
+Reference: references/Ap Menu Screenshots.png.
+Case-study cards follow configured URLs; empty destinations open artwork dialogs.
+Photos use the currently selected responsive image in the native dialog preview.
+Photo strip supports horizontal scrolling and keyboard focus; some older arrow
+controls remain in markup but are hidden in the final reference-matched layouts.
+Device tabs update aria-selected, tabindex, panel labels and visible mockups.
+ArrowLeft/ArrowRight/Home/End work for the device tab group.
+Dialogs have close buttons and outside-click handling; native dialog Escape applies.
+Navigation active states use IntersectionObserver. Gallery centers on load/resize.
+Privacy and Cookies buttons open existing informational dialogs.
+Visible focus styling and reduced-motion-aware gallery scrolling are present.
+
+7. DESTINATIONS STILL REQUIRED
+Edit window.PORTFOLIO in website/config.js:
+email, linkedin, behance, resume;
+projects.hrx, projects['nsl-luxe'], projects.synclature, projects['akruti-luxe'].
+All these values are currently empty. No email or external profile was invented.
+Social/contact/resume buttons currently show availability notices where no real
+destination exists. Supply real URLs/details before expecting external navigation.
+Keep config.js loaded before app.js. There is no contact form submission backend.
+Privacy/Cookies text describes current site behavior; update it if functionality
+changes. Adding new analytics/forms/authentication requires corresponding work.
+
+8. RUNNING AND DEPLOYING FROM ANOTHER ACCOUNT
+Serve the website folder using a standard static server (see README_FIRST.txt).
+For any static host, deploy the CONTENTS of website as the site root and keep
+assets relative to index.html. Do not set the ZIP root as the site root.
+For Sites-style hosting, hosting/hosting.example.json contains a static directory
+configuration without a project ID. A new account must create/select its own site
+and use that service's returned ID and credentials. An account-independent ZIP
+does not grant access to the old site's repository or existing hosted site.
+The current hosted site was owner-private at the last verified publication.
+No repository access token, account login, .git history or internal publishing
+helper is included in this handover. Do not expect old deployment access to transfer.
+If continuing the SAME hosted site, arrange authorized access with the owner first.
+Cache query strings on the stylesheet and replacement assets can be incremented
+when publishing changes. Keep desktop and mobile asset replacements scoped.
+
+9. VERIFICATION AND NEXT-DEVELOPER CHECKLIST
+The packaged JavaScript passes node --check. Local HTML/CSS/SVG references are
+checked for missing files. All website file hashes and ZIP integrity are verified.
+During implementation, desktop at 1440px content width and mobile at 393px were
+checked in-browser. Mobile photo previews and Cookies/Privacy dialogs were tested.
+The mobile menu was additionally tested at 393 x 780 and 375 x 667, including
+all four section links, X, Escape, resume fallback and desktop resize cleanup.
+This handover does not claim exhaustive cross-browser or automated accessibility QA.
+Recommended next checks: 320/375/393/430px mobile and 601/768/1024/1440/1920px;
+tab keyboard navigation; galleries and dialogs; large-screen cap; live destinations.
+Keep supplied text/photography and exact reference colors unless the owner requests
+a design change. Current source includes unused/legacy assets to avoid data loss;
+review usage before removing anything. The source contains inline SVG logo data;
+absence of individual logo files does not mean those logo assets are missing.

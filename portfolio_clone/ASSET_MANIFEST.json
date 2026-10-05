@@ -1,0 +1,757 @@
+[
+  {
+    "path": "website/app.js",
+    "bytes": 6726,
+    "sha256": "c41bbca30159244e58109f3c01ff68f1b4f9b4f450167e6c90ff3dd433da2414"
+  },
+  {
+    "path": "website/assets/about-background-desktop.svg",
+    "bytes": 161,
+    "sha256": "c94f5c9604dce5571d22c485661acedf31735ea58a06f360841c28422ce83ea0"
+  },
+  {
+    "path": "website/assets/about-background-mobile.svg",
+    "bytes": 158,
+    "sha256": "7b86e1d965ef4132849d33ad55c733d4ad536ad67a6c82996d830e60100d6528"
+  },
+  {
+    "path": "website/assets/akruti-luxe.webp",
+    "bytes": 57176,
+    "sha256": "3c10e0c1f3c76a924a44d4910894d3da27009358a393882d6988cb9d59a5ef1c"
+  },
+  {
+    "path": "website/assets/case-study-background-desktop.svg",
+    "bytes": 1824,
+    "sha256": "0979bcd0220caed6074101697bdcd5d0386333f0c64c1266119f6945cc717551"
+  },
+  {
+    "path": "website/assets/case-study-background-mobile.svg",
+    "bytes": 158,
+    "sha256": "941417e56a6227c001bdd482edc105210787869e997f31cb02e20b8c3d6b92b6"
+  },
+  {
+    "path": "website/assets/case-study-grid-mobile.svg",
+    "bytes": 1347,
+    "sha256": "1d848ddcfe31a64824dd6f0aa4e4a8c0808bbb74e932b8802c22f4a80d9269a7"
+  },
+  {
+    "path": "website/assets/case-study-overlay-desktop.svg",
+    "bytes": 781,
+    "sha256": "417379c2ab0c39a95af2fbc89b96ef91d844ead01b8d4a2072bc78d317c11b8c"
+  },
+  {
+    "path": "website/assets/case-study-overlay-mobile.svg",
+    "bytes": 456,
+    "sha256": "69aac8e51e5fa24898fa4eb660cfa8cd2e79527881a6c0b6567d376824a31fe1"
+  },
+  {
+    "path": "website/assets/contact-background-desktop.svg",
+    "bytes": 158,
+    "sha256": "9266c39fc6b56c649f6a3b48852dfe05cb69c798d1ae2f93952ba26ade08b653"
+  },
+  {
+    "path": "website/assets/contact-background-mobile.svg",
+    "bytes": 158,
+    "sha256": "75e33cbd6bfae54f8dd97328d2fb4eb8b8fad6a2132c333347a54b37b3909245"
+  },
+  {
+    "path": "website/assets/contact-card-overlay-mobile.svg",
+    "bytes": 783647,
+    "sha256": "3f21939240644f23b3c22ab0b11d2aca6f1048d7cd2530b40faa10683bc59e90"
+  },
+  {
+    "path": "website/assets/contact-card-overlay.svg",
+    "bytes": 783630,
+    "sha256": "830a053f1ae6f5aa7c08fd91f01874d8e0a2ff992b528f2a20800b681bd3bcd6"
+  },
+  {
+    "path": "website/assets/contact-laptop.webp",
+    "bytes": 28016,
+    "sha256": "98ee97e373ebaa19daa61d948f82bd5bbe47ef181f95c726627ae2d7b705b81f"
+  },
+  {
+    "path": "website/assets/contact-mobile-preview-desktop.svg",
+    "bytes": 876349,
+    "sha256": "e2694b260ead5bc21eb7df2cc80241d24fbec7d8d0de378d5f4524817599bc40"
+  },
+  {
+    "path": "website/assets/contact-mobile-preview-mobile.svg",
+    "bytes": 7801889,
+    "sha256": "fd07bb2864692e8479bf48a5e5bb26fa38f2abc24abe8d4b7a3bfa645a358923"
+  },
+  {
+    "path": "website/assets/contact-mobile-preview-tablet.svg",
+    "bytes": 1084276,
+    "sha256": "c0084fcb9c40a8151a32c35b11c667315968c47fb625475b9cec093c0246d453"
+  },
+  {
+    "path": "website/assets/contact-mockup-desktop.svg",
+    "bytes": 876132,
+    "sha256": "bc4f07838e7fa960cf2005c2de18b6b8cdc1f90db36a84c1718e5cfad67fd804"
+  },
+  {
+    "path": "website/assets/contact-mockup-mobile.svg",
+    "bytes": 7801510,
+    "sha256": "bc038c38999e7c98cf503ca15846e5365dc2d7652c3ded85e649211c3707b3d7"
+  },
+  {
+    "path": "website/assets/contact-mockup-tablet.svg",
+    "bytes": 1084220,
+    "sha256": "fdb2a219b6833053715f4543b8f3fd1287860d8b3384063735e591ccc49e747b"
+  },
+  {
+    "path": "website/assets/contact-screen.webp",
+    "bytes": 46068,
+    "sha256": "68122d58b2e5402165ab480833e5085555dbe058a8f9034adea8bb7c1b385e59"
+  },
+  {
+    "path": "website/assets/contact-surface-desktop.svg",
+    "bytes": 783654,
+    "sha256": "5fe42c6ce9ca56b5d3ce528cb3b18d4726a4e002ff99f71ba27f8535a5331405"
+  },
+  {
+    "path": "website/assets/contact-surface-mobile.svg",
+    "bytes": 783654,
+    "sha256": "a7988d3983f9d977f3d8fe84b523e36a1a9e88bd0a7ab9418ced6b5ab6c18c9b"
+  },
+  {
+    "path": "website/assets/contact-surface-tablet.svg",
+    "bytes": 783654,
+    "sha256": "aeaf971eafc829f8f5e648ddaaf06c574cb735ad51b291f34986a5b41f93fb73"
+  },
+  {
+    "path": "website/assets/figma/akruti-luxe.webp",
+    "bytes": 55388,
+    "sha256": "751861d41893cb19dff515074212d671f4c4ffd1160f4ef992d9fc45a3245d9b"
+  },
+  {
+    "path": "website/assets/figma/ap-center.svg",
+    "bytes": 16095,
+    "sha256": "fa25cd6f1da77a429ceadc3b8edd93d8b023d451b2a4bc403d38634458deae40"
+  },
+  {
+    "path": "website/assets/figma/brand.svg",
+    "bytes": 9074,
+    "sha256": "53fb7f888d6953b15049869d2cc42d1b39a4a50ceedab5172c6d6d2335a93598"
+  },
+  {
+    "path": "website/assets/figma/gallery-604.svg",
+    "bytes": 87680,
+    "sha256": "fdf25243ce297b340fe207700f47d0fb703998587d78e5370898fdb1535d739a"
+  },
+  {
+    "path": "website/assets/figma/gallery-605.svg",
+    "bytes": 58128,
+    "sha256": "cee9cd0ed0ba611ba0fb1074e96264b009ab2d73b0a4d17a870b70fb3c853a64"
+  },
+  {
+    "path": "website/assets/figma/gallery-606.svg",
+    "bytes": 117524,
+    "sha256": "b6be3b20202fd001d2cf2f5207edc066b4a65e522a925476893efe64660bf888"
+  },
+  {
+    "path": "website/assets/figma/gallery-607.svg",
+    "bytes": 81864,
+    "sha256": "795a6ebdabcfd30f4fff56d8250a0d174c2d36b023cfed628f1d62973f127c1c"
+  },
+  {
+    "path": "website/assets/figma/gallery-608.svg",
+    "bytes": 47010,
+    "sha256": "9617f4dce39ed895bcbbd31e801d91b846ad84e100d3d13fe91d70b449d41034"
+  },
+  {
+    "path": "website/assets/figma/gallery-609.svg",
+    "bytes": 54762,
+    "sha256": "b31d5868a4103f9769f7f493a6984e8329822a22b39064c795fb522f3bb9d591"
+  },
+  {
+    "path": "website/assets/figma/gallery-610.svg",
+    "bytes": 45964,
+    "sha256": "8acc863a7c2c775c1c39c29a1750eabf67c8048cd4b40f942530818824ac3274"
+  },
+  {
+    "path": "website/assets/figma/gallery-611.svg",
+    "bytes": 27560,
+    "sha256": "f53984ccca2cc0ec6062154b782e1ae70378cd664ffee1c4dc61c230621ca41f"
+  },
+  {
+    "path": "website/assets/figma/gallery-portrait-desktop.webp",
+    "bytes": 40952,
+    "sha256": "c4fff8b45e190bc884255ec5a8f7c7f3ab0c6405d349a9e319fccd02726750c4"
+  },
+  {
+    "path": "website/assets/figma/gallery-portrait-mobile.webp",
+    "bytes": 12336,
+    "sha256": "d11e3b40bc1df86d6bc4c40fc7c203da6a00f6136c946294e09d954916afb3a9"
+  },
+  {
+    "path": "website/assets/figma/hero-desktop.webp",
+    "bytes": 83148,
+    "sha256": "cc86081b107b13f077bd18c18b92046926a645847f3d0b8dd3e72b5bb8a56eae"
+  },
+  {
+    "path": "website/assets/figma/hero-mobile.webp",
+    "bytes": 19562,
+    "sha256": "371fcde6476a968176b05fd7cf08f034265dc629baf0dc07a6905cc1854bf836"
+  },
+  {
+    "path": "website/assets/figma/hrx.webp",
+    "bytes": 86228,
+    "sha256": "e92dd73a99de2bf86d972f02268b048abb6edf0340ccfc1def0b436dd52dae93"
+  },
+  {
+    "path": "website/assets/figma/logo-awfis.svg",
+    "bytes": 7970,
+    "sha256": "1d90680f08511639f1b2b56e310a5714d5ce435a62ce91bd5b2b02af9e4789a6"
+  },
+  {
+    "path": "website/assets/figma/logo-fabled.svg",
+    "bytes": 11502,
+    "sha256": "7f5f428566e34a6f223f9a76f4b08758e5494fd6ae590d6dfa18e3862c3aa95d"
+  },
+  {
+    "path": "website/assets/figma/logo-hrx.svg",
+    "bytes": 8218,
+    "sha256": "c9a1861ae7bc9e3978c0694a0c6fcd9cc5b965410735c0e926567df1bc58d3ad"
+  },
+  {
+    "path": "website/assets/figma/logo-met.svg",
+    "bytes": 7750,
+    "sha256": "b29a0337db8c8cdceebf5b69e2041bc6859de5da22f106b08da9284ba1ad27d0"
+  },
+  {
+    "path": "website/assets/figma/logo-qiston.svg",
+    "bytes": 6518,
+    "sha256": "495c17103fc66b718f370e149bca5e73d535934a3d549f5a6f18509fb4f5857b"
+  },
+  {
+    "path": "website/assets/figma/logo-tata.svg",
+    "bytes": 3239,
+    "sha256": "5a39d21b3b39917d38c912d6a172e09b13d3e8ae5f9e9d790e240a890f055610"
+  },
+  {
+    "path": "website/assets/figma/logo-zango.svg",
+    "bytes": 10119,
+    "sha256": "d22b16216b74b1ac2e50a3801e029be3f8cc0b0300d7b04f2a2a551565b66466"
+  },
+  {
+    "path": "website/assets/figma/nsl-luxe.webp",
+    "bytes": 82996,
+    "sha256": "57ddf9d02636ccdde5d372194b4a806b469017cfa8f0fb583339ac52286fe2ea"
+  },
+  {
+    "path": "website/assets/figma/sf-pro-bold.otf",
+    "bytes": 334728,
+    "sha256": "a981001f6d4e70292fd26fa8e05437c4a9f0f8c5981027ff0ceead01bb30311f"
+  },
+  {
+    "path": "website/assets/figma/sf-pro-medium.otf",
+    "bytes": 335512,
+    "sha256": "cbfd17919856efcedabdd73781dad2984326928ae7c9635bef6227b1a7d71d21"
+  },
+  {
+    "path": "website/assets/figma/sf-pro-regular.otf",
+    "bytes": 298944,
+    "sha256": "71a2162c852e87baa6440c983e406283391646778c8bc74e57b00613a3412f80"
+  },
+  {
+    "path": "website/assets/figma/sf-pro-semibold.otf",
+    "bytes": 335964,
+    "sha256": "53a55ec7e0a90c0e1980b9d95e3cb93851b4e473b575693813a1b150066661ff"
+  },
+  {
+    "path": "website/assets/figma/synclature.webp",
+    "bytes": 41906,
+    "sha256": "3a5416fc4ce8fc6678f3db3e8c1284b4c432a8d21ace426d2d307ecbbe435146"
+  },
+  {
+    "path": "website/assets/figma/tools-desktop.svg",
+    "bytes": 51008,
+    "sha256": "be1c874a180e285c863b1e7dedb3d64736e69b47814d1bcff234fad9edfed6bc"
+  },
+  {
+    "path": "website/assets/figma/tools-mobile.svg",
+    "bytes": 49654,
+    "sha256": "c4f89e69cc3325e385c42a83ac7ca45ec1dbbd8de198987b4b320d480c1a37f7"
+  },
+  {
+    "path": "website/assets/footer-background-desktop.svg",
+    "bytes": 1362,
+    "sha256": "5fc9030df245c2515ad64094a8767dfa8e22d713957819245f4a153f8a2877c7"
+  },
+  {
+    "path": "website/assets/footer-background-mobile.svg",
+    "bytes": 1358,
+    "sha256": "8cbe578a910770535e7c8ee9868ecd6ff9b76831ff45e78a04f566d820ae283d"
+  },
+  {
+    "path": "website/assets/gallery-artwork-desktop.svg",
+    "bytes": 18868933,
+    "sha256": "4413d3ae201280711b91c3cef912fb875f60b7ca6382505120b96d8deed85080"
+  },
+  {
+    "path": "website/assets/gallery-artwork-mobile.svg",
+    "bytes": 6367480,
+    "sha256": "31c49e93eb04795b2c0965bfd82492704c9ea56d6c8171125b091271474cfe0a"
+  },
+  {
+    "path": "website/assets/gallery-auto.webp",
+    "bytes": 73330,
+    "sha256": "f9c9d2221e3a4b0a5feb4e63adca269b17a44509f958720709c655cd0e16827a"
+  },
+  {
+    "path": "website/assets/gallery-background-desktop.svg",
+    "bytes": 161,
+    "sha256": "a949230d36d0595d7880c9c4afdc97ce4edb23ca51c6153e381e575182d5ee20"
+  },
+  {
+    "path": "website/assets/gallery-background-mobile.svg",
+    "bytes": 155,
+    "sha256": "b66737256a3f418ca87ab4769eb4dbea19ae0dd525e46b8e47a987b3c0301b48"
+  },
+  {
+    "path": "website/assets/gallery-food.webp",
+    "bytes": 134266,
+    "sha256": "fa68048e8236a563368e2e49dff1cbc4006676c9ff550b3f28746a6e90da0cc4"
+  },
+  {
+    "path": "website/assets/gallery-grid-desktop.svg",
+    "bytes": 1450,
+    "sha256": "7c7fecc396c073cf9f758fcefd953b6a89dbdcbc2968a303663707e1ed7be921"
+  },
+  {
+    "path": "website/assets/gallery-grid-mobile.svg",
+    "bytes": 1079,
+    "sha256": "3ed77c6c58761d486f8abc4551d9368e688c6426f03bf9160dc821bc38a24c56"
+  },
+  {
+    "path": "website/assets/gallery-overlay-desktop.svg",
+    "bytes": 913,
+    "sha256": "bde9f829bf50564fa53d3184284ade3fadcd81d522e749fe8582a04167875595"
+  },
+  {
+    "path": "website/assets/gallery-overlay-mobile.svg",
+    "bytes": 898,
+    "sha256": "4caeba89617698e3df022c8f9d8413e53291f5bcf8f5a979902c631bd99a6f7b"
+  },
+  {
+    "path": "website/assets/gallery-property.webp",
+    "bytes": 108706,
+    "sha256": "812be31d95b83e0024106b344bf2f3c8fed9be84678589a824efe5481e245423"
+  },
+  {
+    "path": "website/assets/gallery-tablet.webp",
+    "bytes": 48612,
+    "sha256": "122887f27f3cf7860ea5ae1466336cb725a1e584c2c99e88c404a5f5df57426e"
+  },
+  {
+    "path": "website/assets/gallery-travel.webp",
+    "bytes": 63852,
+    "sha256": "519c7a16d799e828773f5fd39abc382a1d38170a5501edf2d14c6d5dc400fddb"
+  },
+  {
+    "path": "website/assets/hero/desktop-background.svg",
+    "bytes": 6697460,
+    "sha256": "ccd685dbddd3b805f4c62b8977dfaa40697b84ea1cac6bf3f6ca9b4d2dbd3e77"
+  },
+  {
+    "path": "website/assets/hero/desktop-portrait.svg",
+    "bytes": 835253,
+    "sha256": "1d90c92cb3db8b627f50a727a3a74d20791338be29ff65c697a144842f6c8b7c"
+  },
+  {
+    "path": "website/assets/hero/hello-badge.svg",
+    "bytes": 11644,
+    "sha256": "44d77eb1d59eafcf310d1dc5558d1cef4ed773680374dcf29d82f4676931f736"
+  },
+  {
+    "path": "website/assets/hero/hello-mobile.svg",
+    "bytes": 11612,
+    "sha256": "77116e8844093d2f7fc3a49bb73e07df303d78118d9d7996806273e5766e2c62"
+  },
+  {
+    "path": "website/assets/hero/mobile-background.svg",
+    "bytes": 6697121,
+    "sha256": "717375d6fa00c0f1f20fd7196a3862dd1ac825764d4e819d04eefbcf8975d69d"
+  },
+  {
+    "path": "website/assets/hero/mobile-portrait-aligned.svg",
+    "bytes": 835351,
+    "sha256": "a7c76b1777253da12857bbf90ed47994cacc229ee5b60316b8b1cc61d8dfd309"
+  },
+  {
+    "path": "website/assets/hero/open-to-work-badge.svg",
+    "bytes": 10126,
+    "sha256": "0150665c16874ea5854fe4d52aa651928aa40917f29bd44a7927438d7d0d6904"
+  },
+  {
+    "path": "website/assets/hero/open-to-work-mobile.svg",
+    "bytes": 10352,
+    "sha256": "ec9e9379ce58781624c44e174ef3263d7c8ced937743d043d36350432d8e088b"
+  },
+  {
+    "path": "website/assets/hrx.webp",
+    "bytes": 103084,
+    "sha256": "f3d55d8dd1ee6a3df62b11e0533e77a7e9edeff9d8fdedc09d308ca51908586f"
+  },
+  {
+    "path": "website/assets/logo-awfis.webp",
+    "bytes": 9032,
+    "sha256": "17c3ae147fecf972467640cc267918ceb37e6c7f10ec686d0f2fd119636d88a3"
+  },
+  {
+    "path": "website/assets/logo-fabled.webp",
+    "bytes": 95662,
+    "sha256": "a1c94e6b0b8ded165108bb0f806289a9bbddaa7be7bdaed5a063df25cddaf17c"
+  },
+  {
+    "path": "website/assets/logo-hrx.webp",
+    "bytes": 17626,
+    "sha256": "d229ba120532704aea578389c77ca7656612af5c19dbe2ae4d1b938f0a349582"
+  },
+  {
+    "path": "website/assets/logo-met.webp",
+    "bytes": 74074,
+    "sha256": "d4263b6028200b4e54510017f0c685eb7733ed0942d77a24fb52f5aa5c8a0387"
+  },
+  {
+    "path": "website/assets/logo-qiston.webp",
+    "bytes": 23112,
+    "sha256": "4bd19fefdfbda25f321b75bd722db8ab663fa9ff01f8b32f5d6552386ceea3a3"
+  },
+  {
+    "path": "website/assets/logo-zango.webp",
+    "bytes": 22376,
+    "sha256": "0aa235559a527ae474ac195323bdcc02e97c72a38ba84dcc3f13ce47b17678c0"
+  },
+  {
+    "path": "website/assets/marquee-desktop.svg",
+    "bytes": 2266942,
+    "sha256": "420733292c79323417befce593dedc36f48f5f1e959dc609d7a42111170db33e"
+  },
+  {
+    "path": "website/assets/marquee-mobile.svg",
+    "bytes": 2266997,
+    "sha256": "d5ae2084f780f19c67ad868fada1b30b74dde372febbe9ad81e0578aee668a2b"
+  },
+  {
+    "path": "website/assets/nsl-luxe.webp",
+    "bytes": 41442,
+    "sha256": "f89875ed89274dee68072d595eea4e8384a7c499b6b50f428846bd2051f7b2fe"
+  },
+  {
+    "path": "website/assets/numbers-background-desktop.svg",
+    "bytes": 161,
+    "sha256": "486a8b835ac55f4736224f93f64f539f82737ba7527c89040728c6f9d88510a6"
+  },
+  {
+    "path": "website/assets/numbers-background-mobile.svg",
+    "bytes": 158,
+    "sha256": "8b0c2b39283764ea991b8ee94fe56494e863d26de8beeffd0f261edbc674b84f"
+  },
+  {
+    "path": "website/assets/numbers-grid-desktop.svg",
+    "bytes": 1581,
+    "sha256": "5a5b212646e74b430a866ac1de0dec305125dd117950b161de2fead8d8ed684a"
+  },
+  {
+    "path": "website/assets/numbers-grid-mobile.svg",
+    "bytes": 1349,
+    "sha256": "6ee241fd73a1b3719228ec4ae39851ccba06bdc5ba53b6e653edd78491fe50e4"
+  },
+  {
+    "path": "website/assets/numbers-overlay-desktop.svg",
+    "bytes": 784,
+    "sha256": "24b8de37152c77a4b73d5964a183ce291f559027bca9cdeeaacfe70cd2ce4ea9"
+  },
+  {
+    "path": "website/assets/numbers-overlay-mobile.svg",
+    "bytes": 458,
+    "sha256": "b4b90b2ae0a580fbec36a023fb28699fa86c4d2fcc02cf1ac009bd3cda164e83"
+  },
+  {
+    "path": "website/assets/numbers-stats-desktop.svg",
+    "bytes": 238380,
+    "sha256": "692bee793f6123fee69f28d3f08837f451896e0d3556751ff051dffcee80beb0"
+  },
+  {
+    "path": "website/assets/numbers-stats-mobile.svg",
+    "bytes": 238351,
+    "sha256": "40a3838e9d3aad9f88f5cd13a78cb57345b7cc3a968672e84c400dbefac70da6"
+  },
+  {
+    "path": "website/assets/photo-architecture.webp",
+    "bytes": 185906,
+    "sha256": "cb224e3d067bf81837fbc502f2dd8f4e56a34a092da95347bd63a5cb6d5aeb77"
+  },
+  {
+    "path": "website/assets/photo-forest.webp",
+    "bytes": 86824,
+    "sha256": "0b26d8b8c2ee3fb751198b2967a2db4cee0d8fcb5b54407f519df6adbbe2766f"
+  },
+  {
+    "path": "website/assets/photo-gramophone.webp",
+    "bytes": 94590,
+    "sha256": "ad86f61a2ccae3f897978dfb01020c1d54b90a1269bc9706895d684658788189"
+  },
+  {
+    "path": "website/assets/photo-lake.webp",
+    "bytes": 73926,
+    "sha256": "842ab30c72cbaca48d0aeeacb504bea1183c57a213c6adedfa0192df044d1f19"
+  },
+  {
+    "path": "website/assets/photo-palace.webp",
+    "bytes": 88900,
+    "sha256": "b7a0f64845145d25af9b34a4e78c721ffd640afaa890ed689dcb193a427f220b"
+  },
+  {
+    "path": "website/assets/photo-waterfront.webp",
+    "bytes": 63596,
+    "sha256": "3c40ecd8af4cd89caebe505e395e47b76af746300e7534e74c83d69ecc827bee"
+  },
+  {
+    "path": "website/assets/pixels-background-desktop.svg",
+    "bytes": 161,
+    "sha256": "ceabeb2613e7706e4bb45fb7a063e5040fdd71cab5d7aea58cfb62eeeb3b5728"
+  },
+  {
+    "path": "website/assets/pixels-background-mobile.svg",
+    "bytes": 155,
+    "sha256": "dba0eeef414124526ea5f6fe0306cc751da38730b214d5535922346c1c0dc395"
+  },
+  {
+    "path": "website/assets/pixels-card-frame-mobile.svg",
+    "bytes": 4180,
+    "sha256": "a21fe5914dd96222f8696ee5c77055e68b109828c3cbbeb26e053eff142d64c5"
+  },
+  {
+    "path": "website/assets/pixels-card-frame.svg",
+    "bytes": 4180,
+    "sha256": "fb2f6d341c1e3b9868058249a052619872a622e6d60315f4b4201f7b3c6ed2ac"
+  },
+  {
+    "path": "website/assets/pixels-grid-desktop.svg",
+    "bytes": 1454,
+    "sha256": "ab5d68a6d62f6337bacf0b4bbfe3859553f84d92ee86b1ebf07c0213f8f4081e"
+  },
+  {
+    "path": "website/assets/pixels-grid-mobile.svg",
+    "bytes": 1243,
+    "sha256": "7a9154b56d0f8dd2ce1e17154cfb7de772aae97a6e42dd14ab3ce68124f96e67"
+  },
+  {
+    "path": "website/assets/pixels-overlay-desktop.svg",
+    "bytes": 925,
+    "sha256": "e825fe8e3b58e0edb8c48d14b2b0348bd18ac1b0f55dd64c0f472ad86ffa66b5"
+  },
+  {
+    "path": "website/assets/pixels-overlay-mobile.svg",
+    "bytes": 1260,
+    "sha256": "7463107e8ecbd3ed6da3fd6509b861de1b91957ac83657eaff80572e7e6a245c"
+  },
+  {
+    "path": "website/assets/pixels-photo-1-mobile.png",
+    "bytes": 644366,
+    "sha256": "0c38543fdd488d765b1d51b13d22570181e77211e762533aced0a4170b9fff46"
+  },
+  {
+    "path": "website/assets/pixels-photo-1.png",
+    "bytes": 644366,
+    "sha256": "0c38543fdd488d765b1d51b13d22570181e77211e762533aced0a4170b9fff46"
+  },
+  {
+    "path": "website/assets/pixels-photo-2-mobile.png",
+    "bytes": 949516,
+    "sha256": "8c247dcb0aeb1e8287f7b7f6ab3ee6b48cd605d7cc980c1162053bdfd01d7bf5"
+  },
+  {
+    "path": "website/assets/pixels-photo-2.png",
+    "bytes": 949516,
+    "sha256": "8c247dcb0aeb1e8287f7b7f6ab3ee6b48cd605d7cc980c1162053bdfd01d7bf5"
+  },
+  {
+    "path": "website/assets/pixels-photo-3-mobile.png",
+    "bytes": 823104,
+    "sha256": "d6430d065e117a193f10d6f918d4d289a3d87da04db70e6e816a693faa3e064f"
+  },
+  {
+    "path": "website/assets/pixels-photo-3.png",
+    "bytes": 823104,
+    "sha256": "d6430d065e117a193f10d6f918d4d289a3d87da04db70e6e816a693faa3e064f"
+  },
+  {
+    "path": "website/assets/pixels-photo-4-mobile.png",
+    "bytes": 725740,
+    "sha256": "8c321f6aecbd048479df5b8cc3b366f2e50a5d0be054b0332323a49a28bb8fd1"
+  },
+  {
+    "path": "website/assets/pixels-photo-4.png",
+    "bytes": 725740,
+    "sha256": "8c321f6aecbd048479df5b8cc3b366f2e50a5d0be054b0332323a49a28bb8fd1"
+  },
+  {
+    "path": "website/assets/pixels-photo-5-mobile.png",
+    "bytes": 570727,
+    "sha256": "8f9e8759c83cc4bec5865f581c09a56e6057b09951f5829335f35b381b3c1489"
+  },
+  {
+    "path": "website/assets/pixels-photo-5.png",
+    "bytes": 570727,
+    "sha256": "8f9e8759c83cc4bec5865f581c09a56e6057b09951f5829335f35b381b3c1489"
+  },
+  {
+    "path": "website/assets/pixels-photo-6-mobile.png",
+    "bytes": 525065,
+    "sha256": "701c4f6fee9165dc777fd830be591ef4ea10af03364caf35075d0e8e3da1e0c1"
+  },
+  {
+    "path": "website/assets/pixels-photo-6.png",
+    "bytes": 525065,
+    "sha256": "701c4f6fee9165dc777fd830be591ef4ea10af03364caf35075d0e8e3da1e0c1"
+  },
+  {
+    "path": "website/assets/portrait-gallery.webp",
+    "bytes": 88316,
+    "sha256": "e0869e1c029ab91bddec32a7cad0ce9f90799d1a70a7ad5b21c134b084260a1e"
+  },
+  {
+    "path": "website/assets/portrait.webp",
+    "bytes": 88316,
+    "sha256": "e0869e1c029ab91bddec32a7cad0ce9f90799d1a70a7ad5b21c134b084260a1e"
+  },
+  {
+    "path": "website/assets/process-background-desktop.svg",
+    "bytes": 161,
+    "sha256": "3317bd195891635df32b92693b2fe57a3bf3d9137bb65913d6628215a999eae2"
+  },
+  {
+    "path": "website/assets/process-background-mobile.svg",
+    "bytes": 158,
+    "sha256": "0f2117c5bedaeba867a3f9ccfc65c4555c2528774b1b49b6438f2c2e27e1adc6"
+  },
+  {
+    "path": "website/assets/process-grid-desktop.svg",
+    "bytes": 1533,
+    "sha256": "b4b19919fcd90d17ef0a9ad218c69d705934508caa70bb699954b89c06f3b637"
+  },
+  {
+    "path": "website/assets/process-grid-mobile.svg",
+    "bytes": 1349,
+    "sha256": "f9a035efc9727d1ab7eeb5d9224eca2e1ff620775ca24afdf5763477f92f5488"
+  },
+  {
+    "path": "website/assets/process-overlay-desktop.svg",
+    "bytes": 919,
+    "sha256": "b92dc1120499f9d9dc15b26779b15d56fd0d93f2d23c9148d409dd7f52e066e7"
+  },
+  {
+    "path": "website/assets/process-overlay-mobile.svg",
+    "bytes": 898,
+    "sha256": "bf687f772671344e3f1cc1a9c6514a4b69d7d82603500b5a373c41976fec22fe"
+  },
+  {
+    "path": "website/assets/synclature.webp",
+    "bytes": 23350,
+    "sha256": "ccd206e41dbe9dc93a8e0d7ddbe59d8a94205b51cd6e8049faa7f5685c3f9e0b"
+  },
+  {
+    "path": "website/assets/tool-chatgpt.webp",
+    "bytes": 13062,
+    "sha256": "2d10661550314bd9d503c164d069db2bf56620acbe4a02e0805c9257e8678829"
+  },
+  {
+    "path": "website/assets/tool-claude.webp",
+    "bytes": 12348,
+    "sha256": "020668b88e26e5ade62fa7dedf5130325e8efef65c2b6eb6ae5dad5f4890d01d"
+  },
+  {
+    "path": "website/assets/tool-design.webp",
+    "bytes": 8956,
+    "sha256": "b77cfa7dd0fc4e0228723e3dff44933d2f8edf964899d268a89f8bf7f7d2d5d3"
+  },
+  {
+    "path": "website/assets/tool-figma.webp",
+    "bytes": 10430,
+    "sha256": "c0ab172af616230d4ba5ae2ffc99a3859512ac91534f0035d3d41e572932c839"
+  },
+  {
+    "path": "website/assets/tool-illustrator.webp",
+    "bytes": 9422,
+    "sha256": "ca2d875c038cae09572566579c3009002a6f8922a75f4b39fc8fdf43ae66c9b3"
+  },
+  {
+    "path": "website/assets/tool-motion.webp",
+    "bytes": 10128,
+    "sha256": "e7c38a044680bfa47f20e1ecce2ec7c8cc827658547e759cfbcc4083c63d1991"
+  },
+  {
+    "path": "website/assets/tool-notion.webp",
+    "bytes": 11566,
+    "sha256": "09f6942a405616cd799bc07469fa6f68e12e1b73b71cc29594a942f9554ea1b9"
+  },
+  {
+    "path": "website/assets/tool-photoshop.webp",
+    "bytes": 8996,
+    "sha256": "87dda935b1e1ebc188840e16fcd712d8a4f4b3d8a06e1a1c01b17ba919ba3e35"
+  },
+  {
+    "path": "website/assets/tool-slack.webp",
+    "bytes": 11248,
+    "sha256": "1e37154f1517ab50bfe0a8fcb50b4f74feea808449bacd5868ccb2f4457afb2d"
+  },
+  {
+    "path": "website/assets/tool-xd.webp",
+    "bytes": 9398,
+    "sha256": "54580f3041fab12ba430e28c264a1b981e5fd114b689e0157e0b29c5ba2e3e1b"
+  },
+  {
+    "path": "website/assets/tools-ap-logo.webp",
+    "bytes": 7096,
+    "sha256": "98880da6a77935679b5ae875d0120774499911ecfcc47a854c53252f31c77af6"
+  },
+  {
+    "path": "website/assets/tools-background-desktop.svg",
+    "bytes": 161,
+    "sha256": "eee512ca3d9c49730ff729b3a9fbbc32217233faeb46892b4d4b3c626c846cb7"
+  },
+  {
+    "path": "website/assets/tools-background-mobile.svg",
+    "bytes": 158,
+    "sha256": "57c4fb5983cd0352c4ab3a3513a52baa118a7816b28e8983ace5dd47d312feea"
+  },
+  {
+    "path": "website/assets/tools-grid-desktop.svg",
+    "bytes": 1131,
+    "sha256": "e67b0832e61b632c29d6e73bf2f949b0a4ec2588b75e630dd1d3c4c12118dfee"
+  },
+  {
+    "path": "website/assets/tools-grid-mobile.svg",
+    "bytes": 1596,
+    "sha256": "e9ae92ce19c7b7aff973759d9b3c7f9a84eb7f5ce57f04b4cb7c569d94a96080"
+  },
+  {
+    "path": "website/assets/tools-overlay-desktop.svg",
+    "bytes": 469,
+    "sha256": "25f7594b1f1467e5d858de3a6d4b8c75f054dc76c03227b398ed9cab12d06acb"
+  },
+  {
+    "path": "website/assets/tools-overlay-mobile.svg",
+    "bytes": 1130,
+    "sha256": "f9116b8c3ac72c05cc22a18b7626bf5695ef53fcd67d9829dbe872f866dd36df"
+  },
+  {
+    "path": "website/config.js",
+    "bytes": 258,
+    "sha256": "1da961bd5d2d3c458a60ed6d75b0458acee461738285c13e27e33f045cf85145"
+  },
+  {
+    "path": "website/index.html",
+    "bytes": 168024,
+    "sha256": "28c963892eb588f708f87ffe86320ea75bab99d11c1315f05a51e06524f288f8"
+  },
+  {
+    "path": "website/styles.css",
+    "bytes": 79112,
+    "sha256": "ea8a68a4bec8155b6b4cfb764a4f9d26f1e2fdf2a8d7d06b0dcdd11dd612cd8c"
+  }
+]
