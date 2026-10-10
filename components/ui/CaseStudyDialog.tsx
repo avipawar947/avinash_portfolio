@@ -29,7 +29,8 @@ export default function CaseStudyDialog({
     const dialog = ref.current;
     if (!dialog) return;
 
-    dialog.showModal();
+    // Guarded because React's development StrictMode runs this effect twice.
+    if (!dialog.open) dialog.showModal();
 
     // A modal dialog makes the rest of the document inert but does not stop
     // it scrolling under the backdrop, so hold the page still while open.
@@ -47,9 +48,13 @@ export default function CaseStudyDialog({
     dialog.addEventListener("pointerdown", onPointerDown);
 
     return () => {
+      // No `dialog.close()` here on purpose. React removes the portalled node
+      // on unmount, which drops the dialog out of the top layer anyway, and
+      // closing would fire `close` — calling back into the card's state while
+      // it is being torn down, which in StrictMode's mount/unmount/mount
+      // immediately shuts the dialog again.
       dialog.removeEventListener("pointerdown", onPointerDown);
       document.body.style.overflow = previousOverflow;
-      if (dialog.open) dialog.close();
     };
   }, []);
 
