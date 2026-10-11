@@ -60,6 +60,11 @@
   --navbar-h: calc(80 * var(--fig));
   --gutter: calc(140 * var(--fig));
   --container-max: calc(1920 * var(--fig));
+  /* One background-grid cell on the 393px mobile/tablet canvas (~100px in
+     the design). The Gallery grid is the only consumer; desktop divides its
+     section into columns/rows instead. */
+  --grid-cell: 25.45vw;
+
   /* Section vertical rhythm + motion, read from Figma (Projects etc.) */
   --section-pad: max(3.5rem, calc(140 * var(--fig)));
   --heading-gap: max(0.75rem, calc(24 * var(--fig)));
@@ -754,7 +759,7 @@
      tablet width and blow the chart up. Hold it near the design's card
      width and centre it; phones (≤600px) are already narrower. */
   #journey .why-grid {
-    max-width: 37.5rem;
+    max-width: 100%;
     margin-inline: auto;
     row-gap: clamp(1.25rem, 3.2vw, 1.5rem);
   }
@@ -801,7 +806,7 @@
    below only re-sizes them for the narrow layout. */
 
 .process-mobile {
-  max-width: 34rem;
+  max-width: 100%;
   margin-inline: auto;
   margin-top: 2.5rem;
 }
@@ -912,6 +917,117 @@
   }
 
   #process .process-heading {
+    font-size: clamp(2.5rem, 16.3vw, 4rem);
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* --- Creative Showcase (Gallery) ----------------------------------------
+   Desktop keeps its 1920px arc (rendered in `GalleryArc`). Below `lg` the
+   section switches to the design's 393px "Creative Showcase" frame: the same
+   arced strip scaled down and centred, plus the mirrored hero portrait
+   fading into the foot. `--gal-u` is one tile's width — 161.6px in the
+   design frame — so every tile dimension below is the Figma value
+   re-expressed as a fraction of the 287px tile. The strip is wider than the
+   viewport and centred; the section's `overflow-hidden` clips both it and
+   the oversized portrait. */
+
+.gallery-section {
+  padding-top: var(--section-pad);
+  padding-bottom: var(--section-pad);
+  min-height: calc(1099 * var(--fig));
+}
+
+#gallery .gallery-eyebrow {
+  padding: calc(10 * var(--fig));
+  font-size: max(0.75rem, calc(16 * var(--fig)));
+  line-height: 1;
+}
+
+#gallery .gallery-heading {
+  margin-top: var(--heading-gap);
+  font-size: max(2.5rem, calc(160 * var(--fig)));
+  line-height: 1.1;
+  letter-spacing: calc(3.2 * var(--fig));
+}
+
+.gallery-mobile {
+  --gal-u: clamp(8rem, 41.12vw, 10.1rem);
+  position: relative;
+  margin-top: 2.5rem;
+  padding-bottom: clamp(9rem, 46vw, 14rem);
+}
+
+.gallery-arc {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Full-width layer the scroll animation scrubs; the strip is centred inside
+   it with a `left` calc rather than a translate, so GSAP owns the transform. */
+.gallery-arc-mover {
+  position: absolute;
+  inset: 0;
+}
+
+.gallery-arc-track {
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+.gallery-arc-tile {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background-color: #131313;
+}
+
+/* Hero portrait scaled up past the viewport, with the design's fade washing
+   it into the foot of the section. */
+.gallery-figure {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: clamp(18rem, 143vw, 35.2rem);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.gallery-figure-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.gallery-figure-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60%;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(11, 11, 11, 0) 11.377%,
+    rgba(11, 11, 11, 0.6) 55.552%,
+    #0b0b0b 100%
+  );
+}
+
+@media (max-width: 1023px) {
+  .gallery-section {
+    min-height: auto;
+  }
+
+  #gallery .gallery-eyebrow {
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  #gallery .gallery-heading {
     font-size: clamp(2.5rem, 16.3vw, 4rem);
     line-height: 1.25;
     letter-spacing: 0.04em;
