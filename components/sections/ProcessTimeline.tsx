@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import GradientText from "@/components/ui/GradientText";
 import type { ProcessStepItem, ProcessIntroContent } from "@/types/content";
 import ProcessPill from "./ProcessPill";
@@ -42,24 +44,12 @@ export default function ProcessTimeline({
       >
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <span
-              className="inline-flex items-center justify-center rounded-[8px] border border-[rgba(224,224,224,0.1)] bg-[#0d0d0d] text-center font-semibold whitespace-nowrap text-[var(--color-text)]"
-              style={{
-                padding: "calc(10 * var(--fig))",
-                fontSize: "max(0.75rem, calc(16 * var(--fig)))",
-              }}
-            >
+            <span className="process-eyebrow inline-flex items-center justify-center rounded-[8px] border border-[rgba(224,224,224,0.1)] bg-[#0d0d0d] text-center font-semibold whitespace-nowrap text-[var(--color-text)]">
               How I Work
             </span>
             <h2
               id="process-heading"
-              className="m-0 font-display font-medium text-[var(--color-text)]"
-              style={{
-                marginTop: "var(--heading-gap)",
-                fontSize: "max(2.5rem, calc(160 * var(--fig)))",
-                lineHeight: 1.1,
-                letterSpacing: "calc(3.2 * var(--fig))",
-              }}
+              className="process-heading m-0 font-display font-medium text-[var(--color-text)]"
             >
               Our
               <span className="block lg:w-[calc(576*var(--fig))] lg:text-right">
@@ -68,8 +58,10 @@ export default function ProcessTimeline({
             </h2>
           </div>
 
+          {/* The mobile frame omits the intro copy, so it only shows beside
+              the heading on desktop. */}
           <div
-            className="lg:shrink-0 lg:self-end"
+            className="hidden lg:block lg:shrink-0 lg:self-end"
             style={{
               marginTop: "clamp(2rem, calc(120 * var(--fig)), calc(120 * var(--fig)))",
               width: "min(100%, calc(531 * var(--fig)))",
@@ -167,26 +159,42 @@ export default function ProcessTimeline({
           })}
         </div>
 
-        {/* Narrow-screen stack */}
-        <div className="mt-10 flex flex-col gap-8 lg:hidden">
-          {grouped.map((phase) => (
-            <div
-              key={phase.name}
-              className="border-t border-[rgba(208,208,208,0.2)] pt-5"
-            >
-              <GradientText
-                as="h3"
-                className="m-0 mb-3 text-[1.375rem] font-semibold capitalize"
-              >
-                {phase.name}
-              </GradientText>
-              <ul className="m-0 flex list-none flex-col gap-2 p-0">
-                {phase.steps.map((step) => (
-                  <ProcessPill key={step._id} step={step} positioned={false} />
-                ))}
-              </ul>
-            </div>
-          ))}
+        {/* Phone + tablet composition (< lg) — the design's 393px "How I
+            Work" frame: one bordered card holding the three phases, each with
+            its label, a full-bleed dashed rule and a cascading set of step
+            pills that step rightward one indent per row. */}
+        <div className="process-mobile lg:hidden">
+          <div className="process-mobile-box">
+            {grouped.map((phase, phaseIndex) => (
+              <Fragment key={phase.name}>
+                <div className="process-mobile-phase">
+                  <GradientText as="h3" className="process-mobile-label">
+                    {phase.name}
+                  </GradientText>
+
+                  <span className="process-mobile-dash" aria-hidden="true" />
+
+                  <ul className="process-mobile-list">
+                    {phase.steps.map((step, stepIndex) => (
+                      <li
+                        key={step._id}
+                        className="process-mobile-pill"
+                        style={{ marginLeft: `calc(${stepIndex} * 1.75rem)` }}
+                      >
+                        <GradientText className="process-mobile-pill-label">
+                          {step.label}
+                        </GradientText>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {phaseIndex < grouped.length - 1 && (
+                  <span className="process-mobile-sep" aria-hidden="true" />
+                )}
+              </Fragment>
+            ))}
+          </div>
         </div>
       </div>
     </section>

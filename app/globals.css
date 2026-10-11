@@ -789,6 +789,135 @@
   }
 }
 
+/* --- Our Process --------------------------------------------------------
+   Desktop keeps its 1920px table (rendered in the component). Below `lg`
+   the section switches to the design's 393px "How I Work" frame: one
+   bordered card holding the three phases, each with its label, a full-bleed
+   dashed rule and a set of step pills that step one indent to the right per
+   row so the last pill lands flush on the card's inner edge. The card is
+   capped and centred so it does not stretch on tablets, and every length is
+   a plain rem — the type must stay readable instead of inflating with the
+   card. The desktop heading/pill keep their `--fig` sizing; the media query
+   below only re-sizes them for the narrow layout. */
+
+.process-mobile {
+  max-width: 34rem;
+  margin-inline: auto;
+  margin-top: 2.5rem;
+}
+
+.process-mobile-box {
+  overflow: hidden;
+  border: 1px solid rgba(208, 208, 208, 0.2);
+  border-radius: 4px;
+  background-color: var(--color-bg);
+}
+
+.process-mobile-phase {
+  padding-top: 1rem;
+}
+
+.process-mobile-phase:last-child {
+  padding-bottom: 1.5rem;
+}
+
+.process-mobile-label {
+  margin: 0 1rem 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+}
+
+.process-mobile-dash {
+  display: block;
+  height: 1px;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(208, 208, 208, 0.4) 0 2px,
+    transparent 2px 4px
+  );
+}
+
+.process-mobile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Same width for every pill; the per-row indent is the inline `marginLeft`,
+   so the width reserves one indent either side and the last row is flush. */
+.process-mobile-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 3.5rem);
+  min-height: 2.25rem;
+  padding: 0.5rem;
+  overflow: hidden;
+  border-radius: 4px;
+  text-align: center;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 55.234%,
+    rgba(176, 176, 176, 0.01) 114.86%
+  );
+}
+
+.process-mobile-pill-label {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  background-image: linear-gradient(
+    90deg,
+    #ffffff 35.57%,
+    rgba(176, 176, 176, 0.1) 109.43%
+  );
+}
+
+.process-mobile-sep {
+  display: block;
+  height: 1px;
+  margin-top: 1rem;
+  background-color: rgba(208, 208, 208, 0.2);
+}
+
+/* Desktop sizing, moved off inline styles so the narrow layout below can
+   override it. Identical values to the original inline rules at ≥1024px. */
+#process .process-eyebrow {
+  padding: calc(10 * var(--fig));
+  font-size: max(0.75rem, calc(16 * var(--fig)));
+  line-height: 1;
+}
+
+#process .process-heading {
+  margin-top: var(--heading-gap);
+  font-size: max(2.5rem, calc(160 * var(--fig)));
+  line-height: 1.1;
+  letter-spacing: calc(3.2 * var(--fig));
+}
+
+/* Phone + tablet: the design's own type scale (18px labels, 14px pills,
+   64px heading) instead of the shrinking 1920px values. */
+@media (max-width: 1023px) {
+  #process .process-eyebrow {
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  #process .process-heading {
+    font-size: clamp(2.5rem, 16.3vw, 4rem);
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+  }
+}
+
 /* The pill/CTA glow (`1px 1px 40px 1px rgba(255,255,255,0.2)`).
    Deliberately a plain class rather than Tailwind's `shadow-[var(...)]`:
    v3 reads a `var()` arbitrary shadow as a shadow *color* and produces
