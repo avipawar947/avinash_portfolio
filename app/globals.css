@@ -499,6 +499,296 @@
   }
 }
 
+/* --- Beyond The Numbers (Why Choose Me) ---------------------------------
+   One composition that scales with the card, not the viewport. Every
+   internal length is a container-query unit (`cqw`) of the card, so the
+   figure cards, the chart and the domains row keep the 1920 design's
+   proportions at any width: a card that is 530px wide reproduces the Figma
+   values exactly, and everything shrinks in step below that. This is the
+   piece `--fig` alone got wrong — it scaled the card *interiors* by the
+   viewport, so on a phone the 470px-wide chart collapsed into a 96px sliver
+   inside a 353px card. The three columns still collapse to one below `lg`,
+   which is the mobile order the design already calls for (figures → chart →
+   domains → figures) without a second composition. */
+
+#journey .why-pill {
+  min-height: 2.5rem;
+  padding: clamp(0.5rem, 0.75vw, 0.625rem) clamp(0.75rem, 0.9vw, 0.875rem);
+  font-size: clamp(0.875rem, 0.85vw, 1rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+}
+
+#journey .why-heading {
+  margin-top: clamp(1rem, 1.5vw, calc(24 * var(--fig)));
+  font-size: calc(160 * var(--fig));
+  line-height: 1.13;
+  letter-spacing: calc(3.2 * var(--fig));
+}
+
+#journey .why-grid {
+  margin-top: clamp(2rem, 3.2vw, calc(60 * var(--fig)));
+  column-gap: max(1rem, calc(25 * var(--fig)));
+  row-gap: max(1rem, calc(24 * var(--fig)));
+}
+
+#journey .why-col {
+  gap: max(1rem, calc(24 * var(--fig)));
+}
+
+/* The card is the query container: `cqw` below is 1% of its own width. */
+.why-card {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  container-type: inline-size;
+  background-image: linear-gradient(
+    180deg,
+    rgba(19, 19, 19, 0.8) 0%,
+    rgba(44, 44, 44, 0.8) 100%
+  );
+}
+
+/* Figure cards — Figma 530 x 296. */
+.why-card-figure {
+  aspect-ratio: 530 / 296;
+}
+
+.why-card-labels {
+  position: absolute;
+  left: 4.53cqw;
+  top: 4.53cqw;
+  right: 4.53cqw;
+}
+
+/* Typography is viewport-based (like the rest of the page), never card-based:
+   a stretched single-column card on a tablet must not inflate the type. Each
+   clamp hits the exact design size at 1920px, follows the viewport down, and
+   stops growing past the design's 2560px ceiling. Geometry (padding, plot,
+   bars) stays in `cqw` above so the composition still fills the card. */
+.why-card-label {
+  margin: 0;
+  font-size: clamp(0.9375rem, 1.25vw, 2rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+}
+
+.why-card-label-muted {
+  color: #b0b0b0;
+  opacity: 0.3;
+}
+
+/* The figure and its suffix share a baseline, 24px off the lower-left. */
+.why-value {
+  position: absolute;
+  left: 4.53cqw;
+  bottom: 4.53cqw;
+  display: flex;
+  align-items: flex-end;
+  gap: 2.264cqw;
+}
+
+.why-value-num {
+  font-size: clamp(3rem, 8.333vw, 13.333rem);
+  line-height: 0.875;
+  letter-spacing: 0.02em;
+}
+
+.why-value-suffix {
+  font-size: clamp(1.875rem, 5.208vw, 8.333rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+/* Chart card — Figma 530 x 424. */
+.why-card-chart {
+  aspect-ratio: 530 / 424;
+}
+
+.why-chart-title {
+  position: absolute;
+  left: 4.53cqw;
+  top: 4.53cqw;
+  margin: 0;
+  font-size: clamp(0.9375rem, 1.25vw, 2rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+}
+
+.why-plot {
+  position: absolute;
+  left: 6.415cqw;
+  top: 15.094cqw;
+  width: 88.679cqw;
+  height: 52.075cqw;
+}
+
+.why-plot-rule {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background-color: rgba(208, 208, 208, 0.2);
+}
+
+.why-bar {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  height: 15.217%;
+  padding-left: 2.979%;
+  overflow: hidden;
+  border-radius: 0 100px 100px 0;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 55.234%,
+    rgba(176, 176, 176, 0.01) 114.86%
+  );
+}
+
+.why-bar-label {
+  font-size: clamp(0.75rem, 0.9375vw, 1.5rem);
+  line-height: 1.78;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.why-axis {
+  position: absolute;
+  left: 6.415cqw;
+  top: 67.17cqw;
+  width: 84.34cqw;
+  height: auto;
+}
+
+.why-axis-bound {
+  position: absolute;
+  color: #717171;
+  font-size: clamp(0.6875rem, 0.9375vw, 1.5rem);
+  letter-spacing: 0.02em;
+}
+
+.why-axis-bound-min {
+  left: 6.792cqw;
+  top: 70.189cqw;
+}
+
+.why-axis-bound-max {
+  left: 89.057cqw;
+  top: 70.189cqw;
+}
+
+/* Domains card — Figma 530 x 167. */
+.why-card-domains {
+  aspect-ratio: 530 / 167;
+}
+
+.why-domains-inner {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7.547cqw;
+  padding-inline: 4.53%;
+}
+
+.why-domains-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2.642cqw;
+}
+
+.why-domains-item {
+  display: flex;
+  align-items: center;
+  gap: 2.642cqw;
+}
+
+.why-domain {
+  font-size: clamp(0.8125rem, 1.042vw, 1.667rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.why-domain-dot {
+  width: 1.887cqw;
+  height: 1.887cqw;
+  min-width: 5px;
+  min-height: 5px;
+}
+
+/* Phone + tablet composition (< `lg`, where the section is one column).
+   The card geometry above still scales with the card, but the type and the
+   gaps get their own comfortable scale here: big enough to read the figure
+   and labels on a small screen without the stretched single-column card
+   inflating them. Floors are the design's mobile sizes; the vw ramp carries
+   them up to — never past — the desktop values. Anything ≥1024px is left
+   exactly as designed. */
+@media (max-width: 1023px) {
+  #journey .why-heading {
+    font-size: clamp(2.75rem, 16.5vw, 4.5rem);
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+  }
+
+  #journey .why-pill {
+    font-size: clamp(0.9375rem, 1.5vw, 1rem);
+  }
+
+  /* One column below `lg` would otherwise stretch each card to the full
+     tablet width and blow the chart up. Hold it near the design's card
+     width and centre it; phones (≤600px) are already narrower. */
+  #journey .why-grid {
+    max-width: 37.5rem;
+    margin-inline: auto;
+    row-gap: clamp(1.25rem, 3.2vw, 1.5rem);
+  }
+
+  #journey .why-col {
+    gap: clamp(1.25rem, 3.2vw, 1.5rem);
+  }
+
+  .why-card-label,
+  .why-chart-title {
+    font-size: clamp(1rem, 2.2vw, 1.5rem);
+  }
+
+  .why-value-num {
+    font-size: clamp(4.5rem, 12vw, 7rem);
+  }
+
+  .why-value-suffix {
+    font-size: clamp(2.75rem, 7.5vw, 4.375rem);
+  }
+
+  .why-bar-label {
+    font-size: clamp(0.875rem, 1.8vw, 1.125rem);
+  }
+
+  .why-axis-bound {
+    font-size: clamp(0.75rem, 1.5vw, 1.125rem);
+  }
+
+  .why-domain {
+    font-size: clamp(0.9375rem, 1.9vw, 1.25rem);
+  }
+}
+
 /* The pill/CTA glow (`1px 1px 40px 1px rgba(255,255,255,0.2)`).
    Deliberately a plain class rather than Tailwind's `shadow-[var(...)]`:
    v3 reads a `var()` arbitrary shadow as a shadow *color* and produces

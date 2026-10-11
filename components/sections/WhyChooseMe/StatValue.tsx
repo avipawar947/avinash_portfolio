@@ -50,33 +50,11 @@ export default function StatValue({ value, suffix }: { value: string; suffix: st
   }, [value, prefersReducedMotion]);
 
   return (
-    <span
-      className="absolute flex items-end font-display font-medium text-[var(--color-text)]"
-      style={{
-        left: "calc(24 * var(--fig))",
-        bottom: "calc(24 * var(--fig))",
-        gap: "calc(12 * var(--fig))",
-      }}
-    >
-      <span
-        ref={ref}
-        aria-hidden="true"
-        style={{
-          fontSize: "max(3rem, calc(160 * var(--fig)))",
-          lineHeight: 0.875,
-          letterSpacing: "calc(3.2 * var(--fig))",
-        }}
-      >
+    <span className="why-value font-display font-medium text-[var(--color-text)]">
+      <span ref={ref} aria-hidden="true" className="why-value-num">
         {display}
       </span>
-      <span
-        aria-hidden="true"
-        style={{
-          fontSize: "max(1.875rem, calc(100 * var(--fig)))",
-          lineHeight: 1,
-          letterSpacing: "calc(2 * var(--fig))",
-        }}
-      >
+      <span aria-hidden="true" className="why-value-suffix">
         {suffix}
       </span>
       <span className="sr-only">{`${value}${suffix}`}</span>

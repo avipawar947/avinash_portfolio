@@ -57,65 +57,32 @@ export default function StatsGrid({
           paddingInline: "var(--gutter)",
         }}
       >
-        <span
-          className="inline-flex items-center justify-center rounded-[8px] border border-[rgba(224,224,224,0.1)] bg-[#0d0d0d] text-center font-semibold whitespace-nowrap text-[var(--color-text)]"
-          style={{
-            padding: "calc(10 * var(--fig))",
-            fontSize: "max(0.75rem, calc(16 * var(--fig)))",
-          }}
-        >
+        <span className="why-pill inline-flex items-center justify-center rounded-[8px] border border-[rgba(224,224,224,0.1)] bg-[#0d0d0d] text-center font-semibold whitespace-nowrap text-[var(--color-text)]">
           Why Choose Me
         </span>
 
         <h2
           id="journey-heading"
-          className="m-0 text-center font-display font-medium text-[var(--color-text)]"
-          style={{
-            marginTop: "var(--heading-gap)",
-            fontSize: "max(2.5rem, calc(160 * var(--fig)))",
-            lineHeight: 1.13,
-            letterSpacing: "calc(3.2 * var(--fig))",
-          }}
+          className="why-heading m-0 text-center font-display font-medium text-[var(--color-text)]"
         >
           Beyond The
           <br />
           Numbers.
         </h2>
 
-        <div
-          className="grid w-full grid-cols-1 lg:grid-cols-3"
-          style={{
-            marginTop: "calc(60 * var(--fig))",
-            gap: "clamp(1rem, calc(25 * var(--fig)), calc(25 * var(--fig)))",
-          }}
-        >
-          <div
-            className="flex flex-col"
-            style={{
-              gap: "clamp(1rem, calc(24 * var(--fig)), calc(24 * var(--fig)))",
-            }}
-          >
+        <div className="why-grid grid w-full grid-cols-1 lg:grid-cols-3">
+          <div className="why-col flex flex-col">
             {columnOne.map((stat) => (
               <StatCard key={stat._id} stat={stat} />
             ))}
           </div>
 
-          <div
-            className="flex flex-col"
-            style={{
-              gap: "clamp(1rem, calc(25 * var(--fig)), calc(25 * var(--fig)))",
-            }}
-          >
+          <div className="why-col flex flex-col">
             <ProjectMixCard bars={config.projectMix} />
             <DomainsCard domains={config.domains} />
           </div>
 
-          <div
-            className="flex flex-col"
-            style={{
-              gap: "clamp(1rem, calc(24 * var(--fig)), calc(24 * var(--fig)))",
-            }}
-          >
+          <div className="why-col flex flex-col">
             {columnThree.map((stat) => (
               <StatCard key={stat._id} stat={stat} />
             ))}
