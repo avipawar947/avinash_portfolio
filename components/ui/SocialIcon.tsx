@@ -37,18 +37,6 @@ export default function SocialIcon({
   iconAlt?: string;
 }) {
   const d = paths[platform];
-  const iconImageSize = {
-    // Backend-uploaded icon image — Figma: glyph box is 27x27 (50% of the 54x54 circle).
-    width: "max(1rem, calc(27 * var(--fig)))",
-    height: "max(1rem, calc(27 * var(--fig)))",
-  };
-  const glyphSize =
-    variant === "ghost"
-      ? {
-          width: "max(0.875rem, calc(19 * var(--fig)))",
-          height: "max(0.875rem, calc(19 * var(--fig)))",
-        }
-      : undefined;
 
   if (!d) return null;
   return (
@@ -60,17 +48,9 @@ export default function SocialIcon({
         "inline-flex items-center justify-center rounded-full transition-transform hover:scale-105",
         variant === "solid" && "h-12 w-12 bg-btn-gradient shadow-glow",
         variant === "ghost" &&
-          "border border-white/5 bg-gradient-to-b from-[rgba(19,19,19,0.1)] to-[rgba(44,44,44,0.1)]",
+          "social-ghost border border-white/5 bg-gradient-to-b from-[rgba(19,19,19,0.1)] to-[rgba(44,44,44,0.1)]",
         className,
       )}
-      style={
-        variant === "ghost"
-          ? {
-              width: "max(2.5rem, calc(54 * var(--fig)))",
-              height: "max(2.5rem, calc(54 * var(--fig)))",
-            }
-          : undefined
-      }
       aria-label={platform}
     >
       {iconUrl ? (
@@ -78,9 +58,8 @@ export default function SocialIcon({
         <img
           src={iconUrl}
           alt={iconAlt ?? platform}
-          className="text-white"
+          className="social-glyph-img text-white"
           style={{
-            ...iconImageSize,
             objectFit: "contain",
             display: "block",
             // Figma glyph is #FFFFFF — force uploaded icons to white.
@@ -92,10 +71,9 @@ export default function SocialIcon({
           viewBox="0 0 24 24"
           className={clsx(
             variant === "ghost"
-              ? "fill-white"
+              ? "social-glyph fill-white"
               : "h-[19px] w-[19px] fill-[#010101]",
           )}
-          style={glyphSize}
         >
           <path d={d} />
         </svg>

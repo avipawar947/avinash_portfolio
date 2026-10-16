@@ -19,6 +19,12 @@ const FALLBACK_TABS: ContactCTATab[] = [
  *
  * Images render full-size (object-contain inside the 614:376.62 frame) so
  * uploaded desktop/mobile/tablet mockups are never cropped.
+ *
+ * Sizing lives in `#contact` (app/globals.css) rather than inline so the
+ * mobile frame's tabs — three 100px cells on a 6px pitch filling the 313px
+ * column, a 2px indicator 4px under the row, and a full-bleed mockup — can
+ * override it below `lg`. At ≥1024px every rule below is the inline style
+ * it replaced.
  */
 export default function ContactTabs({ tabs }: { tabs: ContactCTATab[] }) {
   const safe = tabs.length ? tabs : FALLBACK_TABS;
@@ -29,12 +35,9 @@ export default function ContactTabs({ tabs }: { tabs: ContactCTATab[] }) {
     <div className="flex w-full flex-col items-center">
       {/* Tabs + mockup share one content-width wrapper so the image never
           spills wider than the tab section */}
-      <div className="flex w-max max-w-full flex-col items-center">
+      <div className="contact-tabs-wrap flex flex-col items-center">
         {/* --- Tab bar (Frame 95623) ------------------------------ */}
-        <div
-          className="flex flex-wrap items-center justify-center"
-          style={{ gap: "max(0.5rem, calc(40 * var(--fig)))" }}
-        >
+        <div className="contact-tabs-bar flex flex-wrap items-center justify-center">
           {safe.map((t, i) => {
             const isActive = i === active;
             return (
@@ -44,13 +47,8 @@ export default function ContactTabs({ tabs }: { tabs: ContactCTATab[] }) {
                 role="tab"
                 aria-selected={isActive}
                 onClick={() => setActive(i)}
-                className="relative flex items-center justify-center outline-none"
+                className="contact-tab relative flex items-center justify-center outline-none"
                 style={{
-                  padding:
-                    "max(5px, calc(8 * var(--fig))) max(10px, calc(40 * var(--fig)))",
-                  fontSize: "max(0.75rem, calc(16.14 * var(--fig)))",
-                  lineHeight: 1.2,
-                  letterSpacing: "0.01em",
                   fontWeight: isActive ? 700 : 500,
                   color: "#FFFFFF",
                   opacity: isActive ? 1 : 0.5,
@@ -60,12 +58,7 @@ export default function ContactTabs({ tabs }: { tabs: ContactCTATab[] }) {
                 {isActive && (
                   <motion.span
                     layoutId="contact-tab-indicator"
-                    className="absolute left-0 right-0 rounded-[3.23px] bg-white"
-                    style={{
-                      bottom: "calc(-1 * max(3px, calc(5 * var(--fig))))",
-                      height: "max(3px, calc(2.42 * var(--fig)))",
-                      boxShadow: "0 0 12px rgba(255,255,255,0.4)",
-                    }}
+                    className="contact-tab-indicator absolute left-0 right-0 rounded-[3.23px] bg-white"
                     transition={{ type: "spring", stiffness: 400, damping: 32 }}
                   />
                 )}
@@ -75,34 +68,14 @@ export default function ContactTabs({ tabs }: { tabs: ContactCTATab[] }) {
         </div>
 
         {/* Radial divider line under the indicator */}
-        <div
-          className="relative w-full"
-          style={{
-            height: "max(3px, calc(2.42 * var(--fig)))",
-            marginTop: "max(3px, calc(5 * var(--fig)))",
-          }}
-        >
-          <div
-            className="absolute inset-x-0"
-            style={{
-              top: "0.63px",
-              height: 1,
-              background:
-                "radial-gradient(closest-side, #FFFFFF 0%, rgba(255,255,255,0) 100%)",
-            }}
-          />
+        <div className="contact-tab-divider relative w-full">
+          <div className="contact-tab-line absolute inset-x-0" />
         </div>
 
         {/* --- Device mockup (Frame 95624 right) -------------------- */}
-        <div
-          className="relative mt-6 w-full lg:mt-[calc(40*var(--fig))]"
-          style={{
-            width: "calc(100% + max(1.5rem, calc(80 * var(--fig))))",
-            maxWidth: "100vw",
-          }}
-        >
+        <div className="contact-mockup-wrap relative mt-6 w-full lg:mt-[calc(40*var(--fig))]">
           <div
-            className="relative w-full overflow-hidden rounded-[16px] "
+            className="contact-mockup relative w-full overflow-hidden rounded-[16px]"
             style={{ aspectRatio: "614 / 376.62" }}
           >
             {current.imageUrl ? (

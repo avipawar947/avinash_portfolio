@@ -577,7 +577,7 @@
   margin: 0;
   font-size: clamp(0.9375rem, 1.25vw, 2rem);
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.85;
   letter-spacing: 0.02em;
   text-transform: capitalize;
 }
@@ -594,7 +594,7 @@
   bottom: 4.53cqw;
   display: flex;
   align-items: flex-end;
-  gap: 2.264cqw;
+  gap: 3.264cqw;
 }
 
 .why-value-num {
@@ -713,7 +713,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 2.642cqw;
+  gap: 1.642cqw;
 }
 
 .why-domains-item {
@@ -748,7 +748,7 @@
   #journey .why-heading {
     font-size: clamp(2.75rem, 16.5vw, 4.5rem);
     line-height: 1.15;
-    letter-spacing: 0.04em;
+    /* letter-spacing: 0.04em; */
   }
 
   #journey .why-pill {
@@ -770,7 +770,7 @@
 
   .why-card-label,
   .why-chart-title {
-    font-size: clamp(1rem, 2.2vw, 1.5rem);
+    font-size: clamp(1.3rem, 2.2vw, 1.5rem);
   }
 
   .why-value-num {
@@ -1031,6 +1031,996 @@
     font-size: clamp(2.5rem, 16.3vw, 4rem);
     line-height: 1.25;
     letter-spacing: 0.04em;
+  }
+}
+
+/* --- My Journey (About) --------------------------------------------------
+   Two canvases, like the rest of the page. Desktop is the 1920 x 1041 frame
+   (node 1:395/1:396): a 1365px copy column, 160px heading, 32px/56px copy.
+   Below `lg` the section switches to the supplied 393 x 1260 mobile frame:
+   a 68 x 40 "About" pill at y=80, a 64px/80px heading 20px under it, and
+   the copy as a 353px column of 20px Semibold rows on a 40px pitch (20px
+   leading gap, `line-height: 2` reproduces the pitch exactly), with the
+   design's bottom fade (Rectangle 7) dissolving the faint tail of the
+   paragraph into the background.
+
+   The values that used to sit inline in MyJourney.tsx live here so the
+   narrow layout can override them; at ≥1024px every rule below is exactly
+   the inline style it replaced. Ramps hit the mobile frame's values at
+   393px and cap just above them, so a tablet gets the same composition
+   at a comfortable reading size instead of a shrunken phone one. */
+
+#about {
+  padding-block: var(--section-pad);
+}
+
+#about .about-eyebrow {
+  padding: calc(10 * var(--fig));
+  font-size: max(0.75rem, calc(16 * var(--fig)));
+}
+
+#about .about-heading {
+  margin-top: var(--heading-gap);
+  font-size: max(2.5rem, calc(160 * var(--fig)));
+  line-height: 1.1;
+  letter-spacing: calc(3.2 * var(--fig));
+}
+
+#about .about-copy {
+  margin-top: calc(52 * var(--fig));
+  width: min(100%, calc(1365 * var(--fig)));
+  font-size: max(0.9375rem, calc(32 * var(--fig)));
+  line-height: 2;
+  letter-spacing: calc(0.64 * var(--fig));
+}
+
+#about .about-line-gradient {
+  line-height: 2;
+}
+
+#about .about-line-muted {
+  line-height: 1.85;
+}
+
+/* Phone + tablet composition (the 393px mobile frame, ramped for tablets).
+   Below `lg` the authored lines already wrap into a flowing paragraph
+   (`lg:whitespace-nowrap` is off), so only the type scale, rhythm and the
+   bottom fade change here. */
+@media (max-width: 1023px) {
+  /* 80px above/below in the design frame; floors like `--section-pad`. */
+  #about {
+    padding-block: max(3.5rem, calc(80 * var(--fig-m)));
+  }
+
+  /* Frame: 68 x 40, 8px/12px padding, 14px label. */
+  #about .about-eyebrow {
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: clamp(0.875rem, 3.56vw, 1rem);
+  }
+
+  /* Frame: 64px/80px, 0.04em — capped at the design size, so a tablet
+     shows the phone composition's heading, not a blown-up one. */
+  #about .about-heading {
+    margin-top: 1.25rem;
+    font-size: clamp(2.5rem, 16.3vw, 4rem);
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+  }
+
+  /* Frame: 353px column (the 393px frame minus its 20px gutters, which
+     `--gutter`'s 1.25rem floor already provides), 20px/40px rows. The
+     width caps at 35rem so a tablet gets a centred reading measure
+     rather than a 900px-wide paragraph. */
+  #about .about-copy {
+    margin-top: 2rem;
+    width: min(100%, 35rem);
+    font-size: clamp(1rem, 5.09vw, 1.5rem);
+    line-height: 2;
+    letter-spacing: 0.01em;
+  }
+
+  /* Uniform 40px pitch between every wrapped row, including the muted
+     lines (desktop keeps 1.85 on those). */
+  #about .about-line-gradient,
+  #about .about-line-muted {
+    line-height: 2;
+  }
+
+  /* Rectangle 7 — the design's bottom fade, washing the low-opacity tail
+     of the paragraph into the section background. Paints above the copy
+     (`::after` is the section's last child, after the positioned inner
+     container) exactly as the frame composes it. */
+  #about::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(80 * var(--fig-m));
+    height: calc(280 * var(--fig-m));
+    background: linear-gradient(
+      180deg,
+      rgba(11, 11, 11, 0) 55.9%,
+      #0b0b0b 91.43%
+    );
+    pointer-events: none;
+  }
+}
+
+/* --- Tools (What I Work With) --------------------------------------------
+   Two canvases, like the rest of the page. Desktop is the 1920px frame: the
+   146 x 41 pill, the 160px heading, the 32px/48px intro, and the 1416 x 485
+   constellation (rendered in ToolsGrid). Below `lg` the section switches to
+   the supplied 393 x 1671 mobile frame: a 146 x 40 pill at y=80, the 64px/
+   80px heading, the intro re-split into three 20px rows, and then the same
+   constellation stood upright — Figma's mobile tile offsets, the hub at the
+   plot's centre, the two Vector 469/470 curves turned 90°, all over the
+   frame's 100px grid whose edges the Rectangle 6/7/8 fades wash out.
+
+   `--tools-u` is one design pixel of that frame. It is capped at 1.3px so a
+   tablet shows the phone composition at a comfortable size instead of a
+   blown-up one; the type above the plot is capped at the same design sizes
+   the other narrow layouts use, so the two do not drift apart.
+
+   Desktop sizing was inline in ToolsGrid.tsx and lives here now so the
+   narrow layout can override it (identical values at ≥1024px). */
+
+#tools {
+  padding-block: var(--section-pad);
+}
+
+#tools .tools-eyebrow {
+  padding: calc(10 * var(--fig));
+  font-size: max(0.75rem, calc(16 * var(--fig)));
+}
+
+#tools .tools-heading {
+  margin-top: var(--heading-gap);
+  font-size: max(2.5rem, calc(160 * var(--fig)));
+  line-height: 1.1;
+  letter-spacing: calc(3.2 * var(--fig));
+}
+
+#tools .tools-copy {
+  margin-top: var(--heading-gap);
+  font-size: max(1rem, calc(32 * var(--fig)));
+  line-height: 1.75;
+  letter-spacing: calc(0.64 * var(--fig));
+}
+
+/* The mobile intro rows are only ever shown below `lg`. */
+#tools .tools-copy-mobile,
+#tools .tools-network-mobile {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  /* One design pixel of the 393px frame, capped for tablets. */
+  #tools {
+    --tools-u: min(calc(100vw / 393), 1.3px);
+    /* 80px above (y=80 pill) and the frame's 278px of tail below the plot. */
+    padding-block: max(3.5rem, calc(80 * var(--fig-m)))
+      max(3.5rem, calc(278 * var(--fig-m)));
+  }
+
+  /* Frame: 146 x 40, 8px/12px padding, 14px label. */
+  #tools .tools-eyebrow {
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: clamp(0.875rem, 3.56vw, 1rem);
+  }
+
+  /* Frame: 64px/80px, 0.04em — capped at the design size. */
+  #tools .tools-heading {
+    margin-top: 1.25rem;
+    font-size: clamp(2.5rem, 16.3vw, 4rem);
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+  }
+
+  #tools .tools-copy {
+    margin-top: 1rem;
+    width: min(100%, 35rem);
+    font-size: clamp(1rem, 5.09vw, 1.5rem);
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  /* Frame: three 32px rows on a 40px pitch, so 8px between them. */
+  #tools .tools-copy-mobile {
+    display: block;
+  }
+
+  #tools .tools-mobile-line {
+    display: block;
+  }
+
+  #tools .tools-mobile-line + .tools-mobile-line {
+    margin-top: 0.5rem;
+  }
+
+  /* ── Constellation ─────────────────────────────────────────────────── */
+  #tools .tools-network-mobile {
+    display: block;
+    position: relative;
+    width: calc(345 * var(--tools-u));
+    height: calc(1005 * var(--tools-u));
+    margin-top: 2.5rem;
+    margin-inline: auto;
+  }
+
+  #tools .tools-curve {
+    position: absolute;
+    width: calc(349.07 * var(--tools-u));
+    height: calc(241.72 * var(--tools-u));
+    /* The quarter-turn / mirror below pivots on the artwork's own origin,
+       so the left/top values are the transformed corner, not the centre. */
+    transform-origin: 0 0;
+  }
+
+  /* Vector 469 — the left curve, quarter-turned. Its hub end lands on the
+     emblem's top-centre (≈183.2, 415.89) against the hub at (184.33, 415.89). */
+  #tools .tools-curve-a {
+    left: calc(308.542 * var(--tools-u));
+    top: calc(66.827 * var(--tools-u));
+    transform: rotate(90deg);
+  }
+
+  /* Vector 470 — the same curve mirrored and turned (Figma's
+     matrix(0,-1,-1,0,0,0)), so it hangs below on the hub's bottom-centre. */
+  #tools .tools-curve-b {
+    left: calc(308.542 * var(--tools-u));
+    top: calc(939.135 * var(--tools-u));
+    transform: matrix(0, -1, -1, 0, 0, 0);
+  }
+
+  #tools .tools-hub-mobile {
+    left: calc(97.59712 * var(--tools-u));
+    top: calc(415.89322 * var(--tools-u));
+  }
+
+  /* ── Backdrop: the frame's 100px grid + its three fades ────────────── */
+  #tools .tools-grid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    /* Verticals land on the tile's right edge (x=100, 200, …), horizontals
+       on its top edge offset 80px (y=80, 180, …) — the frame's line plan. */
+    background-image: linear-gradient(
+        to right,
+        transparent calc(100% - 1px),
+        rgba(208, 208, 208, 0.03) calc(100% - 1px)
+      ),
+      linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 1px, transparent 1px);
+    background-size: calc(100 * var(--tools-u)) calc(100 * var(--tools-u));
+    background-position: 0 calc(80 * var(--tools-u));
+  }
+
+  #tools .tools-grid-top {
+    top: 0;
+    height: calc(1180 * var(--tools-u));
+  }
+
+  #tools .tools-grid-bottom {
+    top: calc(1391 * var(--tools-u));
+    bottom: 0;
+  }
+
+  #tools .tools-fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: calc(220 * var(--tools-u));
+    background: linear-gradient(
+      180deg,
+      rgba(11, 11, 11, 0) 55.9%,
+      #0b0b0b 91.43%
+    );
+  }
+
+  /* Rectangle 6 — flipped, so it opens opaque at the very top. */
+  #tools .tools-fade-top {
+    top: 0;
+    transform: scaleY(-1);
+  }
+
+  /* Rectangle 7 — fades the grid away under the intro. */
+  #tools .tools-fade-mid {
+    top: calc(161 * var(--tools-u));
+  }
+
+  /* Rectangle 8 — flipped, masking the second grid's leading edge. */
+  #tools .tools-fade-bottom {
+    top: calc(1391 * var(--tools-u));
+    transform: scaleY(-1);
+  }
+}
+
+/* --- Contact CTA ("Let's Talk") -------------------------------------------
+   Two canvases, like the rest of the page. Desktop is the 1920px frame: the
+   1720 x 656 card (radius 16), the 146 x 41 pill, the 120px heading, the
+   28px/40px subtitle and the 614:376.62 mockup on the right. Below `lg` the
+   card switches to the supplied 393px mobile frame: a 353px card (20px
+   gutters) with an 8px radius, 80px of air above and below, everything
+   left-flushed to the 20px inner gutter — a 113 x 40 pill at y=80, the
+   64px/80px heading 20px under it, the subtitle re-split into three 20px
+   rows on a 40px pitch, the button row at y=375, the tabs at y=523 and the
+   mockup 24px under them.
+
+   `--contact-u` is one design pixel of that frame, capped at 1.3px so a
+   tablet shows the phone composition at a comfortable size instead of a
+   blown-up one; type uses `clamp()` ramps that hit the frame's sizes at
+   393px and cap there, matching #about and #tools.
+
+   Desktop sizing was inline in ContactCTA/ContactTabs and lives here now so
+   the narrow layout can override it (identical values at ≥1024px). */
+
+#contact {
+  padding-block: var(--section-pad);
+}
+
+#contact .contact-inner {
+  max-width: calc(1720 * var(--fig));
+  padding-inline: max(1rem, calc(20 * var(--fig)));
+}
+
+#contact .contact-card {
+  border: 1px solid rgba(107, 102, 102, 0.15);
+  border-radius: 16px;
+  background: #0d0d0d;
+  padding: max(2.25rem, calc(72 * var(--fig)))
+    max(1.5rem, calc(80 * var(--fig)));
+}
+
+#contact .contact-eyebrow {
+  padding: calc(10 * var(--fig));
+  font-size: max(0.75rem, calc(16 * var(--fig)));
+}
+
+#contact .contact-heading {
+  margin-top: max(1.25rem, calc(32 * var(--fig)));
+  font-size: max(2.5rem, calc(120 * var(--fig)));
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  font-weight: 510;
+}
+
+#contact .contact-copy {
+  margin-top: max(1.25rem, calc(32 * var(--fig)));
+  width: min(100%, calc(822 * var(--fig)));
+  font-size: max(1.125rem, calc(28 * var(--fig)));
+  line-height: max(1.75rem, calc(40 * var(--fig)));
+  letter-spacing: 0.02em;
+  font-weight: 590;
+}
+
+#contact .contact-line-muted {
+  opacity: 0.3;
+}
+
+#contact .contact-actions {
+  margin-top: max(2.5rem, calc(56 * var(--fig)));
+  gap: max(1rem, calc(16 * var(--fig)));
+}
+
+#contact .contact-cta {
+  font-family: 'Inter', -apple-system, Helvetica, Arial, sans-serif;
+  font-size: max(0.75rem, calc(18 * var(--fig)));
+  line-height: max(1rem, calc(22 * var(--fig)));
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  padding: max(0.6rem, calc(10 * var(--fig)))
+    max(1.25rem, calc(32 * var(--fig)));
+}
+
+/* SocialIcon ships `h-12 w-12`; this wins on specificity and pins the
+   frame's 40px circle, then scales it to the mobile frame's 48 below. */
+#contact .contact-linkedin {
+  width: 40px;
+  height: 40px;
+}
+
+/* ── Device tabs (desktop parity) ──────────────────────────────────────── */
+#contact .contact-tabs-wrap {
+  width: max-content;
+  max-width: 100%;
+}
+
+#contact .contact-tabs-bar {
+  gap: max(0.5rem, calc(40 * var(--fig)));
+}
+
+#contact .contact-tab {
+  padding: max(5px, calc(8 * var(--fig))) max(10px, calc(40 * var(--fig)));
+  font-size: max(0.75rem, calc(16.14 * var(--fig)));
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+#contact .contact-tab-indicator {
+  bottom: calc(-1 * max(3px, calc(5 * var(--fig))));
+  height: max(3px, calc(2.42 * var(--fig)));
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+#contact .contact-tab-divider {
+  height: max(3px, calc(2.42 * var(--fig)));
+  margin-top: max(3px, calc(5 * var(--fig)));
+}
+
+#contact .contact-tab-line {
+  top: 0.63px;
+  height: 1px;
+  background: radial-gradient(
+    closest-side,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+#contact .contact-mockup-wrap {
+  width: calc(100% + max(1.5rem, calc(80 * var(--fig))));
+  max-width: 100vw;
+}
+
+/* Phone + tablet composition (the 393px card, ramped for tablets). The
+   copy column and button row stay left-flushed the way the frame composes
+   them; the tabs and mockup below stretch to the column instead of sitting
+   at their phone widths, so a tablet reads the same layout, not a shrunken
+   card floating in a wide one. */
+@media (max-width: 1023px) {
+  #contact {
+    --contact-u: min(calc(100vw / 393), 1.3px);
+  }
+
+  /* 393 frame - 2 x 20px gutter = the 353px card. */
+  #contact .contact-inner {
+    /* padding-inline: calc(20 * var(--contact-u)); */
+  }
+
+  /* Frame: 8px radius, 20px sides, 80px above the pill and below the
+     mockup. */
+  #contact .contact-card {
+    border-radius: calc(8 * var(--contact-u));
+    padding: max(2.5rem, calc(80 * var(--contact-u)))
+      calc(20 * var(--contact-u));
+  }
+
+  /* Frame: 113 x 40, 8px/12px padding, 14px label. */
+  #contact .contact-eyebrow {
+    min-height: calc(40 * var(--contact-u));
+    padding: calc(8 * var(--contact-u)) calc(12 * var(--contact-u));
+    font-size: clamp(0.875rem, 3.56vw, 1rem);
+  }
+
+  /* Frame: 64px/80px, 0.04em, 20px under the pill — capped at the design
+     size, so a tablet shows the phone composition's heading. */
+  #contact .contact-heading {
+    margin-top: calc(20 * var(--contact-u));
+    font-size: clamp(2.5rem, 16.3vw, 4rem);
+    line-height: 1.25;
+    letter-spacing: 0.04em;
+  }
+
+  /* Frame: 313px column (the card's inner measure), 20px/32px rows. */
+  #contact .contact-copy {
+    margin-top: calc(16 * var(--contact-u));
+    width: min(100%, 35rem);
+    font-size: clamp(1rem, 5.09vw, 1.5rem);
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+
+  /* Frame: three 32px rows on a 40px pitch, so 8px between them. */
+  #contact .contact-copy-mobile .contact-mline {
+    display: block;
+  }
+
+  #contact .contact-copy-mobile .contact-mline + .contact-mline {
+    margin-top: calc(8 * var(--contact-u));
+  }
+
+  /* The two tails are flat #B0B0B0 at 25%, not the desktop's 30%. */
+  #contact .contact-line-muted {
+    opacity: 0.25;
+  }
+
+  /* Frame: button row at y=375, i.e. 27px under the copy's last row. */
+  #contact .contact-actions {
+    margin-top: calc(27 * var(--contact-u));
+    gap: calc(16 * var(--contact-u));
+  }
+
+  /* Frame: 138 x 48 pill, 18px/22px Inter. */
+  #contact .contact-cta {
+    min-height: calc(48 * var(--contact-u));
+    font-size: clamp(0.875rem, 4.58vw, 1.125rem);
+    line-height: 1.22;
+    padding: calc(13 * var(--contact-u)) calc(16 * var(--contact-u));
+  }
+
+  /* Frame: 48px circle. */
+  #contact .contact-linkedin {
+    width: calc(48 * var(--contact-u));
+    height: calc(48 * var(--contact-u));
+  }
+
+  /* Frame: the tabs sit 100px under the button row. */
+  #contact .contact-body {
+    gap: calc(100 * var(--contact-u));
+  }
+
+  /* ── Device tabs ────────────────────────────────────────────────────
+     Frame 95648 at y=523: a 313px column, three 100px cells on a 6px
+     pitch (which is exactly the 313px measure), a 2px indicator 4px
+     below the row, and the mockup 24px under that. */
+  #contact .contact-tabs-wrap {
+    width: 100%;
+  }
+
+  #contact .contact-tabs-bar {
+    width: 100%;
+    gap: calc(6 * var(--contact-u));
+  }
+
+  #contact .contact-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: calc(36 * var(--contact-u));
+    padding: calc(8 * var(--contact-u)) calc(20 * var(--contact-u));
+    font-size: clamp(0.875rem, 3.56vw, 1rem);
+    line-height: 1.36;
+  }
+
+  #contact .contact-tab-indicator {
+    bottom: calc(-6 * var(--contact-u));
+    height: calc(2 * var(--contact-u));
+  }
+
+  #contact .contact-tab-divider {
+    height: calc(2 * var(--contact-u));
+    margin-top: calc(4 * var(--contact-u));
+  }
+
+  #contact .contact-tab-line {
+    top: calc(0.5 * var(--contact-u));
+    height: 1px;
+  }
+
+  #contact .contact-mockup-wrap {
+    width: 100%;
+    max-width: 100%;
+    margin-top: calc(24 * var(--contact-u));
+  }
+}
+
+/* --- "Beyond the Pixels" --------------------------------------------------
+   Two canvases, like the rest of the page. Desktop is the 1920 × 1157 frame:
+   the 160px two-line heading and six 380 × 372 film frames on a 416px pitch.
+   Below `lg` the section switches to the supplied 393 × 840 mobile frame: a
+   148 × 40 pill at y=160, the heading hand-broken into "The Person" /
+   "Behind the" / "Work" — three centred 64px rows on an 84px pitch, 20px
+   under the pill — and the strip at y=508 as six 224 × 210 frames on a 24px
+   gap, all over the frame's 100px grid whose edges the Rectangle 6/7/9
+   fades wash out.
+
+   `--life-u` is one design pixel of that frame, capped at 1.3px so a tablet
+   shows the phone composition at a comfortable size instead of a blown-up
+   one; type uses the same `clamp()` ramps as #about and #tools.
+
+   Desktop sizing was inline in LifeBehindText.tsx and lives here now so the
+   narrow layout can override it (identical values at ≥1024px). */
+
+#life-behind {
+  padding-block: var(--section-pad);
+}
+
+#life-behind .life-eyebrow {
+  padding: calc(10 * var(--fig));
+  font-size: max(0.75rem, calc(16 * var(--fig)));
+}
+
+#life-behind .life-heading {
+  margin-top: var(--heading-gap);
+  width: min(100%, calc(1230 * var(--fig)));
+  font-size: max(2.5rem, calc(160 * var(--fig)));
+  line-height: 1.25;
+  letter-spacing: calc(3.2 * var(--fig));
+}
+
+#life-behind .life-track {
+  margin-top: calc(60 * var(--fig));
+}
+
+#life-behind .life-strip {
+  gap: calc(36 * var(--fig));
+  padding-right: calc(36 * var(--fig));
+}
+
+#life-behind .life-card {
+  width: max(13rem, calc(380 * var(--fig)));
+  aspect-ratio: 380 / 372;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(19, 19, 19, 0.8) 0%,
+    rgba(44, 44, 44, 0.8) 50.79%,
+    rgba(19, 19, 19, 0.8) 96.159%
+  );
+}
+
+/* Photo inset 332 × 356 at (24, 8) of the 380 × 372 card. */
+#life-behind .life-photo {
+  left: 6.31579%;
+  top: 2.15054%;
+  width: 87.36842%;
+  height: 95.69892%;
+}
+
+/* Sprocket 16px of the 380px card. */
+#life-behind .life-sprocket {
+  width: 4.21053%;
+}
+
+/* The backdrop only exists below `lg`. */
+#life-behind .life-grid,
+#life-behind .life-fade {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  /* 160px of air above the pill, the frame's 122px of tail below the strip. */
+  #life-behind {
+    --life-u: min(calc(100vw / 393), 1.3px);
+    padding-block: max(3.5rem, calc(160 * var(--life-u)))
+      max(3.5rem, calc(122 * var(--life-u)));
+  }
+
+  /* Frame: 148 x 40, 8px/12px padding, 14px label. */
+  #life-behind .life-eyebrow {
+    min-height: calc(40 * var(--life-u));
+    padding: calc(8 * var(--life-u)) calc(12 * var(--life-u));
+    font-size: clamp(0.875rem, 3.56vw, 1rem);
+  }
+
+  /* Frame: 64px/80px on an 84px pitch (1.3125), 0.04em, 20px under the
+     pill. The `<br className="lg:hidden">` already forces the frame's
+     three rows, so the box just has to be wide enough to hold them. */
+  #life-behind .life-heading {
+    margin-top: calc(20 * var(--life-u));
+    width: min(100%, 35rem);
+    font-size: clamp(2.5rem, 16.3vw, 4rem);
+    line-height: 1.3125;
+    letter-spacing: 0.04em;
+  }
+
+  /* Frame: the strip sits 40px under the heading's last row. */
+  #life-behind .life-track {
+    margin-top: calc(40 * var(--life-u));
+    margin-left: var(--gutter);
+  }
+
+  /* Frame: 24px between cards (and the same trailing gap that stitches
+     the two copies into one seamless loop). */
+  #life-behind .life-strip {
+    gap: calc(24 * var(--life-u));
+    padding-right: calc(24 * var(--life-u));
+  }
+
+  /* Frame: 224 × 210 film frames. */
+  #life-behind .life-card {
+    width: calc(224 * var(--life-u));
+    aspect-ratio: 224 / 210;
+  }
+
+  /* Photo inset 184 × 202 at (20, 4) of the 224 × 210 card. */
+  #life-behind .life-photo {
+    left: 8.92857%;
+    top: 1.90476%;
+    width: 82.14286%;
+    height: 96.19048%;
+  }
+
+  /* Sprocket 16px of the 224px card. */
+  #life-behind .life-sprocket {
+    width: 7.14286%;
+  }
+
+  /* ── Backdrop: the frame's 100px grid + its three fades ──────────── */
+  #life-behind .life-grid {
+    display: block;
+    position: absolute;
+    inset: 0;
+    /* Verticals land on x=100, 200, …, horizontals on y=80, 180, … — the
+       frame's line plan, same construction as the tools backdrop. */
+    background-image: linear-gradient(
+        to right,
+        transparent calc(100% - 1px),
+        rgba(208, 208, 208, 0.03) calc(100% - 1px)
+      ),
+      linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 1px, transparent 1px);
+    background-size: calc(100 * var(--life-u)) calc(100 * var(--life-u));
+    background-position: 0 calc(80 * var(--life-u));
+  }
+
+  #life-behind .life-fade {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(11, 11, 11, 0) 55.9%,
+      #0b0b0b 91.43%
+    );
+  }
+
+  /* Rectangle 6 — flipped, so it opens opaque at the very top. */
+  #life-behind .life-fade-top {
+    top: 0;
+    height: calc(220 * var(--life-u));
+    transform: scaleY(-1);
+  }
+
+  /* Rectangle 7 — fades the grid away behind the heading. */
+  #life-behind .life-fade-mid {
+    top: calc(322 * var(--life-u));
+    height: calc(169 * var(--life-u));
+  }
+
+  /* Rectangle 9 — flipped, washing the strip's leading grid edge out. */
+  #life-behind .life-fade-bottom {
+    top: calc(660 * var(--life-u));
+    height: calc(220 * var(--life-u));
+    transform: scaleY(-1);
+    background: linear-gradient(
+      180deg,
+      rgba(11, 11, 11, 0) 51.92%,
+      #0b0b0b 91.43%
+    );
+  }
+}
+
+/* --- Footer --------------------------------------------------------------
+   Two canvases, like the rest of the page. Desktop is the 1920 frame:
+   social icons on the right of the logo row, the dashed rule under them,
+   then copyright (left) and Privacy/Cookies (right).
+
+   Below `lg` the section switches to the supplied 393 x 530 mobile frame:
+   everything centred and stacked at the frame's exact tops — logo row 80,
+   role tags 144, "Mumbai, India" on its own line at 172, social circles
+   275, Privacy/Cookies 369, dashed rule 429, copyright 470 — with 80/40
+   of air top and bottom (80 + 40 + 24 + 20 + 8 + 20 + 83 + 54 + 40 + 20 +
+   40 + 1 + 40 + 20 + 40 = 530). Those gaps are the frame's, expressed in
+   `--footer-u`, one design pixel of the 393 canvas capped at 1.3px so a
+   tablet shows the same composition at a comfortable size.
+
+   The desktop column sits on an explicit grid so the mobile frame can
+   re-order the same four blocks (links -> rule -> copyright) by stacking
+   them; at >=1024px it lays out exactly as the old flex column did.
+
+   Sizes that the narrow layout overrides — logo, wordmark, tags, links,
+   copyright, social circles and glyphs — are classes here instead of
+   inline styles for the same reason: an inline `style` always beats a
+   media query. */
+
+.footer-root {
+  padding-block: max(2rem, calc(43 * var(--fig)));
+}
+
+.footer-root .footer-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  max-width: var(--container-max);
+  padding-inline: max(1.5rem, calc(100 * var(--fig)));
+}
+
+.footer-root .footer-top {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.footer-root .footer-divider {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin-top: max(1.5rem, calc(40 * var(--fig)));
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.footer-root .footer-copy {
+  grid-column: 1;
+  grid-row: 3;
+  margin-top: max(1.5rem, calc(40 * var(--fig)));
+  font-size: max(0.75rem, calc(14 * var(--fig)));
+  line-height: max(0.875rem, calc(20 * var(--fig)));
+}
+
+.footer-root .footer-links {
+  grid-column: 2;
+  grid-row: 3;
+  justify-self: end;
+  align-self: center;
+  margin-top: max(1.5rem, calc(40 * var(--fig)));
+  gap: max(0.75rem, calc(16 * var(--fig)));
+  font-size: max(0.75rem, calc(14 * var(--fig)));
+  line-height: max(0.875rem, calc(20 * var(--fig)));
+}
+
+.footer-root .footer-socials--desktop {
+  display: flex;
+  align-items: center;
+  margin-top: max(1rem, calc(22 * var(--fig)));
+  gap: max(0.5rem, calc(18.78 * var(--fig)));
+}
+
+.footer-root .footer-socials--mobile {
+  display: none;
+}
+
+.footer-root .footer-col {
+  gap: max(0.75rem, calc(16 * var(--fig)));
+}
+
+.footer-root .footer-brand {
+  gap: max(0.25rem, calc(4 * var(--fig)));
+}
+
+.footer-root .footer-logo {
+  width: max(1.75rem, calc(48 * var(--fig)));
+  height: auto;
+}
+
+.footer-root .footer-wordmark {
+  font-size: max(0.75rem, calc(16 * var(--fig)));
+  line-height: max(0.875rem, calc(20 * var(--fig)));
+  letter-spacing: 0.02em;
+}
+
+.footer-root .footer-tags {
+  gap: max(0.375rem, calc(8 * var(--fig)));
+  font-size: max(0.75rem, calc(16 * var(--fig)));
+  line-height: max(0.875rem, calc(20 * var(--fig)));
+  color: #ffffff;
+}
+
+.footer-root .footer-dot {
+  width: max(0.25rem, calc(4 * var(--fig)));
+  height: max(0.25rem, calc(4 * var(--fig)));
+}
+
+/* Social circle (ghost variant) + glyph — Figma 54x54, glyph 27x27. */
+.social-ghost {
+  width: max(2.5rem, calc(54 * var(--fig)));
+  height: max(2.5rem, calc(54 * var(--fig)));
+}
+
+.social-ghost .social-glyph {
+  width: max(0.875rem, calc(19 * var(--fig)));
+  height: max(0.875rem, calc(19 * var(--fig)));
+}
+
+.social-glyph-img {
+  width: max(1rem, calc(27 * var(--fig)));
+  height: max(1rem, calc(27 * var(--fig)));
+}
+
+@media (max-width: 1023px) {
+  .footer-root {
+    --footer-u: min(calc(100vw / 393), 1.3px);
+    padding-block: calc(80 * var(--footer-u)) calc(40 * var(--footer-u));
+  }
+
+  .footer-root .footer-inner {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(393 * var(--footer-u));
+    padding-inline: calc(20 * var(--footer-u));
+  }
+
+  .footer-root .footer-top {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .footer-root .footer-col {
+    align-items: center;
+    gap: calc(24 * var(--footer-u));
+  }
+
+  .footer-root .footer-brand {
+    gap: calc(4 * var(--footer-u));
+  }
+
+  .footer-root .footer-logo {
+    width: calc(48 * var(--footer-u));
+    height: calc(40 * var(--footer-u));
+    object-fit: contain;
+  }
+
+  .footer-root .footer-wordmark {
+    font-size: calc(16 * var(--footer-u));
+    line-height: calc(20 * var(--footer-u));
+  }
+
+  /* Two lines: role tags + dot, then the location on its own. */
+  .footer-root .footer-tags {
+    justify-content: center;
+    row-gap: calc(8 * var(--footer-u));
+    gap: calc(8 * var(--footer-u));
+    font-size: calc(14 * var(--footer-u));
+    line-height: calc(20 * var(--footer-u));
+  }
+
+  .footer-root .footer-loc {
+    flex-basis: 35%;
+  }
+
+  .footer-root .footer-loc-dot {
+    display: none;
+  }
+
+  .footer-root .footer-dot {
+    width: calc(4 * var(--footer-u));
+    height: calc(4 * var(--footer-u));
+  }
+
+  .footer-root .footer-socials--desktop {
+    display: none;
+  }
+
+  .footer-root .footer-socials--mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: calc(83 * var(--footer-u));
+    gap: calc(18.78 * var(--footer-u));
+  }
+
+  /* The frame runs LinkedIn, Behance, Gmail (desktop runs Gmail second). */
+  .footer-root .footer-social--linkedin {
+    order: 0;
+  }
+
+  .footer-root .footer-social--behance {
+    order: 1;
+  }
+
+  .footer-root .footer-social--gmail {
+    order: 2;
+  }
+
+  .footer-root .footer-links {
+    justify-content: center;
+    margin-top: calc(40 * var(--footer-u));
+    gap: calc(8 * var(--footer-u));
+    font-size: calc(14 * var(--footer-u));
+    line-height: calc(20 * var(--footer-u));
+  }
+
+  .footer-root .footer-divider {
+    margin-top: calc(40 * var(--footer-u));
+  }
+
+  .footer-root .footer-copy {
+    margin-top: calc(40 * var(--footer-u));
+    font-size: calc(14 * var(--footer-u));
+    line-height: calc(20 * var(--footer-u));
+    text-align: center;
+  }
+
+  .footer-root .social-ghost {
+    width: calc(54 * var(--footer-u));
+    height: calc(54 * var(--footer-u));
+  }
+
+  .footer-root .social-ghost .social-glyph {
+    width: calc(27 * var(--footer-u));
+    height: calc(27 * var(--footer-u));
+  }
+
+  .footer-root .social-glyph-img {
+    width: calc(27 * var(--footer-u));
+    height: calc(27 * var(--footer-u));
   }
 }
 

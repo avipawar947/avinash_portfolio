@@ -6,17 +6,6 @@ import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
 import { useIsomorphicLayoutEffect } from "@/lib/hooks/useIsomorphicLayoutEffect";
 import type { LifeBehindTextItemContent } from "@/types/content";
 
-const CARD = { width: 380, height: 372, pitch: 416 } as const;
-
-const PHOTO_INSET = {
-  left: 24,
-  top: 8,
-  width: 332,
-  height: 356,
-} as const;
-
-const SPROCKET_WIDTH = 16;
-
 /**
  * "Beyond the Pixels" — Figma node 1:410 (1920 × 1157).
  *
@@ -29,6 +18,13 @@ const SPROCKET_WIDTH = 16;
  * loop is seamless — the same construction as the client marquee.
  *
  * Images come from the backend (LifeBehindTextItem collection).
+ *
+ * Below `lg` the section switches to the supplied 393 × 840 mobile frame:
+ * a 148 × 40 pill at y=160, the heading hand-broken into its three 64px
+ * rows, six 224 × 210 cards on a 24px gap at y=508, and the frame's grid
+ * behind them washed by its three fades. Sizing lives in `#life-behind`
+ * (app/globals.css) so the narrow layout can override it; at ≥1024px every
+ * rule there is exactly the inline style it replaced.
  */
 export default function LifeBehindText({
   items,
@@ -39,7 +35,6 @@ export default function LifeBehindText({
   const prefersReducedMotion = usePrefersReducedMotion();
 
   const photos = (items ?? []).filter((it) => it.imageUrl);
-  const gap = CARD.pitch - CARD.width;
 
   useIsomorphicLayoutEffect(() => {
     const el = track.current;
@@ -65,40 +60,34 @@ export default function LifeBehindText({
       id="life-behind"
       aria-labelledby="life-heading"
       className="relative w-full overflow-hidden bg-[var(--color-bg)]"
-      style={{
-        paddingTop: "var(--section-pad)",
-        paddingBottom: "var(--section-pad)",
-      }}
     >
+      {/* ── Phone + tablet backdrop ─────────────────────────────────────
+          The 393px frame's 100px grid (verticals at x=100, horizontals
+          from y=80) and its three fades, Rectangle 6/7/9. Desktop has no
+          backdrop, so the whole layer is dropped at `lg`. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden">
+        <div className="life-grid" />
+        <div className="life-fade life-fade-top" />
+        <div className="life-fade life-fade-mid" />
+        <div className="life-fade life-fade-bottom" />
+      </div>
+
       <div
-        className="relative mx-auto flex w-full flex-col items-center"
+        className="life-inner relative mx-auto flex w-full flex-col items-center"
         style={{
           maxWidth: "var(--container-max)",
           paddingInline: "var(--gutter)",
         }}
       >
         {/* Eyebrow */}
-        <span
-          className="inline-flex items-center justify-center rounded-[8px] border border-[rgba(224,224,224,0.1)] bg-[#0d0d0d] text-center font-semibold whitespace-nowrap text-[var(--color-text)]"
-          style={{
-            padding: "calc(10 * var(--fig))",
-            fontSize: "max(0.75rem, calc(16 * var(--fig)))",
-          }}
-        >
+        <span className="life-eyebrow inline-flex items-center justify-center rounded-[8px] border border-[rgba(224,224,224,0.1)] bg-[#0d0d0d] text-center font-semibold whitespace-nowrap text-[var(--color-text)]">
           Beyond the Pixels
         </span>
 
         {/* Heading */}
         <h2
           id="life-heading"
-          className="m-0 text-center font-display font-medium text-balance text-[var(--color-text)]"
-          style={{
-            marginTop: "var(--heading-gap)",
-            width: "min(100%, calc(1230 * var(--fig)))",
-            fontSize: "max(2.5rem, calc(160 * var(--fig)))",
-            lineHeight: 1.25,
-            letterSpacing: "calc(3.2 * var(--fig))",
-          }}
+          className="life-heading m-0 text-center font-display font-medium text-balance text-[var(--color-text)]"
         >
           The Person Behind the Work
         </h2>
@@ -106,13 +95,9 @@ export default function LifeBehindText({
 
       {/* Film-strip track — two copies for seamless loop */}
       {photos.length > 0 && (
-        <div
-          ref={track}
-          className="flex w-max"
-          style={{ marginTop: "calc(60 * var(--fig))" }}
-        >
-          <FilmStrip photos={photos} gap={gap} />
-          <FilmStrip photos={photos} gap={gap} aria-hidden />
+        <div ref={track} className="life-track relative flex w-max">
+          <FilmStrip photos={photos} />
+          <FilmStrip photos={photos} aria-hidden />
         </div>
       )}
     </section>
@@ -123,43 +108,23 @@ export default function LifeBehindText({
 
 function FilmStrip({
   photos,
-  gap,
   "aria-hidden": ariaHidden = false,
 }: {
   photos: { imageUrl: string }[];
-  gap: number;
   "aria-hidden"?: boolean;
 }) {
   return (
     <ul
       aria-hidden={ariaHidden}
-      className="m-0 flex shrink-0 list-none p-0"
-      style={{
-        gap: `calc(${gap} * var(--fig))`,
-        paddingRight: `calc(${gap} * var(--fig))`,
-      }}
+      className="life-strip m-0 flex shrink-0 list-none p-0"
     >
       {photos.map((photo, idx) => (
         <li
           key={idx}
-          className="relative shrink-0 overflow-hidden rounded-[4px]"
-          style={{
-            width: `max(13rem, calc(${CARD.width} * var(--fig)))`,
-            aspectRatio: `${CARD.width} / ${CARD.height}`,
-            backgroundImage:
-              "linear-gradient(to bottom, rgba(19,19,19,0.8) 0%, rgba(44,44,44,0.8) 50.79%, rgba(19,19,19,0.8) 96.159%)",
-          }}
+          className="life-card relative shrink-0 overflow-hidden rounded-[4px]"
         >
           {/* Photo inset — 332×356 at (24, 8), expressed as percentages */}
-          <div
-            className="absolute overflow-hidden"
-            style={{
-              left: `${(PHOTO_INSET.left / CARD.width) * 100}%`,
-              top: `${(PHOTO_INSET.top / CARD.height) * 100}%`,
-              width: `${(PHOTO_INSET.width / CARD.width) * 100}%`,
-              height: `${(PHOTO_INSET.height / CARD.height) * 100}%`,
-            }}
-          >
+          <div className="life-photo absolute overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photo.imageUrl}
@@ -175,10 +140,9 @@ function FilmStrip({
             <span
               key={side}
               aria-hidden="true"
-              className="absolute top-0 h-full"
+              className="life-sprocket absolute top-0 h-full"
               style={{
                 [side]: 0,
-                width: `${(SPROCKET_WIDTH / CARD.width) * 100}%`,
                 backgroundImage: "url(/svg/film-sprocket.svg)",
                 backgroundSize: "100% 100%",
                 backgroundRepeat: "no-repeat",

@@ -1,11 +1,9 @@
 import Image from 'next/image';
 
 import GradientText from '@/components/ui/GradientText';
+import ToolEmblem from './ToolEmblem';
 import ToolTile from './ToolTile';
 import type { ToolItem } from '@/types/content';
-
-const EMBLEM_LOGO_WIDTH = 118;
-const EMBLEM_LOGO_HEIGHT = 98;
 
 export default function ToolsGrid({ items }: { items: ToolItem[] }) {
   return (
@@ -13,11 +11,19 @@ export default function ToolsGrid({ items }: { items: ToolItem[] }) {
       id="tools"
       aria-labelledby="tools-heading"
       className="relative w-full overflow-hidden rounded-[16px] bg-[var(--color-bg)]"
-      style={{
-        paddingTop: 'var(--section-pad)',
-        paddingBottom: 'var(--section-pad)',
-      }}
     >
+      {/* ── Mobile / tablet backdrop ─────────────────────────────────────
+          The 393px frame's 100px grid, with the three Rectangle 6/7/8 fades
+          washing its edges out. Desktop (the 1920px frame) has no backdrop,
+          so the whole layer is dropped at `lg`. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden">
+        <div className="tools-grid tools-grid-top" />
+        <div className="tools-grid tools-grid-bottom" />
+        <div className="tools-fade tools-fade-top" />
+        <div className="tools-fade tools-fade-mid" />
+        <div className="tools-fade tools-fade-bottom" />
+      </div>
+
       <div
         className="relative mx-auto flex w-full flex-col items-center"
         style={{
@@ -26,46 +32,40 @@ export default function ToolsGrid({ items }: { items: ToolItem[] }) {
         }}
       >
         {/* Eyebrow */}
-        <span
-          className="inline-flex items-center justify-center rounded-[8px] border border-[rgba(224,224,224,0.1)] bg-[#0d0d0d] text-center font-semibold whitespace-nowrap text-[var(--color-text)]"
-          style={{
-            padding: 'calc(10 * var(--fig))',
-            fontSize: 'max(0.75rem, calc(16 * var(--fig)))',
-          }}
-        >
+        <span className="tools-eyebrow inline-flex items-center justify-center rounded-[8px] border border-[rgba(224,224,224,0.1)] bg-[#0d0d0d] text-center font-semibold whitespace-nowrap text-[var(--color-text)]">
           What I Work With
         </span>
 
         {/* Heading */}
         <h2
           id="tools-heading"
-          className="m-0 font-display text-center font-medium text-[var(--color-text)]"
-          style={{
-            marginTop: 'var(--heading-gap)',
-            fontSize: 'max(2.5rem, calc(160 * var(--fig)))',
-            lineHeight: 1.1,
-            letterSpacing: 'calc(3.2 * var(--fig))',
-          }}
+          className="tools-heading m-0 font-display text-center font-medium text-[var(--color-text)]"
         >
           Tools
         </h2>
 
-        {/* Subtitle */}
-        <p
-          className="m-0 text-center"
-          style={{
-            marginTop: 'var(--heading-gap)',
-            fontSize: 'max(1rem, calc(32 * var(--fig)))',
-            lineHeight: 1.75,
-            letterSpacing: 'calc(0.64 * var(--fig))',
-          }}
-        >
+        {/* Subtitle — desktop split (gradient through "handoff"). */}
+        <p className="tools-copy m-0 hidden text-center lg:block">
           <GradientText className="font-semibold capitalize">
             From Research to wireframes to developer handoff
           </GradientText>
           <br />
           <span className="font-semibold capitalize text-[#b0b0b0] opacity-30">
             the tools behind every project.
+          </span>
+        </p>
+
+        {/* Subtitle — the mobile frame re-splits the same sentence into three
+            20px rows; the fade now starts after "wireframes". */}
+        <p className="tools-copy tools-copy-mobile m-0 text-center lg:hidden">
+          <GradientText className="tools-mobile-line font-semibold capitalize">
+            From Research to wireframes
+          </GradientText>
+          <span className="tools-mobile-line font-semibold capitalize text-[#b0b0b0] opacity-25">
+            to developer handoff the tools
+          </span>
+          <span className="tools-mobile-line font-semibold capitalize text-[#b0b0b0] opacity-25">
+            behind every project.
           </span>
         </p>
 
@@ -107,69 +107,14 @@ export default function ToolsGrid({ items }: { items: ToolItem[] }) {
             }}
           />
 
-          {/* ── Emblem (Figma 1:388 / 95621) ────────────────────────────── */}
-          <div
-            aria-hidden
-            className="absolute grid place-items-center"
+          {/* Emblem (Figma 1:388 / 95621) */}
+          <ToolEmblem
+            unit="--fig"
             style={{
               left: 'calc(586 * var(--fig))',
               top: 'calc(106 * var(--fig))',
-              width: 'calc(244 * var(--fig))',
-              height: 'calc(244 * var(--fig))',
             }}
-          >
-            {/* Layer 1 — 244 x 244, semi-transparent gradient + glow shadow */}
-            <div
-              className="absolute rounded-[16px]"
-              style={{
-                width: 'calc(244 * var(--fig))',
-                height: 'calc(244 * var(--fig))',
-                backgroundImage:
-                  'linear-gradient(180deg, rgba(19,19,19,0.2) 0%, rgba(44,44,44,0.2) 100%)',
-                border: '1px solid rgba(255,255,255,0.04)',
-                boxShadow: '0px 0px 60px 1px rgba(255,255,255,0.08)',
-              }}
-            />
-            {/* Layer 2 — 204 x 208, semi-transparent gradient + medium glow */}
-            <div
-              className="absolute rounded-[16px]"
-              style={{
-                width: 'calc(204 * var(--fig))',
-                height: 'calc(208 * var(--fig))',
-                backgroundImage:
-                  'linear-gradient(180deg, rgba(19,19,19,0.2) 0%, rgba(44,44,44,0.2) 100%)',
-                border: '1px solid rgba(255,255,255,0.04)',
-                boxShadow: '0px 0px 40px 1px rgba(255,255,255,0.05)',
-              }}
-            />
-            {/* Layer 3 — 168 x 172, opaque gradient + tight glow */}
-            <div
-              className="absolute grid place-items-center rounded-[16px]"
-              style={{
-                width: 'calc(168 * var(--fig))',
-                height: 'calc(172 * var(--fig))',
-                backgroundImage:
-                  'linear-gradient(180deg, #131313 0%, #2C2C2C 100%)',
-                border: '1px solid rgba(255,255,255,0.04)',
-                boxShadow: '0px 0px 20px 1px rgba(255,255,255,0.04)',
-              }}
-            >
-              {/* AP monogram — same as navbar logo, scaled to Figma 118x98.
-                  Avoid `fill` (known black-box bug); use explicit dims. */}
-              <Image
-                src="/brand/ap-logo.png"
-                alt=""
-                width={236}
-                height={200}
-                className="relative"
-                style={{
-                  width: `calc(${EMBLEM_LOGO_WIDTH} * var(--fig))`,
-                  height: `calc(${EMBLEM_LOGO_HEIGHT} * var(--fig))`,
-                  objectFit: 'contain',
-                }}
-              />
-            </div>
-          </div>
+          />
 
           {/* Tile constellation */}
           <ul className="m-0 list-none p-0">
@@ -179,12 +124,40 @@ export default function ToolsGrid({ items }: { items: ToolItem[] }) {
           </ul>
         </div>
 
-        {/* ── Narrow-screen grid ─────────────────────────────────────────── */}
-        <ul className="mt-10 grid w-full max-w-md grid-cols-4 gap-3 p-0 sm:grid-cols-5 lg:hidden">
-          {items.map((tool) => (
-            <ToolTile key={tool._id} tool={tool} positioned={false} />
-          ))}
-        </ul>
+        {/* ── Constellation (phone + tablet) ──────────────────────────────
+            The 393px frame's 345 x 1005 plot: the same two Vector 469/470
+            curves turned 90°, the hub at the plot's centre and the tiles at
+            Figma's mobile offsets. Sized by `--tools-u`. */}
+        <div className="tools-network-mobile relative lg:hidden">
+          <Image
+            src="/svg/tools-curve-left.svg"
+            alt=""
+            aria-hidden
+            width={491}
+            height={340}
+            className="tools-curve tools-curve-a"
+          />
+          <Image
+            src="/svg/tools-curve-left.svg"
+            alt=""
+            aria-hidden
+            width={491}
+            height={340}
+            className="tools-curve tools-curve-b"
+          />
+
+          <ToolEmblem
+            unit="--tools-u"
+            scale={0.7109276}
+            className="tools-hub-mobile"
+          />
+
+          <ul className="m-0 list-none p-0">
+            {items.map((tool) => (
+              <ToolTile key={tool._id} tool={tool} variant="mobile" />
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );
