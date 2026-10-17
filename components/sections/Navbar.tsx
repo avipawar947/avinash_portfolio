@@ -71,18 +71,19 @@ export default function Navbar({
   return (
     <>
       <header
-        className="fixed top-0 left-0 w-full border-b backdrop-blur-md"
+        className={clsx(
+          "site-header fixed top-0 left-0 w-full border-b",
+          // The open menu panel sits under the bar; the bar takes the
+          // handoff build's `.mobile-menu-header` skin while it is open.
+          menuOpen && "site-header--open",
+        )}
         style={{
-          height: "var(--navbar-h)",
-          zIndex: "var(--z-navbar)",
-          borderColor: "var(--color-border-nav)",
-          backgroundColor:
-            "color-mix(in srgb, var(--color-surface) 60%, transparent)",
+          zIndex: menuOpen ? "calc(var(--z-menu) + 1)" : "var(--z-navbar)",
         }}
       >
         <nav
           aria-label="Primary"
-          className="relative mx-auto flex h-full items-center justify-between px-5 lg:justify-normal lg:px-0"
+          className="nav-wrap relative mx-auto flex h-full items-center justify-between px-5 lg:justify-normal lg:px-0"
           style={{ maxWidth: "var(--container-max)" }}
         >
           {/* Brand — AP logo + two-line wordmark, Figma node 1:46 / 1:35.
@@ -95,10 +96,10 @@ export default function Navbar({
               handleNavClick(e, links[0]?.href || "");
             }}
             aria-label={`${content.logoText || "AVINASH"} - home`}
-            className="relative flex items-center gap-2 lg:absolute lg:left-[calc(140*var(--fig))] lg:gap-[calc(4*var(--fig))]"
+            className="nav-brand relative flex items-center gap-2 lg:absolute lg:left-[calc(140*var(--fig))] lg:gap-[calc(4*var(--fig))]"
           >
             <span
-              className="relative block shrink-0 [--logo-w:2.5rem] lg:[--logo-w:calc(48*var(--fig))]"
+              className="nav-logo relative block shrink-0 [--logo-w:2.5rem] lg:[--logo-w:calc(48*var(--fig))]"
               style={{
                 width: "var(--logo-w)",
                 height: "calc(var(--logo-w) * 5 / 6)",
@@ -112,7 +113,7 @@ export default function Navbar({
                 className="object-contain"
               />
             </span>
-            <span className="font-display text-[0.8125rem] leading-[1.15] font-bold tracking-[0.02em] text-[var(--color-text)] uppercase lg:text-[calc(16*var(--fig))] lg:leading-[calc(20*var(--fig))] lg:tracking-[calc(0.32*var(--fig))]">
+            <span className="nav-wordmark font-display text-[0.8125rem] leading-[1.15] font-bold tracking-[0.02em] text-[var(--color-text)] uppercase lg:text-[calc(16*var(--fig))] lg:leading-[calc(20*var(--fig))] lg:tracking-[calc(0.32*var(--fig))]">
               {first}
               {rest.length > 0 && (
                 <>
@@ -222,42 +223,34 @@ export default function Navbar({
             Download Resume
           </motion.a>
 
-          {/* Mobile trigger — Figma "Menu 1" (40×40 circle, gradient fill,
-              1px white/10 stroke, three white rounded bars). */}
+          {/* Mobile trigger — handoff build's `.menu-toggle` (40u circle,
+              #242424 stroke, #121212 fill, two 18 x 1 #ccc bars 6px apart
+              that cross into an X when open). */}
           <button
             type="button"
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="relative grid size-10 place-items-center rounded-[var(--radius-pill)] border lg:hidden"
-            style={{
-              borderColor: "rgba(255,255,255,0.1)",
-              backgroundImage:
-                "linear-gradient(180deg, rgba(19,19,19,0.1) 0%, rgba(44,44,44,0.1) 100%)",
-              zIndex: "calc(var(--z-menu) + 1)",
-            }}
+            className="nav-toggle relative grid size-10 place-items-center rounded-[var(--radius-pill)] border lg:hidden"
+            style={{ zIndex: "calc(var(--z-menu) + 1)" }}
           >
-            <span aria-hidden className="absolute -top-px -left-px block size-10">
-              {/* Rectangle 39312 — 17.5%/40% → 17×2px */}
+            <span
+              aria-hidden
+              className="nav-toggle-icon absolute -top-px -left-px block size-10"
+            >
               <motion.span
-                className="absolute rounded-[100px] bg-white"
-                style={{ left: 7, top: 12, width: 17, height: 2 }}
-                animate={menuOpen ? { top: 19, rotate: 45 } : { top: 12, rotate: 0 }}
+                className="nav-bar absolute"
+                style={{ left: 11, top: 16, width: 18, height: 1 }}
+                animate={menuOpen ? { y: 3.5, rotate: 45 } : { y: 0, rotate: 0 }}
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               />
-              {/* Rectangle 39313 — 27.5%/27.5% → 18×2px, centre */}
               <motion.span
-                className="absolute rounded-[100px] bg-white"
-                style={{ left: 11, top: 19, width: 18, height: 2 }}
-                animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-              />
-              {/* Rectangle 39314 — 40%/17.5% → 17×2px */}
-              <motion.span
-                className="absolute rounded-[100px] bg-white"
-                style={{ left: 16, top: 26, width: 17, height: 2 }}
-                animate={menuOpen ? { top: 19, rotate: -45 } : { top: 26, rotate: 0 }}
+                className="nav-bar absolute"
+                style={{ left: 11, top: 23, width: 18, height: 1 }}
+                animate={
+                  menuOpen ? { y: -3.5, rotate: -45 } : { y: 0, rotate: 0 }
+                }
                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               />
             </span>
@@ -317,10 +310,12 @@ function MobileMenu({
   onNavigate: (href: string) => void;
 }) {
   useEffect(() => {
+    document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     const onKeyDown = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKeyDown);
     return () => {
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKeyDown);
     };
@@ -333,17 +328,15 @@ function MobileMenu({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 bg-[var(--color-surface)] lg:hidden"
+      className="fixed inset-0 lg:hidden"
       style={{ zIndex: "var(--z-menu)" }}
     >
-      <nav
-        aria-label="Mobile"
-        className="flex h-full flex-col justify-center gap-6 px-8"
-      >
-        <ul className="m-0 list-none p-0">
+      <nav aria-label="Mobile" className="menu-nav">
+        <ul className="menu-links">
           {links.map((link, index) => (
             <motion.li
               key={link.href}
+              className="menu-item"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -359,7 +352,7 @@ function MobileMenu({
                   onNavigate(link.href);
                   onClose();
                 }}
-                className="block py-3 font-display text-[clamp(2.5rem,12vw,4rem)] leading-[1.1] font-bold text-[var(--color-text)]"
+                className="menu-link"
               >
                 {link.label}
               </a>
@@ -368,31 +361,26 @@ function MobileMenu({
         </ul>
 
         <motion.div
+          className="menu-actions"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-4 flex flex-col gap-3"
         >
-          {resumeUrl && (
-            <a
-              href={resumeUrl}
-              download
-              className="grid h-12 place-items-center rounded-[var(--radius-pill)] font-medium text-[var(--color-text-inverse)] glow-shadow"
-              style={{ backgroundImage: "var(--gradient-cta)" }}
-            >
-              Download Resume
-            </a>
-          )}
           {linkedInUrl && (
-            <a
-              href={linkedInUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="grid h-12 place-items-center rounded-[var(--radius-pill)] border border-[var(--color-border-nav)] text-[var(--color-text)]"
-            >
-              LinkedIn
-            </a>
+            <SocialIcon
+              platform="linkedin"
+              url={linkedInUrl}
+              className="menu-linkedin"
+            />
           )}
+          <motion.a
+            {...(resumeUrl
+              ? { href: resumeUrl, download: true }
+              : { "aria-disabled": true })}
+            className="menu-cta"
+          >
+            Download Resume
+          </motion.a>
         </motion.div>
       </nav>
     </motion.div>

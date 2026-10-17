@@ -2,9 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* SF Pro, shipped with the project (`public/fonts`) and referenced by
+   `--font-display`. The clone build registers the same .otf files as
+   "Portfolio SF"; naming them "SF Pro Display" keeps the existing token. */
 @font-face {
   font-family: 'SF Pro Display';
-  src: local('SF Pro Display'), local('-apple-system');
+  src: url('/fonts/sf-pro-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/sf-pro-medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/sf-pro-semibold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/sf-pro-bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -69,7 +98,7 @@
   --section-pad: max(3.5rem, calc(140 * var(--fig)));
   --heading-gap: max(0.75rem, calc(24 * var(--fig)));
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+  --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, Arial,
     sans-serif;
 
   /* --- Z-index --- */
@@ -77,11 +106,18 @@
   --z-menu: 60;
 }
 
-/* Below 1024 the design has no mobile counterpart, so the bar collapses to
-   a comfortable fixed height and the gutter gets a floor. */
+/* Below 1024 the bar takes the Figma mobile-menu frame's own bar: 393 x 80,
+   scaled off the 393px canvas by `--menu-u` (capped at 1.3px so it stops
+   inflating on tablets, like the other mobile sections). */
 @media (max-width: 1023px) {
   :root {
-    --navbar-h: 4rem;
+    --menu-u: min(calc(100vw / 393), 1.3px);
+    /* The same ratio without a unit, for the few properties that need a
+       plain number (`scale()`). Needs CSS Values 4 type math; where that is
+       unsupported the declaration is simply dropped and the icon stays 40pt
+       inside the larger circle. */
+    --menu-scale: min(calc(100vw / 393px), 1.3);
+    --navbar-h: calc(80 * var(--menu-u));
     --gutter: 1.25rem;
   }
 }
@@ -2022,6 +2058,218 @@
     width: calc(27 * var(--footer-u));
     height: calc(27 * var(--footer-u));
   }
+}
+
+/* --- Navbar --------------------------------------------------------------
+   Desktop parity for the values that used to be inline (they had to move to
+   a class so the ≤1023 frame could override them):
+     bar        1920 x 80, bottom rule 1px #3A3A3A
+     brand      AP mark 48 x 40 + two-line wordmark SF Pro 700 16/20
+   Below 1024 the bar/gutter/brand follow the handoff build's mobile nav
+   (`portfolio_clone/website/styles.css`, ≤600px block):
+     bar        80u tall, `#0101016e` fill, `1px #ffffff25` rule; while the
+                menu is open it becomes `linear-gradient(#010101,#050505)`
+                with a `#242424` rule
+     brand      the 117u "AVINASH PAWAR" lockup (mark 43.2u + 14.4u/18 text)
+     toggle     40u circle, `#242424` border, `#121212` fill, two 18 x 1
+                `#ccc` bars 6px apart, crossing on open                  */
+.site-header {
+  height: var(--navbar-h);
+  border-color: var(--color-border-nav);
+  background-color: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (max-width: 1023px) {
+  .site-header {
+    background-color: rgba(1, 1, 1, 0.43);
+    border-bottom-color: rgba(255, 255, 255, 0.145);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .site-header--open {
+    background-color: #010101;
+    background-image: linear-gradient(#010101, #050505);
+    border-bottom-color: #242424;
+  }
+
+  .nav-wrap {
+    padding-inline: calc(20 * var(--menu-u));
+  }
+
+  .nav-brand {
+    gap: calc(2 * var(--menu-u));
+  }
+
+  .nav-brand .nav-logo {
+    --logo-w: calc(43.2 * var(--menu-u));
+  }
+
+  .nav-brand .nav-wordmark {
+    font-size: calc(14.4 * var(--menu-u));
+    line-height: calc(18 * var(--menu-u));
+  }
+
+  .nav-toggle {
+    width: calc(40 * var(--menu-u));
+    height: calc(40 * var(--menu-u));
+    border-color: #242424;
+    background-color: #121212;
+    background-image: none;
+  }
+
+  .nav-toggle[aria-expanded="true"] {
+    background-color: transparent;
+  }
+
+  .nav-bar {
+    background-color: #ccc;
+  }
+
+  .nav-toggle-icon {
+    /* The bars keep their 40pt coordinates; the wrapper is centred in the
+       (larger) circle and scaled as a whole. The wrapper itself stays 40pt
+       wide, so the offset is a flat half-width. */
+    top: 50%;
+    left: 50%;
+    margin: -20px 0 0 -20px;
+    transform: scale(var(--menu-scale));
+  }
+
+  /* Scoped here so Tailwind's `lg:hidden` still wins on desktop. */
+  #mobile-menu {
+    display: flex;
+  }
+}
+
+/* --- Mobile menu (hamburger open state) ---------------------------------
+   The handoff build's `<dialog class="mobile-menu">`, transcribed. Every
+   measurement is `calc(<design px> * var(--menu-u))` — the clone's
+   `--menu-unit: .254452926vw`, re-based on the 393px canvas and capped at
+   1.3px so tablets keep a sane size (same cap as the other sections).
+
+   Layout, from `portfolio_clone/website/styles.css` (≤600px):
+     panel     inset 0, 100dvh, scrollable,
+               `radial-gradient(ellipse at 50% 64%, #181818, #101010 42%,
+               #030303)`; a fixed 80u bar sits on top of it
+     content   flex 1 0 auto, min-height 700u (80 + 700 = the 780 frame)
+     links     padding 0 20u, no gap; 120u rows, 40u/48u bold, centred,
+               dashed hairline under every row but the last
+     actions   in-flow, `margin-top: auto`, `40u 0` padding, 8u gap;
+               48u circle + 188u x 48u pill, `linear-gradient(110deg,
+               #fff, #b8b8b8)` with a `0 0 32u #ffffff1a` glow */
+#mobile-menu {
+  flex-direction: column;
+  height: 100dvh;
+  padding-top: calc(80 * var(--menu-u));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-image: radial-gradient(
+    ellipse at 50% 64%,
+    #181818 0%,
+    #101010 42%,
+    #030303 100%
+  );
+}
+
+#mobile-menu .menu-nav {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  min-height: calc(700 * var(--menu-u));
+}
+
+#mobile-menu .menu-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0 calc(20 * var(--menu-u));
+  list-style: none;
+}
+
+#mobile-menu .menu-item {
+  position: relative;
+  height: calc(120 * var(--menu-u));
+}
+
+/* Dashed hairline under every row but the last, faded at both ends. */
+#mobile-menu .menu-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    #858585 0 calc(4 * var(--menu-u)),
+    transparent calc(4 * var(--menu-u)) calc(8 * var(--menu-u))
+  );
+  -webkit-mask-image: linear-gradient(90deg, #0004, #000, #0004);
+  mask-image: linear-gradient(90deg, #0004, #000, #0004);
+}
+
+#mobile-menu .menu-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: var(--font-display);
+  font-size: calc(40 * var(--menu-u));
+  line-height: calc(48 * var(--menu-u));
+  font-weight: 700;
+  letter-spacing: 0;
+  text-align: center;
+  color: #fff;
+}
+
+#mobile-menu .menu-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--menu-u));
+  margin-top: auto;
+  padding: calc(40 * var(--menu-u)) 0;
+}
+
+#mobile-menu .menu-linkedin {
+  width: calc(48 * var(--menu-u));
+  height: calc(48 * var(--menu-u));
+  border: 0;
+  background-color: #fff;
+  background-image: linear-gradient(110deg, #fff, #b8b8b8);
+  box-shadow: 0 0 calc(32 * var(--menu-u)) rgba(255, 255, 255, 0.1);
+  color: #050505;
+}
+
+#mobile-menu .menu-linkedin svg {
+  width: calc(19 * var(--menu-u));
+  height: calc(19 * var(--menu-u));
+  fill: #050505;
+}
+
+#mobile-menu .menu-cta {
+  display: grid;
+  place-items: center;
+  width: calc(188 * var(--menu-u));
+  height: calc(48 * var(--menu-u));
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-image: linear-gradient(110deg, #fff, #b8b8b8);
+  box-shadow: 0 0 calc(32 * var(--menu-u)) rgba(255, 255, 255, 0.1);
+  font-family: var(--font-display);
+  font-size: calc(16 * var(--menu-u));
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-align: center;
+  color: #050505;
 }
 
 /* The pill/CTA glow (`1px 1px 40px 1px rgba(255,255,255,0.2)`).
