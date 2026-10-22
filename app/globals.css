@@ -2060,6 +2060,247 @@
   }
 }
 
+/* --- Hero ------------------------------------------------------------------
+   PASTE THIS BLOCK INTO globals.css (anywhere after the `:root` blocks, e.g.
+   right before the "Navbar" section). Nothing else in globals.css changes.
+
+   Desktop (>= 1024px) keeps its 1920 x 1148 frame. Below `lg` the hero is the
+   Figma 393 x 780 mobile frame. `--hero-u` is one design pixel of that frame,
+   capped at 1.3px like the other mobile sections, so:
+     - phones (<= 393px wide and up to ~504px) render the frame 1:1
+     - tablets get the same composition, scaled up and centred
+   To make tablets scale the hero bigger, raise the 1.3px cap below.
+
+   Every position below is the Figma value: `calc(50% + <x - 196.5>px)` for
+   horizontal centring on the 393 canvas, and plain `top` offsets from the
+   frame (390 = 50% of 780). */
+
+.hero-root {
+  height: calc(1148 * var(--fig));
+  min-height: 100svh;
+}
+
+@media (max-width: 1023px) {
+  .hero-root {
+    --hero-u: min(calc(100vw / 393), 1.3px);
+    height: calc(780 * var(--hero-u));
+    min-height: 0;
+  }
+
+  /* Frame fill + "grey-gradient-abstract 1" (954 x 954, centred, top 0).
+     The texture jpg is intentionally left out, as on desktop. */
+  .hero-m-bg {
+    position: absolute;
+    inset: 0;
+    background-color: #0b0b0b;
+  }
+
+  .hero-m-abstract {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 476.5 * var(--hero-u));
+    width: calc(954 * var(--hero-u));
+    height: calc(954 * var(--hero-u));
+    background-image: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.02) 0%,
+        rgba(102, 102, 102, 0.02) 100%
+      ),
+      radial-gradient(
+        50% 50% at 50% 50%,
+        rgba(20, 20, 20, 0.8) 0%,
+        #010101 100%
+      );
+  }
+
+  /* "Grid": 1px rgba(208,208,208,0.05) lines, verticals at x = 100, 200, 300…
+     and horizontals at y = 80, 180, 280… of the 393 frame. The tile origin is
+     the frame's left edge (50% - 146.5u), so on tablets the grid stays aligned
+     to the composition while continuing to the screen edges. */
+  .hero-m-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(
+        to right,
+        transparent calc(100% - 1px),
+        rgba(208, 208, 208, 0.05) calc(100% - 1px)
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(208, 208, 208, 0.05) 1px,
+        transparent 1px
+      );
+    background-size: calc(100 * var(--hero-u)) calc(100 * var(--hero-u));
+    background-position: calc(50% - 146.5 * var(--hero-u))
+      calc(80 * var(--hero-u));
+  }
+
+  /* PRODUCT / DESIGNER — 24px/29px SF Pro Bold, 0.02em, flat #404040,
+     124 x 40 and 122 x 40 boxes centred on y = 384. */
+  .hero-m-ghost {
+    position: absolute;
+    top: calc(364 * var(--hero-u));
+    display: flex;
+    align-items: center;
+    height: calc(40 * var(--hero-u));
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: calc(24 * var(--hero-u));
+    line-height: calc(29 * var(--hero-u));
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    color: #404040;
+  }
+
+  .hero-m-ghost--product {
+    left: calc(50% - 164.5 * var(--hero-u));
+    width: calc(124 * var(--hero-u));
+    justify-content: flex-start;
+  }
+
+  .hero-m-ghost--designer {
+    left: calc(50% + 60.5 * var(--hero-u));
+    width: calc(122 * var(--hero-u));
+    justify-content: flex-end;
+  }
+
+  /* "Character": 799.26 x 428.35 at left -218, top 126. */
+  .hero-character {
+    left: calc(50% - 448.5 * var(--hero-u));
+    top: calc(126 * var(--hero-u));
+    width: calc(799.26 * var(--hero-u));
+    height: calc(428.35 * var(--hero-u));
+  }
+
+  /* "Rectangle 6": 799 x 626 at left -218, bottom -72 of the 726 group,
+     i.e. top 226 of the frame. */
+  .hero-m-fade {
+    position: absolute;
+    left: calc(50% - 414.5 * var(--hero-u));
+    top: calc(226 * var(--hero-u));
+    width: calc(799 * var(--hero-u));
+    height: calc(626 * var(--hero-u));
+    pointer-events: none;
+    background-image: linear-gradient(
+      180.75deg,
+      rgba(11, 11, 11, 0) 24.6%,
+      #0b0b0b 48.66%,
+      rgba(11, 11, 11, 0.8) 87.22%
+    );
+  }
+
+  /* "Avinash" / "Pawar": 353 x 80 boxes, 88px/80px SF Pro Bold, 0.04em,
+     centred on y = 521 and y = 636. */
+  .hero-m-name {
+    position: absolute;
+    left: calc(50% - 176.5 * var(--hero-u));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(353 * var(--hero-u));
+    height: calc(80 * var(--hero-u));
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: calc(88 * var(--hero-u));
+    line-height: calc(80 * var(--hero-u));
+    letter-spacing: 0.04em;
+    text-align: center;
+    white-space: nowrap;
+    color: #ffffff;
+  }
+
+  .hero-m-name--first {
+    top: calc(481 * var(--hero-u));
+  }
+
+  .hero-m-name--last {
+    top: calc(596 * var(--hero-u));
+  }
+
+  /* Pills. Both: #010101 fill, 0.5px dashed rgba(255,255,255,0.1), glow
+     `1px 1px 40px 1px rgba(255,255,255,0.1)`, fully round, 24px tall. */
+  .hero-m-pill {
+    position: absolute;
+    height: calc(24 * var(--hero-u));
+  }
+
+  /* "Hello": 104 x 24, centre (86, 470). */
+  .hero-m-pill--hello {
+    left: calc(50% - 162.5 * var(--hero-u));
+    top: calc(471 * var(--hero-u));
+    width: calc(104 * var(--hero-u));
+  }
+
+  /* "Open To Work": 96 x 24, centre (123.33, 586.4). */
+  .hero-m-pill--status {
+    left: calc(50% - 121.17 * var(--hero-u));
+    top: calc(588.4 * var(--hero-u));
+    width: calc(96 * var(--hero-u));
+  }
+
+  .hero-m-pill-body {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #010101;
+    border: calc(0.5 * var(--hero-u)) dashed rgba(255, 255, 255, 0.1);
+    border-radius: 1000px;
+    box-shadow: calc(1 * var(--hero-u)) calc(1 * var(--hero-u))
+      calc(40 * var(--hero-u)) calc(1 * var(--hero-u))
+      rgba(255, 255, 255, 0.1);
+  }
+
+  /* 10px/12px SF Pro, weight 590. The small translate is Figma's own label
+     offset inside each pill (1.31, 1.61) and (7.1, ~3) — the latter leaves
+     room for the status dot. Tweak here if you want to nudge the labels. */
+  .hero-m-pill-label {
+    font-family: var(--font-display);
+    font-weight: 590;
+    font-size: calc(10 * var(--hero-u));
+    line-height: calc(12 * var(--hero-u));
+    text-align: center;
+    white-space: nowrap;
+    color: #ffffff;
+  }
+
+  .hero-m-pill--hello .hero-m-pill-label {
+    transform: translate(calc(1.31 * var(--hero-u)), calc(1.61 * var(--hero-u)));
+  }
+
+  .hero-m-pill--status .hero-m-pill-label {
+    transform: translate(calc(7.1 * var(--hero-u)), calc(3 * var(--hero-u)));
+  }
+
+  /* "Group 593": ring 8.1px (1px #33CE0D) at (9.93, 10.12) with a 4.63px
+     filled dot at (12.12, 12.3). */
+  .hero-m-dot-ring {
+    position: absolute;
+    left: calc(9.93 * var(--hero-u));
+    top: calc(10.12 * var(--hero-u));
+    box-sizing: border-box;
+    width: calc(8.1 * var(--hero-u));
+    height: calc(8.1 * var(--hero-u));
+    border: calc(1 * var(--hero-u)) solid #33ce0d;
+    border-radius: 50%;
+  }
+
+  .hero-m-dot {
+    position: absolute;
+    left: calc(12.12 * var(--hero-u));
+    top: calc(12.3 * var(--hero-u));
+    width: calc(4.63 * var(--hero-u));
+    height: calc(4.63 * var(--hero-u));
+    border-radius: 50%;
+    background: #33ce0d;
+  }
+}
+
 /* --- Navbar --------------------------------------------------------------
    Desktop parity for the values that used to be inline (they had to move to
    a class so the ≤1023 frame could override them):

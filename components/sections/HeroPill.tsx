@@ -46,28 +46,7 @@ export default function HeroPill({
   const prefersReducedMotion = usePrefersReducedMotion();
 
   const pill = (
-    <motion.div
-      data-hero-pill
-      style={{ rotate }}
-      // Reduced motion gets the pill at its final state with no entrance
-      // and, more importantly, no perpetual float — an endlessly repeating
-      // animation is exactly what the preference is asking us not to run.
-      initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8 }}
-      animate={
-        prefersReducedMotion
-          ? { opacity: 1, scale: 1 }
-          : { opacity: 1, scale: 1, y: ["0%", "-6%", "0%"] }
-      }
-      transition={
-        prefersReducedMotion
-          ? { duration: 0 }
-          : {
-              opacity: { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] },
-              scale: { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] },
-              y: { duration: 5, delay, repeat: Infinity, ease: "easeInOut" },
-            }
-      }
-    >
+    <motion.div data-hero-pill style={{ rotate }}>
       <div
         className={clsx(
           "relative grid place-items-center overflow-hidden rounded-[var(--radius-pill)] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] glow-shadow",
@@ -81,7 +60,9 @@ export default function HeroPill({
             : {
                 width: `calc(${widthPx} * var(--fig))`,
                 height: "calc(40 * var(--fig))",
-                paddingLeft: withStatusDot ? "calc(20 * var(--fig))" : undefined,
+                paddingLeft: withStatusDot
+                  ? "calc(20 * var(--fig))"
+                  : undefined,
               }
         }
       >
