@@ -39,15 +39,26 @@ export default function ProjectCard({ project }: { project: ProjectItem }) {
     if (!el || prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      // Reveal: the card uncovers from the bottom as it enters.
-      gsap.from(el, {
-        clipPath: "inset(12% 0% 0% 0%)",
-        opacity: 0,
-        y: 48,
-        duration: 1.1,
-        ease: "expo.out",
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
-      });
+      // Reveal: the card uncovers from the bottom as it enters. `fromTo` with
+      // explicit states keeps the hidden start and the visible end deterministic
+      // (gsap.from with only a `from` block can leave stale inline styles if the
+      // animation never runs, which leaves the card invisible and unclickable).
+      gsap.fromTo(
+        el,
+        {
+          clipPath: "inset(12% 0% 0% 0%)",
+          opacity: 0,
+          y: 48,
+        },
+        {
+          clipPath: "inset(0% 0% 0% 0%)",
+          opacity: 1,
+          y: 0,
+          duration: 1.1,
+          ease: "expo.out",
+          scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        }
+      );
 
       // Drift: the image trails the card it sits in. It grows as it drifts,
       // which is what keeps the bottom edge covered at the far end of the
