@@ -34,12 +34,117 @@ export interface ClientLogoItem {
   order: number;
 }
 
+export interface CaseStudySection {
+  heading?: string;
+  body?: string;
+}
+
+export interface JourneyStage {
+  stage: string;
+  does: string;
+  screens: string;
+  helps: string;
+  order: number;
+}
+
+export interface ImpactStatItem {
+  value: string;
+  suffix: string;
+  label: string;
+  desc: string;
+  order: number;
+}
+
+export interface CaseStudyGalleryItem {
+  imageUrl: string;
+  imagePublicId?: string;
+  caption: string;
+  order: number;
+}
+
+export interface CaseStudyBlock {
+  type?: string;
+  text?: string;
+  url?: string;
+  label?: string;
+  posterUrl?: string;
+  brand?: string;
+  nodes?: { label: string; sub?: string; children?: { label: string }[] }[];
+  columns?: string[];
+  rows?: string[][];
+  groups?: { title?: string; label?: string; nodes?: { label: string; sub?: string; tone?: string }[]; kind?: string; description?: string; samples?: { family?: string; weight?: number; text?: string; size?: number }[]; colors?: { hex: string; label?: string }[]; components?: { label: string; items?: string[] }[] }[];
+  items?: { value?: string; suffix?: string; group?: string; label?: string }[];
+  [k: string]: unknown;
+}
+
+export interface CaseStudySectionRich {
+  key?: string;
+  label?: string;
+  title?: string;
+  intro?: string;
+  visible?: boolean;
+  order?: number;
+  blocks?: CaseStudyBlock[];
+}
+
+export interface ProjectCaseStudy {
+  heroEyebrow?: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  tagline?: string[];
+  logoUrl?: string;
+  logoPublicId?: string;
+  iconSvgUrl?: string;
+  iconSvgPublicId?: string;
+  sectionIcons?: { key: string; svgUrl?: string; svgPublicId?: string; label?: string; order?: number }[];
+  coverImageUrl?: string;
+  coverImagePublicId?: string;
+  meta?: { label: string; value: string }[];
+  sections?: CaseStudySectionRich[];
+  heroBackgroundUrl?: string;
+  heroBackgroundPublicId?: string;
+  heroImageUrl?: string;
+  heroImagePublicId?: string;
+  websiteUrl?: string;
+  wireframeUrl?: string;
+  client?: string;
+  type?: string;
+  category?: string;
+  duration?: string;
+  role?: string;
+  overview?: CaseStudySection;
+  challenges?: CaseStudySection;
+  solutions?: CaseStudySection;
+  infoArch?: CaseStudySection & { imageUrl?: string; imagePublicId?: string };
+  userJourney?: CaseStudySection & { rows?: JourneyStage[] };
+  userFlow?: CaseStudySection & { imageUrl?: string; imagePublicId?: string };
+  designSystem?: CaseStudySection & {
+    components?: string[];
+    colors?: string[];
+    iconsNote?: string;
+    typographyNote?: string;
+    colorsNote?: string;
+  };
+  wireframe?: CaseStudySection & { imageUrl?: string; imagePublicId?: string; link?: string };
+  visual?: CaseStudySection & { imageUrl?: string; imagePublicId?: string; link?: string };
+  impact?: { heading?: string; stats?: ImpactStatItem[] };
+  conclusion?: CaseStudySection;
+  gallery?: CaseStudyGalleryItem[];
+}
+
 export interface ProjectItem {
   _id: string;
   title: string;
+  slug?: string;
   tag: string;
   imageUrl: string;
   imagePublicId?: string;
+  mediaType?: 'image' | 'video';
+  videoUrl?: string;
+  videoPublicId?: string;
+  videoPosterUrl?: string;
+  videoPosterPublicId?: string;
+  caseStudy?: ProjectCaseStudy | null;
   /** Which side of the two-column stagger this card sits on. */
   column: 'left' | 'right';
   /** Vertical crop the design applies inside the 738x468 frame — Figma
@@ -167,6 +272,10 @@ export interface ContactCTATab {
 
 export interface ContactCTAContent {
   tabs: ContactCTATab[];
+  /** Case-study CTA action row — editable in admin. */
+  phone?: string;
+  email?: string;
+  linkedinUrl?: string;
 }
 
 export interface SettingsContent {

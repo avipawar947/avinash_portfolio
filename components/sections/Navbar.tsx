@@ -293,9 +293,25 @@ export default function Navbar({
 }
 
 /** `#hash` links smooth-scroll via CSS; `/` is a same-page link so it only
-    scrolls to the top instead of triggering a full navigation. */
+    scrolls to the top instead of triggering a full navigation. On subpages
+    (e.g. /case-study/[slug]) a bare "#work" has no target, so it becomes
+    "/#work" — still a normal navigation, no preventDefault. */
+function navHref(href: string) {
+  if (!href || href === "/") return href || "/";
+  if (href.startsWith("#") && typeof window !== "undefined" && window.location.pathname !== "/") {
+    return `/${href}`;
+  }
+  return href;
+}
+
 function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
-  if (href === "/") {
+  const target = navHref(href);
+  // Rewrite hrefs like "#work" on subpages so the browser goes home first.
+  if (href.startsWith("#") && target !== href) {
+    (e.currentTarget as HTMLAnchorElement).setAttribute("href", target);
+    return;
+  }
+  if (target === "/") {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -303,7 +319,10 @@ function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
 
 /** Map a nav href to the DOM section it scrolls to. */
 function sectionIdFromHref(href: string) {
-  return !href || href === "/" ? "home" : href.replace(/^#/, "");
+  if (!href || href === "/") return "home";
+  const hash = href.split("#")[1];
+  if (hash) return hash;
+  return href.replace(/^\//, "") || "home";
 }
 
 /** Figma-measured label x-centres inside the 496px pill (nodes 1:37-1:40). */

@@ -1456,6 +1456,102 @@
   height: 40px;
 }
 
+/* ── Case-study contact row (Figma 857:31022) ────────────────────────────
+   Phone 220 x 48, email 270 x 48 and the 48px LinkedIn circle on a 16px
+   gap. Both pills are 100-radius, 16px side padding, 4px icon gap and
+   Inter Medium 18/21.784 with 0.36 tracking. The phone carries the white
+   radial fill + 40px glow; the email is the dark #131313 -> #2C2C2C
+   gradient at 10% with a white-10% hairline and no shadow. */
+#contact .cs-contact-phone,
+#contact .cs-contact-email {
+  height: calc(48 * var(--fig));
+  padding-inline: calc(16 * var(--fig));
+  gap: calc(4 * var(--fig));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  justify-content: flex-start;
+  font-family: 'Inter', -apple-system, Helvetica, Arial, sans-serif;
+  font-size: calc(18 * var(--fig));
+  font-weight: 500;
+  line-height: 1.2102;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: transform 300ms linear;
+}
+
+#contact .cs-contact-phone {
+  width: calc(220 * var(--fig));
+  background: radial-gradient(
+    118% 324% at 30% 6%,
+    #ffffff 0%,
+    #bdbdbd 53%,
+    #ffffff 100%
+  );
+  box-shadow: calc(1 * var(--fig)) calc(1 * var(--fig))
+    calc(40 * var(--fig)) calc(1 * var(--fig)) rgba(255, 255, 255, 0.2);
+  color: #010101;
+}
+
+#contact .cs-contact-email {
+  width: calc(270 * var(--fig));
+  background: linear-gradient(
+    180deg,
+    rgba(19, 19, 19, 0.1) 0%,
+    rgba(44, 44, 44, 0.1) 100%
+  );
+  color: #f5fbff;
+}
+
+#contact .cs-contact-phone:hover,
+#contact .cs-contact-email:hover {
+  transform: scale(1.02);
+}
+
+#contact .cs-contact-phone:active,
+#contact .cs-contact-email:active {
+  transform: scale(0.95);
+}
+
+#contact .cs-contact-icon {
+  flex: 0 0 auto;
+  width: calc(24 * var(--fig));
+  height: calc(24 * var(--fig));
+}
+
+/* Case-study LinkedIn: the frame's 48px dark gradient circle, not the
+   homepage's white radial pill. */
+#contact .cs-contact-linkedin {
+  position: relative;
+  width: calc(48 * var(--fig));
+  height: calc(48 * var(--fig));
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(19, 19, 19, 0.1) 0%,
+    rgba(44, 44, 44, 0.1) 100%
+  );
+  box-shadow: none;
+  transition: transform 400ms linear;
+}
+
+#contact .cs-contact-linkedin svg {
+  width: calc(18.875 * var(--fig));
+  height: calc(17.88 * var(--fig));
+  fill: #ffffff;
+}
+
+/* Figma's 10% multitone noise over the circle. */
+#contact .cs-contact-linkedin::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  opacity: 0.1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
 /* ── Device tabs (desktop parity) ──────────────────────────────────────── */
 #contact .contact-tabs-wrap {
   width: max-content;
@@ -1579,6 +1675,54 @@
   #contact .contact-linkedin {
     width: calc(48 * var(--contact-u));
     height: calc(48 * var(--contact-u));
+  }
+
+  /* Case-study row: keep the Figma pill sizes, but let the email pill fall
+     under the phone + LinkedIn pair once the 313px measure can't hold it. */
+  #contact .cs-contact-actions {
+    flex-wrap: wrap;
+  }
+
+  #contact .cs-contact-phone,
+  #contact .cs-contact-email {
+    height: calc(48 * var(--contact-u));
+    padding-inline: calc(16 * var(--contact-u));
+    gap: calc(4 * var(--contact-u));
+    font-size: clamp(0.875rem, 4.58vw, 1.125rem);
+  }
+
+  #contact .cs-contact-phone {
+    order: 1;
+    /* Keep the Figma 220px pill, but on the narrow card let it give up the
+       few pixels needed to sit beside the 48px LinkedIn circle. */
+    width: min(
+      calc(220 * var(--contact-u)),
+      calc(100% - 64 * var(--contact-u))
+    );
+    box-shadow: calc(1 * var(--contact-u)) calc(1 * var(--contact-u))
+      calc(40 * var(--contact-u)) calc(1 * var(--contact-u))
+      rgba(255, 255, 255, 0.2);
+  }
+
+  #contact .cs-contact-email {
+    order: 3;
+    width: calc(270 * var(--contact-u));
+  }
+
+  #contact .cs-contact-icon {
+    width: calc(24 * var(--contact-u));
+    height: calc(24 * var(--contact-u));
+  }
+
+  #contact .cs-contact-linkedin {
+    order: 2;
+    width: calc(48 * var(--contact-u));
+    height: calc(48 * var(--contact-u));
+  }
+
+  #contact .cs-contact-linkedin svg {
+    width: calc(18.875 * var(--contact-u));
+    height: calc(17.88 * var(--contact-u));
   }
 
   /* Frame: the tabs sit 100px under the button row. */
@@ -2530,4 +2674,1243 @@ html {
 body {
   background-color: #0B0B0B;
   color: #FFFFFF;
+}
+
+/* ============================================================================
+   Case-study detail — Figma 857:28193 (Case Study, 1920x5552) + slides
+   1308:*, mobile 1181:475 (CaseStudy Page, 393x4449).
+
+   Desktop: every length is `calc(<figma px> * var(--fig))` (1920 canvas).
+   <=1023px: the 393px mobile frame is used, scaled by `--cs-u`
+   (`min(100vw / 393, 1.3px)`, capped so tablets stop inflating).
+   Panel geometry arrives as unitless custom properties from
+   CaseStudySections.tsx and is multiplied by `--u`.
+   ========================================================================== */
+
+.cs-page {
+  position: relative;
+  overflow: clip;
+  font-family: var(--font-display);
+}
+
+/* The one shared "white -> #B0B0B0 @ 10%" text gradient used across Figma. */
+.cs-hero-subtitle,
+.cs-body,
+.cs-meta-label,
+.cs-meta-value,
+.cs-navlink--active,
+.more-work .project-caption {
+  background-image: linear-gradient(90deg, #ffffff 9.78%, rgba(176, 176, 176, 0.10) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cs-navlink--active { color: transparent; }
+
+/* --- shared pills / buttons ------------------------------------------------ */
+.cs-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: calc(1 * var(--fig)) solid rgba(224, 224, 224, 0.10);
+  border-radius: calc(8 * var(--fig));
+  background: #0d0d0d;
+  color: #ffffff;
+  font-size: calc(16 * var(--fig));
+  line-height: 1;
+  font-weight: 590;
+  letter-spacing: 0;
+}
+
+.cs-btn-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(146 * var(--fig));
+  height: calc(48 * var(--fig));
+  padding-inline: calc(20 * var(--fig));
+  border-radius: var(--radius-pill);
+  background-image: var(--gradient-cta);
+  box-shadow: var(--shadow-glow);
+  color: #010101;
+  font-size: calc(16 * var(--fig));
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: calc(0.32 * var(--fig));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.cs-btn-white:hover {
+  transform: scale(1.03);
+  box-shadow: 1px 1px 48px 1px rgba(255, 255, 255, 0.28);
+}
+.cs-btn-white:active { transform: scale(0.98); }
+
+.cs-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(176 * var(--fig));
+  height: calc(48 * var(--fig));
+  padding-inline: calc(20 * var(--fig));
+  border: calc(1 * var(--fig)) solid rgba(255, 255, 255, 0.40);
+  border-radius: var(--radius-pill);
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.10) 90.9%, rgba(176, 176, 176, 0.01) 100%);
+  box-shadow: var(--shadow-glow);
+  color: #ffffff;
+  font-size: calc(18 * var(--fig));
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: calc(0.36 * var(--fig));
+  transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+.cs-btn-ghost:hover {
+  transform: scale(1.03);
+  border-color: rgba(255, 255, 255, 0.70);
+  box-shadow: 1px 1px 48px 1px rgba(255, 255, 255, 0.28);
+}
+.cs-btn-ghost:active { transform: scale(0.98); }
+
+/* --- hero (857:30934, 1920x1124) ------------------------------------------ */
+/* The hero box grows with its copy (height auto); the background stays a
+   fixed 1124px Figma frame so the glow profile never changes with text length. */
+.cs-hero {
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+  background: transparent;
+}
+.cs-hero-bg {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(1124 * var(--fig));
+  overflow: hidden;
+  background: #010101;
+}
+.cs-hero-flow {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: calc(329 * var(--fig));
+}
+.cs-hero-ground {
+  /* Same stack as the homepage hero (Hero.tsx 1:4): the radial gradient is
+     semi-transparent at its centre, so compositing it over white is what
+     produces the soft luminous glow. Over black it turns flat/muddy. */
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(102, 102, 102, 0.02) 100%),
+    radial-gradient(50% 50% at 50% 50%, rgba(20, 20, 20, 0.80) 0%, #010101 100%);
+}
+.cs-hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px);
+  background-size: calc(200 * var(--fig)) 100%, 100% calc(184 * var(--fig));
+  background-position: calc(160 * var(--fig)) 0, 0 calc(80 * var(--fig));
+  background-repeat: repeat;
+}
+.cs-hero-fade {
+  top: calc(606 * var(--fig));
+  height: calc(518 * var(--fig));
+  background-image: linear-gradient(180deg, rgba(11, 11, 11, 0) 44.4%, #0b0b0b 100%);
+}
+.cs-hero-eyebrow {
+  margin-left: calc(911.5 * var(--fig));
+  width: calc(112 * var(--fig));
+  height: calc(41 * var(--fig));
+}
+.cs-hero-title {
+  margin-left: calc(543 * var(--fig));
+  margin-top: calc(24 * var(--fig));
+  width: calc(847 * var(--fig));
+  font-size: calc(160 * var(--fig));
+  line-height: calc(172 * var(--fig));
+  letter-spacing: calc(3.2 * var(--fig));
+  font-weight: 510;
+  text-align: center;
+  color: #ffffff;
+}
+.cs-hero-subtitle {
+  margin-left: calc(466 * var(--fig));
+  margin-top: calc(24 * var(--fig));
+  width: calc(1000 * var(--fig));
+  font-size: calc(32 * var(--fig));
+  line-height: calc(56 * var(--fig));
+  letter-spacing: calc(0.64 * var(--fig));
+  font-weight: 590;
+  text-align: center;
+}
+.cs-hero-subtitle-stack { display: block; }
+.cs-hero-subtitle-flow { display: none; }
+
+/* Subtitle lines beyond the first fade out — Figma 857:30970/888:2841 set
+   opacity 0.3 (desktop) and 0.1–0.2 (mobile) per line. */
+.cs-hero-subtitle .block:nth-child(2),
+.cs-hero-subtitle .block:nth-child(3) { opacity: 0.3; }
+.cs-hero-subtitle .block:nth-child(4),
+.cs-hero-subtitle .block:nth-child(5) { opacity: 0.2; }
+.cs-hero-subtitle .block:nth-child(6) { opacity: 0.1; }
+.cs-main-frame {
+  margin-left: calc(392 * var(--fig));
+  margin-top: calc(142 * var(--fig));
+  width: calc(1134 * var(--fig));
+  height: calc(776 * var(--fig));
+  padding: calc(7 * var(--fig));
+  border: calc(1 * var(--fig)) solid rgba(208, 208, 208, 0.20);
+  border-radius: calc(8 * var(--fig));
+  background-color: #010101;
+  background-image: linear-gradient(180deg, #000000 30.6%, #666666 100%);
+}
+.cs-main-media {
+  border-radius: calc(7 * var(--fig));
+  overflow: hidden;
+}
+.cs-meta {
+  margin-left: calc(416 * var(--fig));
+  margin-top: calc(44 * var(--fig));
+  width: calc(1111 * var(--fig));
+  display: grid;
+  grid-template-columns:
+    calc(274 * var(--fig)) calc(273 * var(--fig))
+    calc(286 * var(--fig)) calc(278 * var(--fig));
+}
+.cs-meta-cell {
+  position: relative;
+  padding-left: calc(24 * var(--fig));
+  min-width: 0;
+}
+.cs-meta-cell::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(1 * var(--fig));
+  height: calc(64 * var(--fig));
+  background-image: linear-gradient(180deg, #b0b0b0 0%, #ffffff 50%, #b0b0b0 100%);
+}
+.cs-meta-cell:first-child::before { display: none; }
+.cs-meta-label {
+  font-size: calc(20 * var(--fig));
+  line-height: calc(32 * var(--fig));
+  letter-spacing: calc(0.4 * var(--fig));
+  font-weight: 700;
+}
+.cs-meta-value {
+  margin-top: calc(8 * var(--fig));
+  font-size: calc(16 * var(--fig));
+  line-height: calc(32 * var(--fig));
+  letter-spacing: calc(0.32 * var(--fig));
+  font-weight: 400;
+}
+.cs-hero-actions {
+  margin-left: calc(807 * var(--fig));
+  margin-top: calc(32 * var(--fig));
+  display: flex;
+  align-items: center;
+  gap: calc(16 * var(--fig));
+}
+
+/* --- section stage (1116:2848, 1920x1570) --------------------------------- */
+/* The hero box now ends at the flow content bottom (y1872); pulling the stage
+   up by the Figma overlap keeps its top at y1679 for the default copy. */
+.cs-stage {
+  position: relative;
+  z-index: 1;
+  height: calc(1570 * var(--fig));
+  margin-top: calc(-193 * var(--fig));
+  overflow: hidden;
+  background: #0b0b0b;
+}
+.cs-stage-grid {
+  background-image:
+    linear-gradient(to right, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px);
+  background-size: calc(200 * var(--fig)) 100%, 100% calc(184 * var(--fig));
+  background-position: calc(160 * var(--fig)) 0, 0 calc(80 * var(--fig));
+  background-repeat: repeat;
+}
+.cs-stage-fade {
+  background-image: linear-gradient(180deg, rgba(11, 11, 11, 0) 44.39%, #0b0b0b 100%);
+}
+.cs-stage-fade--top {
+  top: 0;
+  height: calc(448 * var(--fig));
+}
+.cs-stage-fade--bottom {
+  top: calc(1378 * var(--fig));
+  height: calc(448 * var(--fig));
+}
+.cs-cards {
+  position: absolute;
+  left: calc(164 * var(--fig));
+  top: calc(452 * var(--fig));
+  width: calc(1591 * var(--fig));
+  height: calc(922 * var(--fig));
+  display: flex;
+  border: calc(1 * var(--fig)) solid rgba(208, 208, 208, 0.10);
+  background-image: radial-gradient(50% 50% at 50% 50%, rgba(20, 20, 20, 0.80) 0%, #010101 100%);
+}
+.cs-panel-frame {
+  position: relative;
+  flex: 1 1 auto;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background: #181818;
+}
+.cs-artboard {
+  position: absolute;
+  inset: calc(28 * var(--fig));
+  border: calc(1 * var(--fig)) solid rgba(208, 208, 208, 0.05);
+  border-radius: calc(4 * var(--fig));
+  background: #111111;
+  overflow: hidden;
+}
+.cs-artboard-dots {
+  position: absolute;
+  inset: calc(20 * var(--fig));
+  background-image: radial-gradient(circle, #202020 0 calc(1 * var(--fig)), transparent calc(1 * var(--fig)));
+  background-size: calc(20 * var(--fig)) calc(20 * var(--fig));
+}
+
+/* --- desktop sidenav (Cards / Left Side 252x920) -------------------------- */
+.cs-sidenav {
+  position: relative;
+  flex: 0 0 calc(252 * var(--fig));
+  width: calc(252 * var(--fig));
+  height: 100%;
+  border: calc(1 * var(--fig)) solid rgba(208, 208, 208, 0.10);
+  background: #1c1c1c;
+  overflow: hidden;
+}
+.cs-sidenav-brand {
+  position: absolute;
+  left: calc(34 * var(--fig));
+  top: calc(40 * var(--fig));
+  display: flex;
+  align-items: center;
+  gap: calc(12 * var(--fig));
+  height: calc(32 * var(--fig));
+}
+.cs-sidenav-logo {
+  width: calc(32 * var(--fig));
+  height: calc(32 * var(--fig));
+  border-radius: calc(4 * var(--fig));
+  overflow: hidden;
+}
+.cs-sidenav-title {
+  font-size: calc(28 * var(--fig));
+  line-height: calc(32 * var(--fig));
+  font-weight: 700;
+  letter-spacing: calc(0.56 * var(--fig));
+  white-space: nowrap;
+  background-image: linear-gradient(90deg, #ffffff 52.9%, rgba(176, 176, 176, 0.10) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cs-sidenav-divider {
+  position: absolute;
+  left: calc(11 * var(--fig));
+  top: calc(112 * var(--fig));
+  width: calc(230 * var(--fig));
+  height: calc(1 * var(--fig));
+  background-image: linear-gradient(90deg, #b0b0b0 0%, #ffffff 50%, #b0b0b0 100%);
+}
+.cs-sidenav-list {
+  position: absolute;
+  left: calc(41 * var(--fig));
+  top: calc(152 * var(--fig));
+  width: calc(192 * var(--fig));
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cs-sidenav-list li { height: calc(44 * var(--fig)); }
+.cs-navlink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: calc(44 * var(--fig));
+  font-size: calc(16 * var(--fig));
+  line-height: calc(20 * var(--fig));
+  letter-spacing: calc(0.32 * var(--fig));
+  color: rgba(136, 136, 136, 0.60);
+  white-space: nowrap;
+  transition: color 0.25s ease;
+}
+.cs-navlink::before {
+  content: "";
+  position: absolute;
+  left: calc(-22 * var(--fig));
+  top: 50%;
+  width: calc(6 * var(--fig));
+  height: calc(6 * var(--fig));
+  margin-top: calc(-3 * var(--fig));
+  border-radius: 50%;
+  background: #ffffff;
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.cs-navlink--active {
+  font-weight: 700;
+  color: transparent;
+}
+.cs-navlink--active::before {
+  opacity: 1;
+  transform: scale(1);
+}
+.cs-navlink:hover { color: #ffffff; }
+.cs-navlink--active:hover { color: transparent; }
+
+/* --- stacked slides inside the ArtBoard ----------------------------------- */
+.cs-panel {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(calc(10 * var(--fig)));
+  transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out),
+    visibility 0s linear 0.45s;
+  pointer-events: none;
+}
+.cs-panel.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out),
+    visibility 0s;
+  pointer-events: auto;
+}
+.cs-panel-inner {
+  position: absolute;
+  inset: 0;
+  --u: var(--fig);
+}
+.cs-panel-inner[data-layout="center"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cs-panel-inner[data-layout="center"] .cs-panel-copy {
+  width: calc(var(--copy-w) * var(--u));
+}
+.cs-panel-inner[data-layout="top"] .cs-panel-copy {
+  position: absolute;
+  left: calc(var(--copy-left) * var(--u));
+  top: calc(var(--copy-top) * var(--u));
+  width: calc(var(--copy-w) * var(--u));
+}
+.cs-panel-inner[data-layout="top"] .cs-panel-media {
+  position: absolute;
+  left: calc(var(--media-left) * var(--u));
+  top: calc(var(--media-top) * var(--u));
+  width: calc(var(--media-w) * var(--u));
+  height: calc(var(--media-h) * var(--u));
+}
+.cs-panel-copy { text-align: center; }
+.cs-h2 {
+  font-size: calc(48 * var(--u));
+  line-height: calc(64 * var(--u));
+  font-weight: 600;
+  text-align: center;
+  color: #ffffff;
+}
+.cs-body {
+  margin-top: calc(8 * var(--u));
+  font-size: calc(18 * var(--u));
+  line-height: calc(32 * var(--u));
+  font-weight: 400;
+  text-align: center;
+  white-space: pre-line;
+}
+.cs-body--block { margin-top: 0; }
+
+/* --- block renderers (diagrams / tables / tokens / embeds / stats) -------- */
+.cs-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  gap: calc(14 * var(--u));
+  width: 100%;
+  height: 100%;
+}
+.cs-node {
+  min-width: calc(168 * var(--u));
+  max-width: calc(260 * var(--u));
+  padding: calc(12 * var(--u)) calc(16 * var(--u));
+  border: calc(1 * var(--u)) solid #2c2c2c;
+  border-radius: calc(8 * var(--u));
+  background: #141414;
+  text-align: center;
+}
+.cs-node-title {
+  display: block;
+  font-size: calc(16 * var(--u));
+  line-height: calc(22 * var(--u));
+  font-weight: 700;
+  color: #ffffff;
+}
+.cs-node-sub {
+  display: block;
+  margin-top: calc(4 * var(--u));
+  font-size: calc(12 * var(--u));
+  line-height: calc(18 * var(--u));
+  font-weight: 500;
+  color: #b0b0b0;
+}
+.cs-node[data-accent="true"] { border-color: #534ab7; }
+
+.cs-tablewrap {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border: calc(1 * var(--u)) solid rgba(255, 255, 255, 0.08);
+  border-radius: calc(10 * var(--u));
+  background: #131313;
+}
+.cs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: calc(14 * var(--u));
+  line-height: calc(22 * var(--u));
+  color: #d0d0d0;
+}
+.cs-table th,
+.cs-table td {
+  padding: calc(12 * var(--u)) calc(16 * var(--u));
+  border-bottom: calc(1 * var(--u)) solid rgba(255, 255, 255, 0.06);
+  text-align: left;
+  vertical-align: top;
+}
+.cs-table thead th {
+  color: #ffffff;
+  background: #1a1a1a;
+}
+.cs-table tbody tr:last-child td { border-bottom: 0; }
+
+.cs-flowgroups {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(24 * var(--u));
+  width: 100%;
+  height: 100%;
+}
+.cs-flowgroup {
+  display: flex;
+  flex-direction: column;
+  gap: calc(12 * var(--u));
+}
+.cs-ds-h3 {
+  margin: 0;
+  font-size: calc(18 * var(--u));
+  line-height: calc(24 * var(--u));
+  font-weight: 600;
+  text-align: center;
+  color: #ffffff;
+}
+
+.cs-ds {
+  display: flex;
+  flex-direction: column;
+  gap: calc(32 * var(--u));
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.cs-ds-top {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: calc(37 * var(--u));
+}
+.cs-ds-block { display: flex; flex-direction: column; gap: calc(8 * var(--u)); min-height: 0; }
+.cs-ds-desc {
+  margin: 0;
+  font-size: calc(12 * var(--u));
+  line-height: calc(18 * var(--u));
+  color: #b0b0b0;
+}
+.cs-ds-icons-frame {
+  display: grid;
+  grid-template-columns: repeat(8, calc(44 * var(--u)));
+  grid-auto-rows: calc(40 * var(--u));
+  padding: calc(16 * var(--u)) 0 0 calc(16 * var(--u));
+  width: fit-content;
+}
+.cs-ds-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+.cs-ds-icon svg { width: calc(24 * var(--u)); height: calc(24 * var(--u)); }
+.cs-ds-colors {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: calc(12 * var(--u));
+}
+.cs-swatch { display: flex; flex-direction: column; gap: calc(6 * var(--u)); }
+.cs-swatch-box {
+  display: block;
+  height: calc(64 * var(--u));
+  border: calc(1 * var(--u)) solid rgba(255, 255, 255, 0.12);
+  border-radius: calc(8 * var(--u));
+}
+.cs-swatch-label {
+  display: block;
+  font-size: calc(10 * var(--u));
+  line-height: calc(14 * var(--u));
+  color: #b0b0b0;
+}
+.cs-ds-type { display: flex; flex-wrap: wrap; align-items: baseline; gap: calc(24 * var(--u)); }
+.cs-type-sample { color: #ffffff; line-height: 1; }
+.cs-ds-components { display: flex; flex-wrap: wrap; gap: calc(10 * var(--u)); }
+.cs-chip {
+  padding: calc(8 * var(--u)) calc(16 * var(--u));
+  border: calc(1 * var(--u)) solid #2c2c2c;
+  border-radius: calc(8 * var(--u));
+  background: #141414;
+  font-size: calc(13 * var(--u));
+  line-height: calc(18 * var(--u));
+  color: #ffffff;
+}
+
+.cs-embed { position: relative; width: 100%; height: 100%; }
+.cs-frame-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: calc(7 * var(--u));
+  border: calc(1 * var(--u)) solid rgba(208, 208, 208, 0.20);
+  border-radius: calc(8 * var(--u));
+  background-color: #010101;
+  background-image: linear-gradient(180deg, #000000 30.6%, #666666 100%);
+  overflow: hidden;
+}
+.cs-frame-media { border-radius: calc(7 * var(--u)); overflow: hidden; }
+.cs-embed-btn {
+  position: absolute;
+  left: calc(var(--button-left) * var(--u));
+  top: calc(var(--button-top) * var(--u));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: calc(176 * var(--u));
+  height: calc(48 * var(--u));
+  padding-inline: calc(20 * var(--u));
+  border: calc(1 * var(--u)) solid rgba(255, 255, 255, 0.40);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+  font-size: calc(18 * var(--u));
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: calc(0.36 * var(--u));
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.cs-embed-btn:hover {
+  transform: scale(1.03);
+  border-color: rgba(255, 255, 255, 0.70);
+}
+
+.cs-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(32 * var(--u));
+  width: 100%;
+  height: 100%;
+}
+.cs-stat {
+  position: relative;
+  height: 100%;
+  padding: calc(24 * var(--u));
+  border-radius: calc(8 * var(--u));
+  background-image: linear-gradient(180deg, rgba(19, 19, 19, 0.80) 0%, rgba(44, 44, 44, 0.80) 100%);
+  overflow: hidden;
+}
+.cs-stat-dot {
+  position: absolute;
+  left: calc(24 * var(--u));
+  top: calc(26 * var(--u));
+  width: calc(20 * var(--u));
+  height: calc(20 * var(--u));
+  background-image: radial-gradient(circle, #ffffff 0 calc(5 * var(--u)), transparent calc(5 * var(--u)));
+}
+.cs-stat-group {
+  margin: 0;
+  padding-left: calc(36 * var(--u));
+  font-size: calc(20 * var(--u));
+  line-height: calc(32 * var(--u));
+  font-weight: 700;
+  color: #ffffff;
+}
+.cs-stat-num {
+  margin: calc(62 * var(--u)) 0 0;
+  font-size: calc(64 * var(--u));
+  line-height: calc(72 * var(--u));
+  font-weight: 510;
+  color: #ffffff;
+}
+.cs-stat-suffix { font-size: calc(40 * var(--u)); line-height: 1; }
+.cs-stat-desc {
+  margin: calc(8 * var(--u)) 0 0;
+  font-size: calc(14 * var(--u));
+  line-height: calc(24 * var(--u));
+  color: #b0b0b0;
+}
+
+/* --- mobile nav (hidden on desktop) -------------------------------------- */
+.cs-mobilenav { display: none; }
+.cs-tabs { display: none; }
+
+/* --- More Work (857:30990, 1920x1104) ------------------------------------- */
+.more-work {
+  position: relative;
+  z-index: 1;
+  height: calc(1104 * var(--fig));
+  overflow: hidden;
+  background: #0b0b0b;
+}
+.more-work-grid {
+  background-image:
+    linear-gradient(to right, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px);
+  background-size: calc(200 * var(--fig)) 100%, 100% calc(184 * var(--fig));
+  background-position: calc(160 * var(--fig)) 0, 0 0;
+  background-repeat: repeat;
+}
+.more-work-fade { z-index: 3; }
+.more-work-fade--top { display: none; }
+.more-work-fade--bottom {
+  top: calc(886 * var(--fig));
+  height: calc(500 * var(--fig));
+  background-image: linear-gradient(180deg, rgba(11, 11, 11, 0) 68%, #0b0b0b 100%);
+}
+.more-work-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  padding-top: calc(140 * var(--fig));
+}
+.more-work-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(228 * var(--fig));
+  height: calc(41 * var(--fig));
+  border: calc(1 * var(--fig)) solid rgba(224, 224, 224, 0.10);
+  border-radius: calc(8 * var(--fig));
+  background: #0d0d0d;
+  color: #ffffff;
+  font-size: calc(16 * var(--fig));
+  line-height: 1;
+  font-weight: 590;
+}
+.more-work-title {
+  width: calc(1022 * var(--fig));
+  margin: calc(27 * var(--fig)) auto 0;
+  font-size: calc(160 * var(--fig));
+  line-height: calc(160 * var(--fig));
+  letter-spacing: calc(3.2 * var(--fig));
+  font-weight: 510;
+  text-align: center;
+  color: #ffffff;
+}
+.more-work-track {
+  display: flex;
+  gap: calc(82 * var(--fig));
+  width: calc(1590 * var(--fig));
+  margin: calc(60 * var(--fig)) auto 0;
+}
+.more-work .project {
+  position: relative;
+  flex: 0 0 calc(754 * var(--fig));
+  width: calc(754 * var(--fig));
+  cursor: pointer;
+}
+.more-work .project-image {
+  display: block;
+  width: 100%;
+  height: calc(484 * var(--fig));
+  padding: calc(7 * var(--fig));
+  border: calc(1 * var(--fig)) solid rgba(208, 208, 208, 0.20);
+  border-radius: calc(8 * var(--fig));
+  background-color: #010101;
+  background-image: linear-gradient(180deg, #000000 30.6%, #666666 100%);
+  overflow: hidden;
+}
+.more-work .project-media {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(7 * var(--fig));
+  overflow: hidden;
+}
+.more-work .project-media img,
+.more-work .project-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 0.35s ease;
+}
+.more-work .project:hover .project-media img,
+.more-work .project:hover .project-media video { scale: 1.025; }
+.more-work .project-wash {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.20) 30.6%, rgba(102, 102, 102, 0.20) 100%);
+}
+.more-work .project-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(40 * var(--fig));
+  margin-top: calc(24 * var(--fig));
+  font-size: calc(24 * var(--fig));
+  line-height: calc(40 * var(--fig));
+  font-weight: 600;
+}
+.more-work .project-open {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.more-work .project:hover .project-open { opacity: 1; }
+.more-work-scroll { display: none; }
+
+/* ============================================================================
+   Tablet / mobile — 393px Figma frame, scaled by --cs-u
+   ========================================================================== */
+@media (max-width: 1023px) {
+  :root {
+    --cs-u: min(calc(100vw / 393), 1.3px);
+    /* Horizontal inset that keeps the 393px mobile composition centred when
+       the design is scaled up on tablets (1024px and below). 0 on mobile. */
+    --cs-x: max(0px, calc((100vw - (393 * var(--cs-u))) / 2));
+  }
+
+  .cs-page { overflow: hidden; }
+
+  /* hero (1181:476, 393x880; content flows to 1299 for the default copy) */
+  .cs-hero {
+    background: transparent;
+  }
+  .cs-hero-bg {
+    height: calc(880 * var(--cs-u));
+    background: #0b0b0b;
+  }
+  .cs-hero-flow {
+    padding-top: calc(276 * var(--cs-u));
+  }
+  .cs-hero-ground {
+    /* Mobile homepage abstract: 954x954 radial centred at the top over
+       #0b0b0b (Hero.tsx `.hero-m-abstract`). */
+    background-color: #0b0b0b;
+    background-image:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(102, 102, 102, 0.02) 100%),
+      radial-gradient(50% 50% at 50% 50%, rgba(20, 20, 20, 0.80) 0%, #010101 100%);
+    background-size: 100% 100%, calc(954 * var(--cs-u)) calc(954 * var(--cs-u));
+    background-position: 0 0, 50% 0;
+    background-repeat: no-repeat;
+  }
+  .cs-hero-grid {
+    background-image:
+      linear-gradient(to right, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px);
+    background-size: calc(100 * var(--cs-u)) 100%, 100% calc(100 * var(--cs-u));
+    background-position: 0 0, 0 calc(80 * var(--cs-u));
+  }
+  .cs-hero-fade { display: none; }
+  .cs-eyebrow {
+    border-width: calc(1 * var(--cs-u));
+    border-radius: calc(8 * var(--cs-u));
+    font-size: calc(14 * var(--cs-u));
+  }
+  .cs-hero-eyebrow {
+    margin-left: calc(140.5 * var(--cs-u) + var(--cs-x));
+    width: calc(105 * var(--cs-u));
+    height: calc(40 * var(--cs-u));
+  }
+  .cs-hero-title {
+    margin-left: calc(16 * var(--cs-u) + var(--cs-x));
+    margin-top: calc(20 * var(--cs-u));
+    width: calc(353 * var(--cs-u));
+    font-size: calc(64 * var(--cs-u));
+    line-height: calc(80 * var(--cs-u));
+    letter-spacing: calc(2.56 * var(--cs-u));
+  }
+  .cs-hero-subtitle {
+    margin-left: calc(16 * var(--cs-u) + var(--cs-x));
+    margin-top: calc(16 * var(--cs-u));
+    width: calc(353 * var(--cs-u));
+    font-size: calc(24 * var(--cs-u));
+    line-height: calc(40 * var(--cs-u));
+    letter-spacing: calc(0.48 * var(--cs-u));
+  }
+  /* One natural paragraph at the 393 frame: same copy, no forced breaks. */
+  .cs-hero-subtitle-stack { display: none; }
+  .cs-hero-subtitle-flow { display: inline; }
+  .cs-main-frame {
+    margin-left: calc(20 * var(--cs-u) + var(--cs-x));
+    margin-top: calc(121 * var(--cs-u));
+    width: calc(353 * var(--cs-u));
+    height: calc(236 * var(--cs-u));
+    padding: calc(5 * var(--cs-u));
+    border-width: calc(1 * var(--cs-u));
+    border-radius: calc(8 * var(--cs-u));
+  }
+  .cs-main-media { border-radius: calc(6 * var(--cs-u)); }
+  .cs-meta {
+    margin-left: calc(20 * var(--cs-u) + var(--cs-x));
+    margin-top: calc(30 * var(--cs-u));
+    width: calc(353 * var(--cs-u));
+    grid-template-columns: calc(169 * var(--cs-u)) calc(169 * var(--cs-u));
+    column-gap: calc(16 * var(--cs-u));
+    row-gap: calc(24 * var(--cs-u));
+  }
+  .cs-meta-cell { padding-left: 0; }
+  .cs-meta-cell::before { display: none; }
+  .cs-meta-label {
+    font-size: calc(16 * var(--cs-u));
+    line-height: calc(24 * var(--cs-u));
+    letter-spacing: calc(0.32 * var(--cs-u));
+  }
+  .cs-meta-value {
+    margin-top: calc(8 * var(--cs-u));
+    font-size: calc(16 * var(--cs-u));
+    line-height: calc(32 * var(--cs-u));
+    letter-spacing: calc(0.32 * var(--cs-u));
+  }
+  .cs-hero-actions {
+    margin-left: calc(42 * var(--cs-u) + var(--cs-x));
+    margin-top: calc(8 * var(--cs-u));
+    gap: calc(16 * var(--cs-u));
+  }
+  .cs-btn-white {
+    min-width: calc(140 * var(--cs-u));
+    height: calc(48 * var(--cs-u));
+    padding-inline: calc(18 * var(--cs-u));
+    font-size: calc(14 * var(--cs-u));
+    letter-spacing: calc(0.28 * var(--cs-u));
+    box-shadow: calc(1 * var(--cs-u)) calc(1 * var(--cs-u)) calc(40 * var(--cs-u)) calc(1 * var(--cs-u)) rgba(255, 255, 255, 0.2);
+  }
+  .cs-btn-ghost {
+    min-width: calc(154 * var(--cs-u));
+    height: calc(48 * var(--cs-u));
+    padding-inline: calc(18 * var(--cs-u));
+    font-size: calc(16 * var(--cs-u));
+    letter-spacing: calc(0.32 * var(--cs-u));
+    box-shadow: calc(1 * var(--cs-u)) calc(1 * var(--cs-u)) calc(40 * var(--cs-u)) calc(1 * var(--cs-u)) rgba(255, 255, 255, 0.2);
+  }
+
+  /* stage (393x994; block 351x794 at y150) */
+  .cs-stage {
+    height: calc(994 * var(--cs-u));
+    margin-top: 0;
+  }
+  .cs-stage-grid {
+    background-image:
+      linear-gradient(to right, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px);
+    background-size: calc(100 * var(--cs-u)) 100%, 100% calc(100 * var(--cs-u));
+    background-position: 0 0, 0 calc(80 * var(--cs-u));
+  }
+  .cs-stage-fade { background-image: linear-gradient(180deg, rgba(11, 11, 11, 0) 30%, #0b0b0b 90%); }
+  .cs-stage-fade--top {
+    top: 0;
+    height: calc(146 * var(--cs-u));
+  }
+  .cs-stage-fade--bottom { display: none; }
+  .cs-cards {
+    left: calc(21 * var(--cs-u) + var(--cs-x));
+    top: calc(150 * var(--cs-u));
+    width: calc(351 * var(--cs-u));
+    height: calc(794 * var(--cs-u));
+    display: flex;
+    flex-direction: column;
+    border: 0;
+    border-radius: calc(4 * var(--cs-u));
+    background: transparent;
+    overflow: hidden;
+  }
+  .cs-sidenav { display: none; }
+
+  .cs-mobilenav {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    width: 100%;
+    height: calc(132 * var(--cs-u));
+    border: calc(1 * var(--cs-u)) solid rgba(208, 208, 208, 0.10);
+    border-radius: calc(4 * var(--cs-u)) calc(4 * var(--cs-u)) 0 0;
+    background: #1c1c1c;
+    overflow: hidden;
+  }
+  .cs-mobilenav-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(12 * var(--cs-u));
+    height: calc(32 * var(--cs-u));
+    margin-top: calc(20 * var(--cs-u));
+  }
+  .cs-mobilenav-logo {
+    width: calc(32 * var(--cs-u));
+    height: calc(32 * var(--cs-u));
+    border-radius: calc(4 * var(--cs-u));
+    overflow: hidden;
+  }
+  .cs-mobilenav-title {
+    font-size: calc(28 * var(--cs-u));
+    line-height: calc(32 * var(--cs-u));
+    font-weight: 700;
+    letter-spacing: calc(0.56 * var(--cs-u));
+    white-space: nowrap;
+    background-image: linear-gradient(90deg, #ffffff 52.9%, rgba(176, 176, 176, 0.10) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cs-tabs {
+    display: flex;
+    gap: calc(8 * var(--cs-u));
+    height: calc(40 * var(--cs-u));
+    margin-top: calc(20 * var(--cs-u));
+    padding-inline: calc(16 * var(--cs-u));
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cs-tabs::-webkit-scrollbar { display: none; }
+  .cs-tab {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    height: calc(40 * var(--cs-u));
+    padding-inline: calc(12 * var(--cs-u));
+    border: calc(1 * var(--cs-u)) solid rgba(255, 255, 255, 0.10);
+    border-radius: var(--radius-pill);
+    background-image: linear-gradient(180deg, rgba(19, 19, 19, 0.10) 0%, rgba(44, 44, 44, 0.10) 100%);
+    color: rgba(136, 136, 136, 0.60);
+    font-size: calc(16 * var(--cs-u));
+    line-height: calc(20 * var(--cs-u));
+    letter-spacing: calc(0.32 * var(--cs-u));
+    white-space: nowrap;
+    transition: color 0.25s ease, border-color 0.25s ease;
+  }
+  .cs-tab[data-active="true"] {
+    border: calc(0.5 * var(--cs-u)) solid #ffffff;
+    background-image: linear-gradient(180deg, #131313 0.7%, rgba(44, 44, 44, 0) 100%);
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .cs-panel-frame {
+    flex: 1 1 auto;
+    height: auto;
+    border-radius: 0 0 calc(4 * var(--cs-u)) calc(4 * var(--cs-u));
+  }
+  .cs-artboard {
+    inset: calc(8 * var(--cs-u));
+    border-width: calc(1 * var(--cs-u));
+    border-radius: calc(4 * var(--cs-u));
+  }
+  .cs-artboard-dots {
+    inset: auto;
+    left: calc(18 * var(--cs-u));
+    top: calc(16 * var(--cs-u));
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle, #202020 0 calc(1 * var(--cs-u)), transparent calc(1 * var(--cs-u)));
+    background-size: calc(18 * var(--cs-u)) calc(18 * var(--cs-u));
+  }
+
+  /* panels — copy column 303 wide, centred in the 335-wide ArtBoard */
+  .cs-panel { transform: translateY(calc(8 * var(--cs-u))); }
+  .cs-panel-inner {
+    --u: var(--cs-u);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .cs-panel-inner[data-layout="center"] { justify-content: center; }
+  .cs-panel-inner[data-layout="top"] {
+    justify-content: flex-start;
+    padding-top: calc(var(--m-top) * var(--cs-u));
+  }
+  .cs-panel-inner[data-layout="center"] .cs-panel-copy,
+  .cs-panel-inner[data-layout="top"] .cs-panel-copy {
+    position: static;
+    left: auto;
+    top: auto;
+    width: calc(303 * var(--cs-u));
+  }
+  .cs-panel-inner[data-layout="top"] .cs-panel-media {
+    position: static;
+    left: auto;
+    top: auto;
+    width: calc(303 * var(--cs-u));
+    height: auto;
+    margin-top: calc(var(--m-gap) * var(--cs-u));
+  }
+  .cs-h2 {
+    font-size: calc(32 * var(--cs-u));
+    line-height: calc(40 * var(--cs-u));
+  }
+  .cs-body {
+    margin-top: calc(24 * var(--cs-u));
+    font-size: calc(16 * var(--cs-u));
+    line-height: calc(32 * var(--cs-u));
+  }
+  .cs-body--block { margin-top: 0; }
+
+  /* block renderers shrink to the 303 column */
+  .cs-flow { gap: calc(10 * var(--cs-u)); }
+  .cs-node {
+    min-width: calc(120 * var(--cs-u));
+    max-width: calc(220 * var(--cs-u));
+    padding: calc(10 * var(--cs-u)) calc(12 * var(--cs-u));
+    border-radius: calc(8 * var(--cs-u));
+  }
+  .cs-node-title { font-size: calc(13 * var(--cs-u)); line-height: calc(18 * var(--cs-u)); }
+  .cs-node-sub { font-size: calc(11 * var(--cs-u)); line-height: calc(16 * var(--cs-u)); }
+  .cs-tablewrap { height: auto; max-height: calc(520 * var(--cs-u)); }
+  .cs-table { font-size: calc(11 * var(--cs-u)); line-height: calc(18 * var(--cs-u)); }
+  .cs-table th,
+  .cs-table td {
+    min-width: calc(150 * var(--cs-u));
+    padding: calc(10 * var(--cs-u)) calc(12 * var(--cs-u));
+  }
+  .cs-flowgroups { height: auto; gap: calc(16 * var(--cs-u)); }
+  .cs-ds { height: auto; gap: calc(16 * var(--cs-u)); overflow: visible; }
+  .cs-ds-top { grid-template-columns: 1fr; row-gap: calc(20 * var(--cs-u)); }
+  .cs-ds-icons-frame {
+    grid-template-columns: repeat(8, 1fr);
+    grid-auto-rows: calc(38 * var(--cs-u));
+    width: 100%;
+    padding: calc(10 * var(--cs-u)) 0 0 calc(10 * var(--cs-u));
+  }
+  .cs-ds-colors { grid-template-columns: repeat(3, 1fr); gap: calc(10 * var(--cs-u)); }
+  .cs-swatch-box { height: calc(48 * var(--cs-u)); }
+  .cs-ds-h3 { font-size: calc(16 * var(--cs-u)); }
+  .cs-chip { font-size: calc(12 * var(--cs-u)); }
+  .cs-embed { height: auto; }
+  .cs-frame-link { height: auto; aspect-ratio: 1008 / 598; }
+  .cs-embed-btn {
+    position: static;
+    margin-top: calc(24 * var(--cs-u));
+    min-width: calc(176 * var(--cs-u));
+    height: calc(48 * var(--cs-u));
+    font-size: calc(18 * var(--cs-u));
+  }
+  .cs-stats {
+    grid-template-columns: 1fr;
+    gap: calc(16 * var(--cs-u));
+    height: auto;
+  }
+  .cs-stat { height: auto; min-height: calc(200 * var(--cs-u)); padding: calc(20 * var(--cs-u)); }
+  .cs-stat-dot { left: calc(20 * var(--cs-u)); top: calc(22 * var(--cs-u)); }
+  .cs-stat-group { padding-left: calc(32 * var(--cs-u)); font-size: calc(16 * var(--cs-u)); line-height: calc(24 * var(--cs-u)); }
+  .cs-stat-num { margin-top: calc(28 * var(--cs-u)); font-size: calc(48 * var(--cs-u)); line-height: calc(56 * var(--cs-u)); }
+  .cs-stat-suffix { font-size: calc(30 * var(--cs-u)); }
+  .cs-stat-desc { font-size: calc(13 * var(--cs-u)); line-height: calc(22 * var(--cs-u)); }
+
+  /* More Work (1265:24727, 393x614) */
+  .more-work { height: calc(614 * var(--cs-u)); }
+  .more-work-grid {
+    background-image:
+      linear-gradient(to right, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px);
+    background-size: calc(100 * var(--cs-u)) 100%, 100% calc(100 * var(--cs-u));
+    background-position: 0 0, 0 calc(80 * var(--cs-u));
+  }
+  .more-work-fade--top { display: none; }
+  .more-work-fade--bottom {
+    top: calc(514 * var(--cs-u));
+    height: calc(146 * var(--cs-u));
+    background-image: linear-gradient(180deg, rgba(11, 11, 11, 0) 30%, #0b0b0b 88.3%);
+  }
+  .more-work-inner { padding-top: calc(80 * var(--cs-u)); }
+  .more-work-eyebrow {
+    width: calc(207 * var(--cs-u));
+    height: calc(40 * var(--cs-u));
+    border-width: calc(1 * var(--cs-u));
+    border-radius: calc(8 * var(--cs-u));
+    font-size: calc(14 * var(--cs-u));
+  }
+  .more-work-title {
+    width: calc(353 * var(--cs-u));
+    margin-top: calc(20 * var(--cs-u));
+    font-size: calc(64 * var(--cs-u));
+    line-height: calc(80 * var(--cs-u));
+    letter-spacing: calc(2.56 * var(--cs-u));
+  }
+  .more-work-track {
+    gap: calc(24 * var(--cs-u));
+    width: 100%;
+    margin-top: calc(40 * var(--cs-u));
+    padding-inline: calc(20 * var(--cs-u));
+    scroll-padding-inline: calc(20 * var(--cs-u));
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .more-work-track::-webkit-scrollbar { display: none; }
+  .more-work .project {
+    flex: 0 0 calc(269 * var(--cs-u));
+    width: calc(269 * var(--cs-u));
+    scroll-snap-align: start;
+  }
+  .more-work .project-image {
+    height: calc(202 * var(--cs-u));
+    padding: calc(5 * var(--cs-u));
+    border-width: calc(1 * var(--cs-u));
+    border-radius: calc(8 * var(--cs-u));
+  }
+  .more-work .project-media { border-radius: calc(7 * var(--cs-u)); }
+  .more-work .project-caption {
+    height: calc(24 * var(--cs-u));
+    margin-top: calc(12 * var(--cs-u));
+    font-size: calc(18 * var(--cs-u));
+    line-height: calc(24 * var(--cs-u));
+    letter-spacing: calc(0.36 * var(--cs-u));
+  }
+  .more-work-scroll {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(2 * var(--cs-u));
+    width: calc(36 * var(--cs-u));
+    height: calc(16 * var(--cs-u));
+    margin-top: calc(20 * var(--cs-u));
+    border-radius: var(--radius-pill);
+    background: #242424;
+  }
+  .more-work-scroll-dot {
+    width: calc(10 * var(--cs-u));
+    height: calc(10 * var(--cs-u));
+    border: calc(1 * var(--cs-u)) solid rgba(176, 176, 176, 0.10);
+    border-radius: 50%;
+    background: rgba(176, 176, 176, 0.10);
+  }
+  .more-work-scroll-dot.is-current {
+    width: calc(12 * var(--cs-u));
+    height: calc(12 * var(--cs-u));
+    border: 0;
+    background: #ffffff;
+  }
 }

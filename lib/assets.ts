@@ -21,13 +21,20 @@ function isPublicIdField(key: string, value: unknown): value is string {
   return key.endsWith(PUBLIC_ID_SUFFIX) && typeof value === 'string' && value.length > 0;
 }
 
-/** Every non-empty `*PublicId` value referenced by a document. */
+/** Every non-empty `*PublicId` value referenced by a document (recursive — case-study subdocs too). */
 export function publicIdsOf(doc: Record<string, unknown> | null | undefined): string[] {
   if (!doc) return [];
-  return Object.entries(doc).reduce<string[]>((ids, [key, value]) => {
-    if (isPublicIdField(key, value)) ids.push(value);
-    return ids;
-  }, []);
+  const ids: string[] = [];
+  const visit = (v: unknown) => {
+    if (!v || typeof v !== 'object') return;
+    for (const [key, value] of Object.entries(v as Record<string, unknown>)) {
+      if (isPublicIdField(key, value)) ids.push(value);
+      else if (Array.isArray(value)) value.forEach(visit);
+      else visit(value);
+    }
+  };
+  visit(doc);
+  return ids;
 }
 
 /** Delete a set of public ids from Cloudinary (idempotent, errors swallowed). */

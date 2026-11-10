@@ -12,6 +12,12 @@ const ContactCTATabSchema = new Schema(
 const ContactCTASchema = new Schema(
   {
     tabs: { type: [ContactCTATabSchema], default: [] },
+    phone: { type: String, default: '+91 9325900669' },
+    email: { type: String, default: 'avipawar947@gmail.com' },
+    linkedinUrl: {
+      type: String,
+      default: 'https://www.linkedin.com/in/avinashpawar',
+    },
   },
   { timestamps: true }
 );

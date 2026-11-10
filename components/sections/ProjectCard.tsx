@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useId, useRef, useState } from "react";
+import Link from "next/link";
+import { useId, useRef } from "react";
 
 import { gsap, ScrollTrigger } from "@/lib/animations";
 import { useIsomorphicLayoutEffect } from "@/lib/hooks/useIsomorphicLayoutEffect";
 import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
-import CaseStudyDialog from "@/components/ui/CaseStudyDialog";
 import type { ProjectItem } from "@/types/content";
 
 /**
@@ -22,15 +22,17 @@ import type { ProjectItem } from "@/types/content";
  * design's vocabulary — a mask wipe rather than a slide, and a drift small
  * enough that the frame never appears to move.
  *
- * The card is one hit target: an overlay button over the whole card, so the
- * caption can keep its heading role. It opens the case study dialog, or
- * follows `link` once the CMS has one.
+ * The card is one hit target: an overlay link over the whole card, so the
+ * caption can keep its heading role. It opens the case-study detail page
+ * (/case-study/[slug]); the media can be an image or a video (CMS mediaType).
  */
 export default function ProjectCard({ project }: { project: ProjectItem }) {
   const root = useRef<HTMLElement>(null);
   const captionId = useId();
-  const [previewOpen, setPreviewOpen] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const slug = project.slug || project._id;
+  const href = `/case-study/${slug}`;
+  const isVideo = project.mediaType === "video" && !!project.videoUrl;
 
   useIsomorphicLayoutEffect(() => {
     const el = root.current;
@@ -79,13 +81,22 @@ export default function ProjectCard({ project }: { project: ProjectItem }) {
     };
   }, [prefersReducedMotion]);
 
-  const href = externalHref(project.link);
-
   return (
     <article ref={root} className="project group">
       <span className="project-image" data-cursor="project">
         <span className="project-media" data-card-media>
-          {project.imageUrl ? (
+          {isVideo ? (
+            <video
+              src={project.videoUrl}
+              poster={project.videoPosterUrl || undefined}
+              autoPlay
+              muted
+              loop
+              playsInline
+              aria-label={project.title}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          ) : project.imageUrl ? (
             <Image
               src={project.imageUrl}
               alt={project.title}
@@ -108,37 +119,12 @@ export default function ProjectCard({ project }: { project: ProjectItem }) {
         </span>
       </h3>
 
-      <button
-        type="button"
+      <Link
+        href={href}
         className="absolute inset-0"
         aria-labelledby={captionId}
-        onClick={() => {
-          if (href) {
-            window.open(href, "_blank", "noopener,noreferrer");
-            return;
-          }
-          setPreviewOpen(true);
-        }}
+        aria-label={`${project.title} — view case study`}
       />
-
-      {previewOpen && (
-        <CaseStudyDialog
-          title={project.title}
-          imageUrl={project.imageUrl}
-          onClose={() => setPreviewOpen(false)}
-        />
-      )}
     </article>
   );
-}
-
-/** Only http(s) leaves the site; anything else is treated as no link yet. */
-function externalHref(link: string): string | null {
-  if (!link) return null;
-  try {
-    const url = new URL(link);
-    return url.protocol === "https:" || url.protocol === "http:" ? url.href : null;
-  } catch {
-    return null;
-  }
 }

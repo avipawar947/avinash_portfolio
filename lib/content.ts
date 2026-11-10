@@ -15,7 +15,7 @@ import ContactCTAModel from "@/models/ContactCTA";
 import FooterModel from "@/models/Footer";
 import SettingsModel from "@/models/Settings";
 import { seedContent } from "./seed-data";
-import type { HomeContent } from "@/types/content";
+import type { HomeContent, ProjectItem } from "@/types/content";
 
 /**
  * Fetches every section's content for the homepage in one place.
@@ -78,7 +78,11 @@ export async function getHomeContent(): Promise<HomeContent> {
         ? (lifeBehindText as any)
         : seedContent.lifeBehindText,
       tools: tools?.length ? (tools as any) : seedContent.tools,
-      contactCTA: (contactCTA as any) || seedContent.contactCTA,
+      // Merge so existing documents without the new contact fields still get
+      // the seeded phone/email/LinkedIn defaults.
+      contactCTA: contactCTA
+        ? { ...seedContent.contactCTA, ...(contactCTA as any) }
+        : seedContent.contactCTA,
       footer: (footer as any) || seedContent.footer,
       settings: (settings as any) || seedContent.settings,
     };
@@ -88,5 +92,66 @@ export async function getHomeContent(): Promise<HomeContent> {
       (err as Error).message,
     );
     return seedContent;
+  }
+}
+
+export interface CaseStudyData {
+  project: ProjectItem;
+  related: ProjectItem[];
+  navbar: HomeContent["navbar"];
+  contactCTA: HomeContent["contactCTA"];
+  footer: HomeContent["footer"];
+  settings: HomeContent["settings"];
+}
+
+/**
+ * One case-study detail page (/case-study/[slug]).
+ * Falls back to seed projects (matched by slug, or by _id for old links)
+ * so the page never blanks before Mongo is seeded.
+ */
+export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | null> {
+  const home = await getHomeContent();
+  // Normalize: allow passing raw _id (old links) as well as slug.
+  try {
+    await connectDB();
+    const bySlug = await ProjectModel.findOne({ slug }).lean();
+    const project = bySlug
+      ? (bySlug as any)
+      : await ProjectModel.findById(slug).lean().catch(() => null);
+    if (!project) {
+      const seedHit = seedContent.projects.find((p: any) => p.slug === slug || p._id === slug);
+      if (!seedHit) return null;
+      return {
+        project: seedHit as any,
+        related: seedContent.projects.filter((p: any) => p._id !== (seedHit as any)._id) as any,
+        navbar: home.navbar,
+        contactCTA: home.contactCTA,
+        footer: home.footer,
+        settings: home.settings,
+      };
+    }
+    const related = await ProjectModel.find({ _id: { $ne: project._id }, slug: { $ne: "" } })
+      .sort("order")
+      .lean();
+    return {
+      project: project as any,
+      related: (related?.length ? (related as any) : home.projects.filter((p: any) => p._id !== project._id)) ?? [],
+      navbar: home.navbar,
+      contactCTA: home.contactCTA,
+      footer: home.footer,
+      settings: home.settings,
+    };
+  } catch (err) {
+    console.warn("[content] Case study fallback —", (err as Error).message);
+    const seedHit = seedContent.projects.find((p: any) => p.slug === slug || p._id === slug);
+    if (!seedHit) return null;
+    return {
+      project: seedHit as any,
+      related: seedContent.projects.filter((p: any) => p._id !== (seedHit as any)._id) as any,
+      navbar: home.navbar,
+      contactCTA: home.contactCTA,
+      footer: home.footer,
+      settings: home.settings,
+    };
   }
 }

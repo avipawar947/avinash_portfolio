@@ -21,11 +21,17 @@ import Image from "next/image";
 export default function ContactCTA({
   content,
   footer,
+  variant = "home",
 }: {
   content: ContactCTAContent;
   footer: FooterContent;
+  /** `case-study` swaps the Contact Us pill for the phone/email/LinkedIn row. */
+  variant?: "home" | "case-study";
 }) {
   const linkedin = footer.socialLinks.find((s) => s.platform === "linkedin");
+  const phone = content.phone || "+91 9325900669";
+  const email = content.email || "avipawar947@gmail.com";
+  const linkedinUrl = content.linkedinUrl || linkedin?.url;
 
   return (
     <section
@@ -83,21 +89,59 @@ export default function ContactCTA({
               </p>
 
               {/* --- CTA button row (Frame 95628) ------------------ */}
-              <div className="contact-actions flex items-center justify-start">
-                <a
-                  href="#"
-                  className="contact-cta inline-flex shrink-0 items-center justify-center rounded-[100px] border border-white/10 bg-btn-gradient text-[#010101] glow-shadow transition-transform hover:scale-[1.02] active:scale-95"
-                >
-                  Contact Us
-                </a>
-                {linkedin && (
-                  <SocialIcon
-                    platform="linkedin"
-                    url={linkedin.url}
-                    className="contact-linkedin"
-                  />
-                )}
-              </div>
+              {variant === "case-study" ? (
+                <div className="contact-actions cs-contact-actions flex items-center justify-start">
+                  <a
+                    href={`tel:${phone.replace(/[^\d+]/g, "")}`}
+                    className="cs-contact-phone inline-flex shrink-0 items-center justify-center"
+                  >
+                    <Image
+                      src="/svg/case-study/icons/icon-call.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="cs-contact-icon"
+                    />
+                    <span>{phone}</span>
+                  </a>
+                  <a
+                    href={`mailto:${email}`}
+                    className="cs-contact-email inline-flex shrink-0 items-center justify-center"
+                  >
+                    <Image
+                      src="/svg/case-study/icons/icon-gmail.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="cs-contact-icon"
+                    />
+                    <span>{email}</span>
+                  </a>
+                  {linkedinUrl && (
+                    <SocialIcon
+                      platform="linkedin"
+                      url={linkedinUrl}
+                      className="contact-linkedin cs-contact-linkedin"
+                    />
+                  )}
+                </div>
+              ) : (
+                <div className="contact-actions flex items-center justify-start">
+                  <a
+                    href="#"
+                    className="contact-cta inline-flex shrink-0 items-center justify-center rounded-[100px] border border-white/10 bg-btn-gradient text-[#010101] glow-shadow transition-transform hover:scale-[1.02] active:scale-95"
+                  >
+                    Contact Us
+                  </a>
+                  {linkedin && (
+                    <SocialIcon
+                      platform="linkedin"
+                      url={linkedin.url}
+                      className="contact-linkedin"
+                    />
+                  )}
+                </div>
+              )}
             </div>
 
             {/* --- Right device tabs + mockup ---------------------- */}

@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 // Enforced upload limits (configurable via .env.local if needed).
 const MAX_IMAGE_BYTES = Number(process.env.CLOUDINARY_MAX_IMAGE_MB || 10) * 1024 * 1024; // 10 MB
 const MAX_PDF_BYTES = Number(process.env.CLOUDINARY_MAX_PDF_MB || 15) * 1024 * 1024; // 15 MB
+const MAX_VIDEO_BYTES = Number(process.env.CLOUDINARY_MAX_VIDEO_MB || 100) * 1024 * 1024; // 100 MB
 
 const ALLOWED_IMAGE_TYPES = new Set([
   'image/jpeg',
@@ -17,6 +18,12 @@ const ALLOWED_IMAGE_TYPES = new Set([
   'image/avif',
 ]);
 const PDF_TYPE = 'application/pdf';
+const ALLOWED_VIDEO_TYPES = new Set([
+  'video/mp4',
+  'video/webm',
+  'video/quicktime',
+  'video/x-msvideo',
+]);
 
 function humanSize(bytes: number) {
   return `${Math.round(bytes / 1024 / 1024)} MB`;
@@ -40,12 +47,13 @@ export const POST = withAdmin(async (req: NextRequest) => {
   }
 
   const isPdf = file.type === PDF_TYPE;
-  const maxBytes = isPdf ? MAX_PDF_BYTES : MAX_IMAGE_BYTES;
+  const isVideo = ALLOWED_VIDEO_TYPES.has(file.type);
+  const maxBytes = isPdf ? MAX_PDF_BYTES : isVideo ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
 
-  if (!isPdf && !ALLOWED_IMAGE_TYPES.has(file.type)) {
+  if (!isPdf && !isVideo && !ALLOWED_IMAGE_TYPES.has(file.type)) {
     return NextResponse.json(
       {
-        error: `Unsupported file type: "${file.type || 'unknown'}". Allowed: images (jpg, png, webp, gif, svg, avif) or a PDF resume.`,
+        error: `Unsupported file type: "${file.type || 'unknown'}". Allowed: images (jpg, png, webp, gif, svg, avif), video (mp4, webm, mov) or a PDF resume.`,
       },
       { status: 400 }
     );
@@ -54,7 +62,7 @@ export const POST = withAdmin(async (req: NextRequest) => {
   if (file.size > maxBytes) {
     return NextResponse.json(
       {
-        error: `File too large (${humanSize(file.size)}). Maximum ${humanSize(maxBytes)}${isPdf ? ' for resumes' : ' for images'}.`,
+        error: `File too large (${humanSize(file.size)}). Maximum ${humanSize(maxBytes)}${isPdf ? ' for resumes' : isVideo ? ' for videos' : ' for images'}.`,
       },
       { status: 400 }
     );
