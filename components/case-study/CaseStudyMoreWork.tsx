@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ProjectCard from "@/components/sections/ProjectCard";
 import type { ProjectItem } from "@/types/content";
 
@@ -18,6 +18,7 @@ import type { ProjectItem } from "@/types/content";
 export default function CaseStudyMoreWork({ related }: { related: ProjectItem[] }) {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const picks = related.slice(0, 2);
+  const [activeIndex, setActiveIndex] = useState(Math.max(0, picks.length - 1));
   if (!picks.length) return null;
 
   const scrollToIndex = (index: number) => {
@@ -28,6 +29,7 @@ export default function CaseStudyMoreWork({ related }: { related: ProjectItem[] 
     );
     const card = cards[index];
     card?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+    setActiveIndex(index);
   };
 
   return (
@@ -55,7 +57,8 @@ export default function CaseStudyMoreWork({ related }: { related: ProjectItem[] 
               role="button"
               tabIndex={0}
               aria-label={`Scroll to case study ${i + 1}`}
-              className={`more-work-scroll-dot${i === picks.length - 1 ? " is-current" : ""}`}
+              aria-current={i === activeIndex}
+              className={`more-work-scroll-dot${i === activeIndex ? " is-current" : ""}`}
               onClick={() => scrollToIndex(i)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") scrollToIndex(i);
