@@ -478,7 +478,23 @@ function makePanel(id: string, heading: string, body: string, blocks: any[]): Pa
 /** Build the same 11 panels for every project, from either CMS content shape. */
 export function buildPanels(project: ProjectItem): Panel[] {
   const rich = legacySections(project);
-  if (rich?.length) {
+  const cs = project.caseStudy ?? {};
+  const hasFlat = Boolean(
+    cs.overview?.body?.trim() ||
+    cs.challenges?.body?.trim() ||
+    cs.solutions?.body?.trim() ||
+    cs.infoArch?.body?.trim() ||
+    cs.infoArch?.nodes?.length ||
+    cs.userJourney?.rows?.length ||
+    cs.userFlow?.groups?.length ||
+    cs.userFlow?.nodes?.length ||
+    cs.designSystem?.colors?.length ||
+    cs.designSystem?.components?.length ||
+    cs.designSystem?.icons?.length ||
+    cs.designSystem?.fonts?.length ||
+    cs.impact?.stats?.length
+  );
+  if (rich?.length && !hasFlat) {
     return rich.map((s) => {
       const paras = s.blocks.filter((b: any) => b.type === "paragraph").map((b: any) => b.text).filter(Boolean);
       const rest = s.blocks.filter((b: any) => b.type !== "paragraph" && b.type);
@@ -487,7 +503,6 @@ export function buildPanels(project: ProjectItem): Panel[] {
     });
   }
 
-  const cs = project.caseStudy ?? {};
   return [
     makePanel("overview", sectionHeading(cs.overview, "Overview"), sectionBody(cs.overview, ""), []),
     makePanel("challenges", sectionHeading(cs.challenges, "The Challenges"), sectionBody(cs.challenges, ""), []),
@@ -507,14 +522,11 @@ export function buildPanels(project: ProjectItem): Panel[] {
     makePanel("user-flow", sectionHeading(cs.userFlow, "User Flow"), sectionBody(cs.userFlow, ""), [
       {
         type: "flow",
-        groups: [
-          {
-            title: "Flow",
-            nodes: cs.userFlow?.nodes?.length
-              ? cs.userFlow.nodes.map((n: any) => ({ label: n.title, sub: n.sub }))
-              : FLOW_NODES.map((n) => ({ label: n.title, sub: n.sub })),
-          },
-        ],
+        groups: cs.userFlow?.groups?.length
+          ? cs.userFlow.groups.map((g: any) => ({ title: g.title, nodes: g.nodes ?? [] }))
+          : cs.userFlow?.nodes?.length
+            ? [{ title: "Flow", nodes: cs.userFlow.nodes.map((n: any) => ({ label: n.title, sub: n.sub })) }]
+            : [{ title: "Flow", nodes: FLOW_NODES.map((n) => ({ label: n.title, sub: n.sub })) }],
         imageUrl: cs.userFlow?.imageUrl,
         buttonLabel: cs.userFlow?.buttonLabel,
       },

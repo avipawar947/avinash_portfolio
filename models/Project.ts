@@ -93,6 +93,18 @@ const CaseStudySchema = new Schema(
           sub: { type: String, default: '' },
         },
       ],
+      groups: [
+        {
+          title: { type: String, default: '' },
+          nodes: [
+            {
+              label: { type: String, default: '' },
+              sub: { type: String, default: '' },
+              tone: { type: String, default: '' },
+            },
+          ],
+        },
+      ],
       buttonLabel: { type: String, default: '' },
       _id: false,
     },

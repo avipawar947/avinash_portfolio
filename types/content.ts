@@ -121,6 +121,7 @@ export interface ProjectCaseStudy {
     imageUrl?: string;
     imagePublicId?: string;
     nodes?: { title?: string; sub?: string }[];
+    groups?: { title?: string; nodes?: { label?: string; sub?: string; tone?: string }[] }[];
     buttonLabel?: string;
   };
   designSystem?: CaseStudySection & {
