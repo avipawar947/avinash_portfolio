@@ -2697,7 +2697,6 @@ body {
 .cs-hero-subtitle,
 .cs-body,
 .cs-meta-label,
-.cs-meta-value,
 .cs-navlink--active,
 .more-work .project-caption {
   background-image: linear-gradient(90deg, #ffffff 9.78%, rgba(176, 176, 176, 0.10) 100%);
@@ -2841,6 +2840,7 @@ body {
   letter-spacing: calc(0.64 * var(--fig));
   font-weight: 590;
   text-align: center;
+  text-transform: capitalize;
 }
 .cs-hero-subtitle-stack { display: block; }
 .cs-hero-subtitle-flow { display: none; }
@@ -2896,6 +2896,7 @@ body {
   line-height: calc(32 * var(--fig));
   letter-spacing: calc(0.4 * var(--fig));
   font-weight: 700;
+  text-transform: capitalize;
 }
 .cs-meta-value {
   margin-top: calc(8 * var(--fig));
@@ -2903,6 +2904,9 @@ body {
   line-height: calc(32 * var(--fig));
   letter-spacing: calc(0.32 * var(--fig));
   font-weight: 400;
+  text-transform: capitalize;
+  /* Figma 857:30945 etc: the gradient fill is hidden, values are solid grey. */
+  color: #b0b0b0;
 }
 .cs-hero-actions {
   margin-left: calc(807 * var(--fig));
@@ -3005,6 +3009,7 @@ body {
   line-height: calc(32 * var(--fig));
   font-weight: 700;
   letter-spacing: calc(0.56 * var(--fig));
+  text-transform: capitalize;
   white-space: nowrap;
   background-image: linear-gradient(90deg, #ffffff 52.9%, rgba(176, 176, 176, 0.10) 100%);
   -webkit-background-clip: text;
@@ -3039,6 +3044,7 @@ body {
   font-size: calc(16 * var(--fig));
   line-height: calc(20 * var(--fig));
   letter-spacing: calc(0.32 * var(--fig));
+  text-transform: capitalize;
   color: rgba(136, 136, 136, 0.60);
   white-space: nowrap;
   transition: color 0.25s ease;
@@ -3093,11 +3099,16 @@ body {
   --u: var(--fig);
 }
 .cs-panel-inner[data-layout="center"] {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
 }
+/* Figma pins the copy block at an explicit (left, top) on these slides
+   (Overview 191/302, Challenges 180/302, Solutions 180/270, Conclusion
+   191/328). Centering the block shifted the heading whenever the CMS copy
+   wrapped to a different number of lines than the Figma text layers. */
 .cs-panel-inner[data-layout="center"] .cs-panel-copy {
+  position: absolute;
+  left: calc(var(--copy-left) * var(--u));
+  top: calc(var(--copy-top) * var(--u));
   width: calc(var(--copy-w) * var(--u));
 }
 .cs-panel-inner[data-layout="top"] .cs-panel-copy {
@@ -3117,19 +3128,39 @@ body {
 .cs-h2 {
   font-size: calc(48 * var(--u));
   line-height: calc(64 * var(--u));
-  font-weight: 600;
+  font-weight: 590;
+  letter-spacing: calc(1.92 * var(--u));
   text-align: center;
+  text-transform: capitalize;
   color: #ffffff;
 }
 .cs-body {
   margin-top: calc(8 * var(--u));
   font-size: calc(18 * var(--u));
   line-height: calc(32 * var(--u));
-  font-weight: 400;
+  font-weight: 590;
+  letter-spacing: calc(0.36 * var(--u));
   text-align: center;
+  text-transform: capitalize;
   white-space: pre-line;
 }
 .cs-body--block { margin-top: 0; }
+
+/* Figma 1308:54210 etc: only the first copy line is fully lit, every
+   following line sits at 30% opacity. Mask the body to that height instead
+   of hard-coding per-line spans so CMS copy still wraps naturally. */
+.cs-panel-copy .cs-body:not(.cs-body--block) {
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    #000 0 calc(32 * var(--u)),
+    rgba(0, 0, 0, 0.3) calc(32 * var(--u))
+  );
+  mask-image: linear-gradient(
+    180deg,
+    #000 0 calc(32 * var(--u)),
+    rgba(0, 0, 0, 0.3) calc(32 * var(--u))
+  );
+}
 
 /* --- block renderers (diagrams / tables / tokens / embeds / stats) -------- */
 .cs-flow {
@@ -3559,7 +3590,25 @@ body {
   }
   /* One natural paragraph at the 393 frame: same copy, no forced breaks. */
   .cs-hero-subtitle-stack { display: none; }
-  .cs-hero-subtitle-flow { display: inline; }
+  .cs-hero-subtitle-flow { display: block; }
+  /* Figma 1181:475 fades the 6 subtitle lines: 1, .3, .3, .2, .2, .1.
+     Band the natural paragraph by 40px lines instead of dropping the fade. */
+  .cs-hero-subtitle {
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      #000 0 calc(40 * var(--cs-u)),
+      rgba(0, 0, 0, 0.3) calc(40 * var(--cs-u)) calc(120 * var(--cs-u)),
+      rgba(0, 0, 0, 0.2) calc(120 * var(--cs-u)) calc(200 * var(--cs-u)),
+      rgba(0, 0, 0, 0.1) calc(200 * var(--cs-u)) 100%
+    );
+    mask-image: linear-gradient(
+      180deg,
+      #000 0 calc(40 * var(--cs-u)),
+      rgba(0, 0, 0, 0.3) calc(40 * var(--cs-u)) calc(120 * var(--cs-u)),
+      rgba(0, 0, 0, 0.2) calc(120 * var(--cs-u)) calc(200 * var(--cs-u)),
+      rgba(0, 0, 0, 0.1) calc(200 * var(--cs-u)) 100%
+    );
+  }
   .cs-main-frame {
     margin-left: calc(20 * var(--cs-u) + var(--cs-x));
     margin-top: calc(121 * var(--cs-u));
@@ -3588,7 +3637,7 @@ body {
   .cs-meta-value {
     margin-top: calc(8 * var(--cs-u));
     font-size: calc(16 * var(--cs-u));
-    line-height: calc(32 * var(--cs-u));
+    line-height: calc(24 * var(--cs-u));
     letter-spacing: calc(0.32 * var(--cs-u));
   }
   .cs-hero-actions {
@@ -3675,6 +3724,7 @@ body {
     line-height: calc(32 * var(--cs-u));
     font-weight: 700;
     letter-spacing: calc(0.56 * var(--cs-u));
+    text-transform: capitalize;
     white-space: nowrap;
     background-image: linear-gradient(90deg, #ffffff 52.9%, rgba(176, 176, 176, 0.10) 100%);
     -webkit-background-clip: text;
@@ -3707,6 +3757,7 @@ body {
     font-size: calc(16 * var(--cs-u));
     line-height: calc(20 * var(--cs-u));
     letter-spacing: calc(0.32 * var(--cs-u));
+    text-transform: capitalize;
     white-space: nowrap;
     transition: color 0.25s ease, border-color 0.25s ease;
   }
@@ -3745,7 +3796,11 @@ body {
     flex-direction: column;
     align-items: center;
   }
-  .cs-panel-inner[data-layout="center"] { justify-content: center; }
+  .cs-panel-inner[data-layout="center"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .cs-panel-inner[data-layout="top"] {
     justify-content: flex-start;
     padding-top: calc(var(--m-top) * var(--cs-u));
@@ -3772,9 +3827,23 @@ body {
   .cs-body {
     margin-top: calc(24 * var(--cs-u));
     font-size: calc(16 * var(--cs-u));
-    line-height: calc(32 * var(--cs-u));
+    line-height: calc(24 * var(--cs-u));
+    letter-spacing: calc(0.32 * var(--cs-u));
   }
   .cs-body--block { margin-top: 0; }
+  /* Figma 1181:475 mobile: first body line lit, rest at 30%, on 24px lines. */
+  .cs-panel-copy .cs-body:not(.cs-body--block) {
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      #000 0 calc(24 * var(--cs-u)),
+      rgba(0, 0, 0, 0.3) calc(24 * var(--cs-u))
+    );
+    mask-image: linear-gradient(
+      180deg,
+      #000 0 calc(24 * var(--cs-u)),
+      rgba(0, 0, 0, 0.3) calc(24 * var(--cs-u))
+    );
+  }
 
   /* block renderers shrink to the 303 column */
   .cs-flow { gap: calc(10 * var(--cs-u)); }

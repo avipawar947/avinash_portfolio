@@ -85,7 +85,9 @@ export function heroBackground(project: ProjectItem): string {
 
 export function logoUrl(project: ProjectItem): string {
   const cs: any = project.caseStudy ?? {};
-  return cs.iconSvgUrl?.trim() || cs.logoUrl?.trim() || "/images/case-study/qistonpe/logo.webp";
+  // Left-nav mark comes from the CMS: "Project icon" (iconSvgUrl) first, then
+  // the uploaded wordmark (logoUrl). Empty means the nav renders a placeholder.
+  return cs.iconSvgUrl?.trim() || cs.logoUrl?.trim() || "";
 }
 
 export function sectionIcon(project: ProjectItem, key: string): string | undefined {

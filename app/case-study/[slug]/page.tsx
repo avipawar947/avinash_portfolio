@@ -45,7 +45,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
       />
       <main className="cs-page bg-[#0b0b0b]">
         <CaseStudyHero project={project} />
-        <CaseStudyViewer project={projectData} logoUrl={navLogo} projectTitle={heroTitle(project)} />
+        <CaseStudyViewer project={projectData} logoUrl={navLogo} projectTitle={heroTitle(project, true)} />
         <CaseStudyMoreWork related={related} />
         <ContactCTA content={contactCTA} footer={footer} variant="case-study" />
       </main>

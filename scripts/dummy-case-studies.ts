@@ -19,7 +19,14 @@ function makeDummy(title: string, slug: string) {
       `Guided steps, clear status at every stage, and nothing left halfway.`,
       `Designed to be used with confidence from the first screen to the last.`,
     ],
-    logoUrl: `/images/case-study/${slug === 'hrx' ? 'hrx/card' : slug === 'synclature' ? 'synclature/card' : 'qistonpe/logo'}.webp`,
+    logoUrl:
+      slug === 'hrx'
+        ? '/images/case-study/hrx/card.webp'
+        : slug === 'synclature'
+          ? '/images/case-study/synclature/card.webp'
+          : slug === 'nsl-luxe'
+            ? ''
+            : '/images/case-study/qistonpe/logo.webp',
     coverImageUrl: `/images/case-study/${slug === 'hrx' ? 'hrx/card' : slug === 'synclature' ? 'synclature/card' : 'qistonpe/hero-main'}.webp`,
     meta: [
       { label: 'Client', value: t },
@@ -78,7 +85,10 @@ function makeDummy(title: string, slug: string) {
       { key: 'conclusion', label: 'Conclusion', title: 'Conclusion', visible: true, order: 10, blocks: [para(`${t} brings the entire journey into one platform, so teams can move from first details to the finish with clarity. A clear tracking system and a consistent design system make a complex process feel simple and organised — something people can use with confidence.`)] },
     ],
     sectionIcons: [],
-    iconSvgUrl: '',
+    iconSvgUrl:
+      slug === 'hrx' || slug === 'synclature' || slug === 'nsl-luxe'
+        ? `/images/case-study/${slug}/logo-icon-light.png`
+        : '',
   };
 }
 

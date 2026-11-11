@@ -37,7 +37,22 @@ export const seedContent: HomeContent = {
   ],
   projects: [
     { _id: 'p1', title: 'HRX', slug: 'hrx', tag: 'Case Study', imageUrl: '/images/case-study/hrx/card.webp', mediaType: 'image', column: 'left', cropHeight: 118.12, cropTop: -8.95, wash: true, link: '', order: 0 },
-    { _id: 'p2', title: 'NSL Luxe', slug: 'nsl-luxe', tag: 'Case Study', imageUrl: '', mediaType: 'image', column: 'right', cropHeight: 105.67, cropTop: -2.73, link: '', order: 1 },
+    {
+      _id: 'p2',
+      title: 'NSL Luxe',
+      slug: 'nsl-luxe',
+      tag: 'Case Study',
+      imageUrl: '',
+      mediaType: 'image',
+      column: 'right',
+      cropHeight: 105.67,
+      cropTop: -2.73,
+      link: '',
+      order: 1,
+      caseStudy: {
+        iconSvgUrl: '/images/case-study/nsl-luxe/logo-icon-light.png',
+      },
+    },
     { _id: 'p3', title: 'Synclature', slug: 'synclature', tag: 'Case Study', imageUrl: '/images/case-study/synclature/card.webp', mediaType: 'image', column: 'left', cropHeight: 104.59, cropTop: -2.19, link: '', order: 2 },
     {
       _id: 'p4',
@@ -58,6 +73,7 @@ export const seedContent: HomeContent = {
           'Qiston Pe simplifies your vehicle financing journey with easy applications and seamless tracking. Take control of your loans, from application to approval, all in one place.',
         heroBackgroundUrl: '/images/case-study/qistonpe/hero-bg.webp',
         heroImageUrl: '/images/case-study/qistonpe/hero-main.webp',
+        iconSvgUrl: '/images/case-study/qistonpe/logo-icon-light.png',
         websiteUrl: 'https://qistonpe.com',
         wireframeUrl: 'https://qistonpe.com/wireframe',
         client: 'Qiston Pe',

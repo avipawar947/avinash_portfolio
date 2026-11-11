@@ -17,7 +17,30 @@ import type { ProjectItem } from "@/types/content";
  */
 export default function CaseStudyMoreWork({ related }: { related: ProjectItem[] }) {
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const picks = related.slice(0, 2);
+  // Figma 857:30990 shows HRX + Synclature. The CMS also lists a duplicate
+  // "Synclature" stub and NSL Luxe, whose logo points at another project's
+  // asset (placeholder data). Keep projects with their own card media + brand
+  // mark first, drop duplicate titles, then take the first two.
+  const hasMedia = (p: ProjectItem) =>
+    Boolean(p.imageUrl?.trim() || p.videoUrl?.trim() || p.caseStudy?.heroImageUrl?.trim());
+  const hasOwnBrand = (p: ProjectItem) => {
+    const logo = p.caseStudy?.logoUrl?.trim() ?? "";
+    if (!logo) return false;
+    if (/^(https?:|data:)/.test(logo)) return true;
+    const slug = (p.slug ?? "").trim();
+    return !slug || logo.includes(slug) || logo.includes(slug.split("-")[0]);
+  };
+  const seen = new Set<string>();
+  const ranked = related
+    .filter((p) => hasMedia(p))
+    .filter((p) => {
+      const key = p.title?.trim().toLowerCase() ?? p._id;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .sort((a, b) => Number(hasOwnBrand(b)) - Number(hasOwnBrand(a)));
+  const picks = (ranked.length >= 2 ? ranked : related).slice(0, 2);
   const [activeIndex, setActiveIndex] = useState(Math.max(0, picks.length - 1));
   if (!picks.length) return null;
 
