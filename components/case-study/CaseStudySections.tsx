@@ -246,12 +246,13 @@ function FlowDiagram({ block }: { block: any }) {
 /** Render one CMS rich block (paragraph / sitemap / journey / flow / tokens / embed / stats). */
 function Block({ block, sectionKey }: { block: any; sectionKey: string }) {
   const t = block?.type;
+  // Keep hook order stable across every block type (Rules of Hooks).
+  const [zoomSrc, setZoomSrc] = useState<string | null>(null);
   if (t === "paragraph") {
     return block.text ? <p className="cs-body cs-body--block m-0">{block.text}</p> : null;
   }
   if (t === "sitemap") {
     const nodes = block.nodes ?? [];
-    const [zoomSrc, setZoomSrc] = useState<string | null>(null);
     return (
       <>
         <div className="cs-flow flex flex-wrap justify-center">
