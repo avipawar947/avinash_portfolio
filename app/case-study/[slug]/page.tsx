@@ -28,9 +28,9 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
   const { project, related, navbar, contactCTA, footer } = data;
   const navLogo = logoUrl(project);
 
-  // The viewer is a client component; strip Mongoose document prototypes.
+  // The hero + viewer are client components; strip Mongoose document
+  // prototypes so only plain JSON crosses the server/client boundary.
   const projectData = JSON.parse(JSON.stringify(project));
-
   // Navbar hash links (#work etc.) must go home: /#work
   const navLinks = navbar.links.map((l) =>
     l.href.startsWith("#") ? { ...l, href: `/${l.href}` } : l
@@ -44,7 +44,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
         linkedInUrl={footer.socialLinks.find((s) => s.platform === "linkedin")?.url}
       />
       <main className="cs-page bg-[#0b0b0b]">
-        <CaseStudyHero project={project} />
+        <CaseStudyHero project={projectData} />
         <CaseStudyViewer project={projectData} logoUrl={navLogo} projectTitle={heroTitle(project, true)} />
         <CaseStudyMoreWork related={related} />
         <ContactCTA content={contactCTA} footer={footer} variant="case-study" />

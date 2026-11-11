@@ -5,6 +5,7 @@ import clsx from "clsx";
 import type { ProjectItem } from "@/types/content";
 import CaseStudyNav from "./CaseStudyNav";
 import { PanelContent, buildPanels } from "./CaseStudySections";
+import { navItems } from "./helpers";
 
 /**
  * The 1920x1570 case-study stage (Figma 1116:2848):
@@ -23,6 +24,7 @@ export default function CaseStudyViewer({
   projectTitle: string;
 }) {
   const panels = useMemo(() => buildPanels(project), [project]);
+  const items = useMemo(() => navItems(project), [project]);
   const [active, setActive] = useState<string>(panels[0]?.id ?? "overview");
 
   const select = useCallback((id: string) => {
@@ -49,7 +51,7 @@ export default function CaseStudyViewer({
       <div className="cs-stage-fade cs-stage-fade--bottom pointer-events-none absolute inset-x-0" aria-hidden />
 
       <div className="cs-cards">
-        <CaseStudyNav logoUrl={logoUrl} projectTitle={projectTitle} active={active} onSelect={select} />
+        <CaseStudyNav logoUrl={logoUrl} projectTitle={projectTitle} items={items} active={active} onSelect={select} />
 
         <div className="cs-panel-frame">
           <div className="cs-artboard">

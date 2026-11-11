@@ -136,6 +136,42 @@ export function wireframeLink(project: ProjectItem): string {
   return cs.wireframeUrl?.trim() || cs.wireframe?.link?.trim() || "";
 }
 
+/**
+ * Nav labels are CMS-driven: each section id maps to its backend-editable
+ * heading (overview, challenges, solutions, infoArch, userJourney, userFlow,
+ * designSystem, wireframe, visual, impact, conclusion). Falls back to the
+ * canonical design labels only when the CMS has nothing stored yet.
+ */
+const NAV_FIELD_BY_ID: Record<string, string> = {
+  overview: "overview",
+  challenges: "challenges",
+  solutions: "solutions",
+  "info-arch": "infoArch",
+  "user-journey": "userJourney",
+  "user-flow": "userFlow",
+  "design-system": "designSystem",
+  wireframe: "wireframe",
+  "visual-design": "visual",
+  impact: "impact",
+  conclusion: "conclusion",
+};
+
+export function navItems(project: ProjectItem): { id: string; label: string }[] {
+  return NAV_ITEMS.map((item) => {
+    const cs: any = project.caseStudy ?? {};
+    const field = NAV_FIELD_BY_ID[item.id] ?? item.id;
+    const stored = cs[field]?.heading?.trim?.() || "";
+    return { id: item.id, label: stored || item.label };
+  });
+}
+
+/** Journey column headers come from the CMS, else the Figma copy. */
+export function journeyColumns(project: ProjectItem): string[] {
+  const cols = (project.caseStudy as any)?.userJourney?.columns;
+  if (Array.isArray(cols) && cols.length) return cols.filter((c) => c?.trim()).map((c) => c.trim());
+  return ["What the dealership does", "Screens", "How the design helps"];
+}
+
 export function sectionBody(s: { heading?: string; body?: string } | undefined, fallback = ""): string {
   return s?.body?.trim() || fallback;
 }

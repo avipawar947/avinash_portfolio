@@ -64,12 +64,22 @@ const CaseStudySchema = new Schema(
       body: { type: String, default: '' },
       imageUrl: { type: String, default: '' },
       imagePublicId: { type: String, default: '' },
+      nodes: [
+        {
+          label: { type: String, default: '' },
+          sub: { type: String, default: '' },
+          children: [{ label: { type: String, default: '' } }],
+        },
+      ],
       _id: false,
     },
     userJourney: {
       heading: { type: String, default: '' },
       body: { type: String, default: '' },
       rows: { type: [JourneyRow], default: [] },
+      columns: { type: [String], default: [] },
+      imageUrl: { type: String, default: '' },
+      imagePublicId: { type: String, default: '' },
       _id: false,
     },
     userFlow: {
@@ -77,6 +87,13 @@ const CaseStudySchema = new Schema(
       body: { type: String, default: '' },
       imageUrl: { type: String, default: '' },
       imagePublicId: { type: String, default: '' },
+      nodes: [
+        {
+          title: { type: String, default: '' },
+          sub: { type: String, default: '' },
+        },
+      ],
+      buttonLabel: { type: String, default: '' },
       _id: false,
     },
     designSystem: {
@@ -84,6 +101,20 @@ const CaseStudySchema = new Schema(
       body: { type: String, default: '' },
       components: { type: [String], default: [] },
       colors: { type: [String], default: [] },
+      icons: [
+        {
+          label: { type: String, default: '' },
+          svgUrl: { type: String, default: '' },
+        },
+      ],
+      fonts: [
+        {
+          family: { type: String, default: '' },
+          weight: { type: Number, default: 400 },
+          text: { type: String, default: '' },
+          size: { type: Number, default: 0 },
+        },
+      ],
       iconsNote: { type: String, default: '' },
       typographyNote: { type: String, default: '' },
       colorsNote: { type: String, default: '' },

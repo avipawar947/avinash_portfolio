@@ -115,15 +115,22 @@ export interface ProjectCaseStudy {
   overview?: CaseStudySection;
   challenges?: CaseStudySection;
   solutions?: CaseStudySection;
-  infoArch?: CaseStudySection & { imageUrl?: string; imagePublicId?: string };
-  userJourney?: CaseStudySection & { rows?: JourneyStage[] };
-  userFlow?: CaseStudySection & { imageUrl?: string; imagePublicId?: string };
+  infoArch?: CaseStudySection & { imageUrl?: string; imagePublicId?: string; nodes?: { label?: string; sub?: string; children?: { label?: string }[] }[] };
+  userJourney?: CaseStudySection & { rows?: JourneyStage[]; columns?: string[]; imageUrl?: string; imagePublicId?: string };
+  userFlow?: CaseStudySection & {
+    imageUrl?: string;
+    imagePublicId?: string;
+    nodes?: { title?: string; sub?: string }[];
+    buttonLabel?: string;
+  };
   designSystem?: CaseStudySection & {
     components?: string[];
     colors?: string[];
     iconsNote?: string;
     typographyNote?: string;
     colorsNote?: string;
+    icons?: { label?: string; svgUrl?: string }[];
+    fonts?: { family?: string; weight?: number; text?: string; size?: number }[];
   };
   wireframe?: CaseStudySection & { imageUrl?: string; imagePublicId?: string; link?: string };
   visual?: CaseStudySection & { imageUrl?: string; imagePublicId?: string; link?: string };

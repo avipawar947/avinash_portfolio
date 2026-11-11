@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import type { CSSProperties } from "react";
 import type { ProjectItem } from "@/types/content";
 import { legacySections, PANEL_META, sectionBody, sectionHeading, type PanelLayout } from "./helpers";
@@ -100,6 +101,148 @@ const INFO_NODES: { title: string; sub?: string; accent?: boolean }[] = [
   { title: "Application", sub: "3-Step Wizard" },
 ];
 
+/** Fallback type samples for the Design System / Typography slide (Figma
+ *  1308:40238) — replaced by CMS `designSystem.fonts` whenever the backend
+ *  provides the real font stack. */
+const DEFAULT_FONTS: { family: string; weight: number; text: string; size: number }[] = [
+  { family: "Montserrat", weight: 590, text: "QistonPe", size: 56 },
+  { family: "Poppins", weight: 400, text: "QistonPe", size: 32 },
+];
+
+/** Fallback journey column headers (Figma User Journey slide). */
+const DEFAULT_JOURNEY_COLUMNS = ["What the dealership does", "Screens", "How the design helps"];
+
+/**
+ * Full-screen zoom overlay for the Information Architecture slide — the
+ * Figma "Zoom In" button opens the CMS-provided diagram here, supports drag
+ * panning and wheel-free zoom controls.
+ */
+function ZoomOverlay({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  const [view, setView] = useState({ x: 0, y: 0, scale: 1 });
+  const dragRef = useRef<{ x: number; y: number; px: number; py: number } | null>(null);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const zoomBy = (f: number) =>
+    setView((v) => ({ ...v, scale: Math.min(Math.max(v.scale * f, 0.5), 8) }));
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    dragRef.current = { x: e.clientX, y: e.clientY, px: view.x, py: view.y };
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+  };
+  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const d = dragRef.current;
+    if (!d) return;
+    setView((v) => ({ ...v, x: d.px - (e.clientX - d.x), y: d.py - (e.clientY - d.y) }));
+  };
+  const endDrag = () => {
+    dragRef.current = null;
+  };
+
+  return (
+    <div
+      className="cs-zoom-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Zoomed information architecture"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+    >
+      <div className="cs-zoom-bar" onPointerDown={(e) => e.stopPropagation()}>
+        <button type="button" onClick={() => zoomBy(1.25)} aria-label="Zoom in">+</button>
+        <button type="button" onClick={() => zoomBy(0.8)} aria-label="Zoom out">−</button>
+        <button type="button" onClick={() => setView({ x: 0, y: 0, scale: 1 })} aria-label="Reset zoom">Reset</button>
+        <button type="button" onClick={onClose} aria-label="Close zoom">Close</button>
+      </div>
+      <div
+        className="cs-zoom-stage"
+        style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})` }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt={alt} draggable={false} />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * User Flow diagram — CMS node chain (or CMS artwork), the CTA button and a
+ * sequential "cursor" that travels across the nodes (Figma user flow cursor).
+ */
+function FlowDiagram({ block }: { block: any }) {
+  const nodes: any[] = block.imageUrl
+    ? []
+    : (block.groups ?? []).flatMap((g: any) => g.nodes ?? []);
+  const nodeKey = nodes.map((n: any) => `${n.label}-${n.sub ?? ""}`).join("|");
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const [cursor, setCursor] = useState<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    if (!nodes.length) return;
+    const track = trackRef.current;
+    if (!track) return;
+    const els = Array.from(track.querySelectorAll<HTMLElement>(".cs-node"));
+    if (!els.length) return;
+    const tRect = track.getBoundingClientRect();
+    const toLocal = (el: HTMLElement) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left - tRect.left, y: r.top - tRect.top, w: r.width, h: r.height };
+    };
+    const rects = els.map(toLocal);
+    setCursor({ x: rects[0].x + rects[0].w / 2, y: rects[0].y + rects[0].h / 2 });
+    let i = 0;
+    const timer = window.setInterval(() => {
+      i = (i + 1) % rects.length;
+      const r = rects[i];
+      setCursor({ x: r.x + r.w / 2, y: r.y + r.h / 2 });
+    }, 1500);
+    return () => window.clearInterval(timer);
+  }, [nodeKey]);
+
+  if (block.imageUrl) {
+    // CMS-provided flow artwork replaces the node chain.
+    return (
+      <div className="cs-journey-media">
+        <Image src={block.imageUrl} alt="User flow" fill sizes="80vw" className="object-contain" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="cs-flowgroups flex flex-col" ref={trackRef}>
+      {(block.groups ?? []).map((g: any) => (
+        <div key={g.title} className="cs-flowgroup">
+          <h3 className="cs-ds-h3 m-0 font-semibold">{g.title}</h3>
+          <div className="cs-flow flex flex-wrap justify-center">
+            {(g.nodes ?? []).map((n: any) => (
+              <div key={n.label} className="cs-node" data-tone={n.tone || ""}>
+                <span className="cs-node-title block font-bold">{n.label}</span>
+                {n.sub && <span className="cs-node-sub block font-medium">{n.sub}</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      {block.buttonLabel ? (
+        <div className="cs-flow-cta">
+          <span className="cs-embed-btn">{block.buttonLabel}</span>
+        </div>
+      ) : null}
+      {nodes.length ? (
+        <div className="cs-flow-cursor" style={{ transform: `translate(${cursor?.x ?? 0}px, ${cursor?.y ?? 0}px)` }} aria-hidden />
+      ) : null}
+    </div>
+  );
+}
+
 /** Render one CMS rich block (paragraph / sitemap / journey / flow / tokens / embed / stats). */
 function Block({ block, sectionKey }: { block: any; sectionKey: string }) {
   const t = block?.type;
@@ -108,28 +251,42 @@ function Block({ block, sectionKey }: { block: any; sectionKey: string }) {
   }
   if (t === "sitemap") {
     const nodes = block.nodes ?? [];
+    const [zoomSrc, setZoomSrc] = useState<string | null>(null);
     return (
-      <div className="cs-flow flex flex-wrap justify-center">
-        {block.brand && (
-          <div className="cs-node" data-accent="true">
-            <span className="cs-node-title block font-bold">{block.brand}</span>
+      <>
+        <div className="cs-flow flex flex-wrap justify-center">
+          {block.brand && (
+            <div className="cs-node" data-accent="true">
+              <span className="cs-node-title block font-bold">{block.brand}</span>
+            </div>
+          )}
+          {nodes.map((n: any) => (
+            <div key={n.label} className="cs-node">
+              <span className="cs-node-title block font-bold">{n.label}</span>
+              {n.sub && <span className="cs-node-sub block font-medium">{n.sub}</span>}
+              {Array.isArray(n.children) && n.children.length > 0 && (
+                <span className="cs-node-sub block font-normal">{n.children.map((c: any) => c.label).join(" · ")}</span>
+              )}
+            </div>
+          ))}
+        </div>
+        {block.imageUrl ? (
+          <div className="cs-sitemap-media">
+            <div className="cs-sitemap-frame">
+              <Image src={block.imageUrl} alt={block.brand || "Information architecture"} fill sizes="80vw" className="object-contain" />
+            </div>
+            <button type="button" className="cs-zoom-btn" onClick={() => setZoomSrc(block.imageUrl)}>
+              Zoom In
+            </button>
           </div>
-        )}
-        {nodes.map((n: any) => (
-          <div key={n.label} className="cs-node">
-            <span className="cs-node-title block font-bold">{n.label}</span>
-            {n.sub && <span className="cs-node-sub block font-medium">{n.sub}</span>}
-            {Array.isArray(n.children) && n.children.length > 0 && (
-              <span className="cs-node-sub block font-normal">{n.children.map((c: any) => c.label).join(" · ")}</span>
-            )}
-          </div>
-        ))}
-      </div>
+        ) : null}
+        {zoomSrc ? <ZoomOverlay src={zoomSrc} alt={block.brand || "Information architecture"} onClose={() => setZoomSrc(null)} /> : null}
+      </>
     );
   }
   if (t === "journey") {
     const rows: string[][] = block.rows ?? [];
-    const cols: string[] = block.columns ?? ["What the dealership does", "Screens", "How the design helps"];
+    const cols: string[] = block.columns ?? DEFAULT_JOURNEY_COLUMNS;
     const stages: string[] = block.stages?.length
       ? block.stages
       : [
@@ -141,6 +298,14 @@ function Block({ block, sectionKey }: { block: any; sectionKey: string }) {
           "Track and resolve",
           "Request disbursement",
         ];
+    if (block.imageUrl) {
+      // CMS-provided journey artwork replaces the tabular view.
+      return (
+        <div className="cs-journey-media">
+          <Image src={block.imageUrl} alt="User journey" fill sizes="80vw" className="object-contain" />
+        </div>
+      );
+    }
     return (
       <div className="cs-tablewrap overflow-x-auto">
         <table className="cs-table w-full border-collapse text-left">
@@ -167,23 +332,7 @@ function Block({ block, sectionKey }: { block: any; sectionKey: string }) {
     );
   }
   if (t === "flow") {
-    return (
-      <div className="cs-flowgroups flex flex-col">
-        {(block.groups ?? []).map((g: any) => (
-          <div key={g.title} className="cs-flowgroup">
-            <h3 className="cs-ds-h3 m-0 font-semibold">{g.title}</h3>
-            <div className="cs-flow flex flex-wrap justify-center">
-              {(g.nodes ?? []).map((n: any) => (
-                <div key={n.label} className="cs-node" data-tone={n.tone || ""}>
-                  <span className="cs-node-title block font-bold">{n.label}</span>
-                  {n.sub && <span className="cs-node-sub block font-medium">{n.sub}</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <FlowDiagram block={block} />;
   }
   if (t === "tokens") {
     const groups: any[] = block.groups ?? [];
@@ -229,11 +378,21 @@ function Block({ block, sectionKey }: { block: any; sectionKey: string }) {
         {g.kind === "icons" && (
           <div className="cs-ds-icons">
             <div className="cs-ds-icons-frame">
-              {(g.icons ?? DEFAULT_ICONS).map((ic: any, i: number) => (
-                <span key={i} className="cs-ds-icon" style={{ gridRow: ic.row, gridColumn: ic.col }}>
-                  <MaterialIcon name={ic.name} size={24} />
-                </span>
-              ))}
+              {(g.icons ?? DEFAULT_ICONS).map((ic: any, i: number) => {
+                if (ic.svgUrl) {
+                  return (
+                    <span key={i} className="cs-ds-icon" style={{ gridRow: ic.row ?? 1, gridColumn: ic.col ?? 1 }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={ic.svgUrl} alt={ic.label || "design-system icon"} className="cs-ds-icon-img" />
+                    </span>
+                  );
+                }
+                return (
+                  <span key={i} className="cs-ds-icon" style={{ gridRow: ic.row, gridColumn: ic.col }}>
+                    <MaterialIcon name={ic.name} size={24} />
+                  </span>
+                );
+              })}
             </div>
           </div>
         )}
@@ -333,17 +492,31 @@ export function buildPanels(project: ProjectItem): Panel[] {
     makePanel("challenges", sectionHeading(cs.challenges, "The Challenges"), sectionBody(cs.challenges, ""), []),
     makePanel("solutions", sectionHeading(cs.solutions, "The Solutions"), sectionBody(cs.solutions, ""), []),
     makePanel("info-arch", sectionHeading(cs.infoArch, "Information Architecture"), sectionBody(cs.infoArch, ""), [
-      { type: "sitemap", brand: project.title, nodes: INFO_NODES },
+      { type: "sitemap", brand: project.title, nodes: (cs.infoArch?.nodes?.length ? cs.infoArch.nodes.map((n: any) => ({ label: n.label, sub: n.sub, children: n.children })) : INFO_NODES), imageUrl: cs.infoArch?.imageUrl },
     ]),
     makePanel("user-journey", sectionHeading(cs.userJourney, "User Journey"), sectionBody(cs.userJourney, ""), [
       {
         type: "journey",
         stages: (cs.userJourney?.rows ?? []).map((r) => r.stage),
         rows: (cs.userJourney?.rows ?? []).map((r) => [r.does, r.screens, r.helps]),
+        columns: cs.userJourney?.columns?.length ? cs.userJourney.columns : undefined,
+        imageUrl: cs.userJourney?.imageUrl,
       },
     ]),
     makePanel("user-flow", sectionHeading(cs.userFlow, "User Flow"), sectionBody(cs.userFlow, ""), [
-      { type: "flow", groups: [{ title: "Flow", nodes: FLOW_NODES.map((n) => ({ label: n.title, sub: n.sub })) }] },
+      {
+        type: "flow",
+        groups: [
+          {
+            title: "Flow",
+            nodes: cs.userFlow?.nodes?.length
+              ? cs.userFlow.nodes.map((n: any) => ({ label: n.title, sub: n.sub }))
+              : FLOW_NODES.map((n) => ({ label: n.title, sub: n.sub })),
+          },
+        ],
+        imageUrl: cs.userFlow?.imageUrl,
+        buttonLabel: cs.userFlow?.buttonLabel,
+      },
     ]),
     makePanel("design-system", sectionHeading(cs.designSystem, "Design System"), sectionBody(cs.designSystem, ""), [
       {
@@ -351,6 +524,17 @@ export function buildPanels(project: ProjectItem): Panel[] {
         groups: [
           { kind: "colors", title: "Colors", colors: (cs.designSystem?.colors ?? []).map((hex) => ({ hex })) },
           { kind: "components", title: "Components", components: [{ label: "Components", items: cs.designSystem?.components ?? [] }] },
+          { kind: "icons", title: "Icons", icons: (cs.designSystem?.icons ?? []).map((i) => ({ svgUrl: i.svgUrl, label: i.label })) },
+          {
+            kind: "type",
+            title: "Typography",
+            samples: (cs.designSystem?.fonts ?? DEFAULT_FONTS).map((f: any) => ({
+              family: f.family,
+              weight: f.weight,
+              text: f.text,
+              size: f.size,
+            })),
+          },
         ],
       },
     ]),
@@ -360,7 +544,7 @@ export function buildPanels(project: ProjectItem): Panel[] {
     makePanel("visual-design", sectionHeading(cs.visual, "Visual Design"), sectionBody(cs.visual, ""), [
       { type: "embed", url: cs.visual?.link || "#visual-design", label: "Visit Wireframe", posterUrl: cs.visual?.imageUrl },
     ]),
-    makePanel("impact", sectionHeading(cs.impact, "Impact"), "What Changed, Three Ways.", [
+    makePanel("impact", sectionHeading(cs.impact, "Impact"), sectionBody(cs.impact, "What Changed, Three Ways."), [
       { type: "stats", items: (cs.impact?.stats ?? []).map((s) => ({ value: s.value, suffix: s.suffix, group: s.label, label: s.desc })) },
     ]),
     makePanel("conclusion", sectionHeading(cs.conclusion, "Conclusion"), sectionBody(cs.conclusion, ""), []),

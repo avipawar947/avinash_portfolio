@@ -3240,6 +3240,31 @@ body {
   flex-direction: column;
   gap: calc(12 * var(--u));
 }
+
+/* User-flow cursor that travels across the node chain (Figma motion). */
+.cs-flow-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(30 * var(--u));
+  height: calc(30 * var(--u));
+  margin: calc(-15 * var(--u)) 0 0 calc(-15 * var(--u));
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 calc(0 * var(--u)) calc(12 * var(--u)) rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  z-index: 3;
+  transition: transform 0.8s ease;
+}
+.cs-flow-cta {
+  position: absolute;
+  left: 50%;
+  bottom: calc(16 * var(--u));
+  transform: translateX(-50%);
+}
+.cs-flow-cta .cs-embed-btn { position: static; transform: none; }
+.cs-journey-media { position: absolute; inset: 0; }
+.cs-journey-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .cs-ds-h3 {
   margin: 0;
   font-size: calc(18 * var(--u));
@@ -3351,6 +3376,87 @@ body {
   transform: scale(1.03);
   border-color: rgba(255, 255, 255, 0.70);
 }
+
+/* --- IA zoom overlay + media (Figma Zoom In) --------------------------- */
+.cs-sitemap-media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: calc(260 * var(--u));
+}
+.cs-sitemap-frame {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(8 * var(--u));
+  overflow: hidden;
+  background: #010101;
+}
+.cs-sitemap-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.cs-zoom-btn {
+  position: absolute;
+  right: calc(16 * var(--u));
+  bottom: calc(16 * var(--u));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(40 * var(--u));
+  padding-inline: calc(16 * var(--u));
+  border: calc(1 * var(--u)) solid rgba(255, 255, 255, 0.40);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+  font-size: calc(14 * var(--u));
+  line-height: 1;
+}
+.cs-zoom-btn:hover { border-color: rgba(255, 255, 255, 0.70); background: rgba(255, 255, 255, 0.18); }
+
+.cs-zoom-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 5, 5, 0.94);
+}
+.cs-zoom-stage {
+  position: relative;
+  width: min(92vw, 1280px);
+  height: min(82vh, 900px);
+  overflow: hidden;
+  border: calc(1 * var(--u)) solid rgba(255, 255, 255, 0.12);
+  border-radius: calc(12 * var(--u));
+  background: #0b0b0b;
+}
+.cs-zoom-stage img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.cs-zoom-bar {
+  position: absolute;
+  top: calc(20 * var(--u));
+  right: calc(20 * var(--u));
+  display: flex;
+  gap: calc(8 * var(--u));
+  z-index: 2;
+}
+.cs-zoom-bar button {
+  min-width: calc(40 * var(--u));
+  height: calc(36 * var(--u));
+  padding-inline: calc(12 * var(--u));
+  border: calc(1 * var(--u)) solid rgba(255, 255, 255, 0.30);
+  border-radius: var(--radius-pill);
+  background: rgba(20, 20, 20, 0.85);
+  color: #ffffff;
+  font-size: calc(13 * var(--u));
+  line-height: 1;
+  cursor: pointer;
+}
+.cs-zoom-bar button:hover { border-color: rgba(255, 255, 255, 0.70); }
 
 .cs-stats {
   display: grid;
