@@ -6,7 +6,8 @@ import { fetcher, apiRequest } from '@/lib/fetcher';
 import ImageUploader from '@/components/admin/ImageUploader';
 import VideoUploader from '@/components/admin/VideoUploader';
 import FormField from '@/components/admin/FormField';
-import type { ProjectItem, ProjectCaseStudy } from '@/types/content';
+import CaseStudyBuilder from '@/components/admin/CaseStudyBuilder';
+import type { ProjectItem } from '@/types/content';
 
 const EMPTY: Omit<ProjectItem, '_id'> = {
   title: '',
@@ -65,29 +66,6 @@ export default function ProjectsAdminPage() {
     mutate('/api/projects');
   }
 
-  async function patchCS(p: ProjectItem, cs: Partial<ProjectCaseStudy>) {
-    const prev = p.caseStudy ?? {};
-    const next = { ...prev, ...cs };
-    // Deep-merge nested case-study sub-objects so field-by-field edits never
-    // wipe sibling keys the editor didn't touch (designSystem.fonts,
-    // userJourney.rows/columns, userFlow.nodes, …).
-    const merge = (a: any, b: any): any => {
-      if (Array.isArray(a) || Array.isArray(b)) return b ?? a;
-      if (a && b && typeof a === 'object') {
-        const out: any = { ...(a ?? {}) };
-        for (const k of Object.keys(b ?? {})) out[k] = merge(out[k], (b as any)[k]);
-        return out;
-      }
-      return b ?? a;
-    };
-    const merged: any = { ...next };
-    const subs = ['overview', 'challenges', 'solutions', 'conclusion', 'infoArch', 'userJourney', 'userFlow', 'designSystem', 'wireframe', 'visual', 'impact'];
-    for (const key of subs) {
-      if ((cs as any)[key] || (prev as any)[key]) merged[key] = merge((prev as any)[key], (cs as any)[key]);
-    }
-    await updateProject(p._id, { caseStudy: merged as ProjectCaseStudy });
-  }
-
   async function deleteProject(id: string) {
     if (!confirm('Delete this project?')) return;
     await apiRequest(`/api/projects/${id}`, 'DELETE');
@@ -95,7 +73,7 @@ export default function ProjectsAdminPage() {
   }
 
   return (
-    <div className="max-w-3xl">
+    <div className="max-w-4xl">
       <h1 className="mb-6 text-2xl font-semibold">Projects & Case Studies</h1>
       <p className="mb-6 text-sm text-white/50">
         Card click ab <code>/case-study/[slug]</code> page kholta hai (modal nahi). Media <b>image ya video</b> dono ho sakta hai — hero video hone par card + hero dono video dikhata hai.
@@ -103,8 +81,6 @@ export default function ProjectsAdminPage() {
 
       <div className="space-y-4">
         {items?.map((p) => {
-          const cs = p.caseStudy ?? {};
-          const sec = (k: 'overview' | 'challenges' | 'solutions' | 'conclusion') => cs[k] ?? {};
           return (
             <div key={p._id} className="rounded-xl border border-white/10 bg-[#0D0D0D] p-5">
               <div className="grid grid-cols-2 gap-4">
@@ -201,83 +177,7 @@ export default function ProjectsAdminPage() {
 
               <details className="mt-4 rounded-lg border border-white/10 p-3">
                 <summary className="cursor-pointer text-sm font-medium text-white/80">Case study content (hero + sections)</summary>
-                <div className="mt-3 grid gap-3 text-sm">
-                  <div className="grid grid-cols-2 gap-3">
-                    <input placeholder="heroTitle" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.heroTitle ?? ''}
-                      onChange={(e) => patchCS(p, { heroTitle: e.target.value })} />
-                    <input placeholder="websiteUrl" type="url" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.websiteUrl ?? ''}
-                      onChange={(e) => patchCS(p, { websiteUrl: e.target.value })} />
-                    <input placeholder="wireframeUrl" type="url" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.wireframeUrl ?? ''}
-                      onChange={(e) => patchCS(p, { wireframeUrl: e.target.value })} />
-                    <input placeholder="client" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.client ?? ''}
-                      onChange={(e) => patchCS(p, { client: e.target.value })} />
-                    <input placeholder="type" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.type ?? ''}
-                      onChange={(e) => patchCS(p, { type: e.target.value })} />
-                    <input placeholder="category" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.category ?? ''}
-                      onChange={(e) => patchCS(p, { category: e.target.value })} />
-                    <input placeholder="duration" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.duration ?? ''}
-                      onChange={(e) => patchCS(p, { duration: e.target.value })} />
-                    <input placeholder="role" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.role ?? ''}
-                      onChange={(e) => patchCS(p, { role: e.target.value })} />
-                  </div>
-                  <textarea rows={2} placeholder="heroSubtitle" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.heroSubtitle ?? ''}
-                    onChange={(e) => patchCS(p, { heroSubtitle: e.target.value })} />
-                  <ImageUploader label="Hero image (detail main frame; empty = card image)" value={cs.heroImageUrl ?? ''} oldPublicId={cs.heroImagePublicId ?? ''}
-                    onChange={(url, publicId) => patchCS(p, { heroImageUrl: url, heroImagePublicId: publicId ?? '' })} />
-                  <ImageUploader label="Hero background" value={cs.heroBackgroundUrl ?? ''} oldPublicId={cs.heroBackgroundPublicId ?? ''}
-                    onChange={(url, publicId) => patchCS(p, { heroBackgroundUrl: url, heroBackgroundPublicId: publicId ?? '' })} />
-                  <ImageUploader label="Project icon (SVG, left-nav logo; empty = webp logo)" value={(cs as any).iconSvgUrl ?? ''} oldPublicId={(cs as any).iconSvgPublicId ?? ''}
-                    onChange={(url, publicId) => patchCS(p, { iconSvgUrl: url, iconSvgPublicId: publicId ?? '' } as any)} />
-                  <textarea rows={2} placeholder="Overview body" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={sec('overview').body ?? ''}
-                    onChange={(e) => patchCS(p, { overview: { ...sec('overview'), heading: sec('overview').heading ?? 'Overview', body: e.target.value } })} />
-                  <textarea rows={2} placeholder="Challenges body" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={sec('challenges').body ?? ''}
-                    onChange={(e) => patchCS(p, { challenges: { ...sec('challenges'), heading: sec('challenges').heading ?? 'The Challenges', body: e.target.value } })} />
-                  <textarea rows={2} placeholder="Solutions body" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={sec('solutions').body ?? ''}
-                    onChange={(e) => patchCS(p, { solutions: { ...sec('solutions'), heading: sec('solutions').heading ?? 'The Solutions', body: e.target.value } })} />
-                  <textarea rows={2} placeholder="Conclusion body" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={sec('conclusion').body ?? ''}
-                    onChange={(e) => patchCS(p, { conclusion: { ...sec('conclusion'), heading: sec('conclusion').heading ?? 'Conclusion', body: e.target.value } })} />
-                  <textarea rows={2} placeholder="Information Architecture body" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.infoArch?.body ?? ''}
-                    onChange={(e) => patchCS(p, { infoArch: { ...(cs.infoArch ?? {}), heading: cs.infoArch?.heading ?? 'Information Architecture', body: e.target.value } })} />
-                  <textarea rows={4} placeholder={"Information Architecture nodes (label | sub per line)"} className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={(cs.infoArch?.nodes ?? []).map((n) => `${n.label} | ${n.sub ?? ''}`).join('\n')}
-                    onChange={(e) => patchCS(p, { infoArch: { ...(cs.infoArch ?? {}), heading: cs.infoArch?.heading ?? 'Information Architecture', body: cs.infoArch?.body ?? '', nodes: e.target.value.split('\n').map((l) => l.trim()).filter(Boolean).map((l) => { const [label, sub] = l.split('|').map((s) => s.trim()); return { label, sub }; }) } })} />
-                  <textarea rows={2} placeholder="User Journey intro" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.userJourney?.body ?? ''}
-                    onChange={(e) => patchCS(p, { userJourney: { ...(cs.userJourney ?? {}), heading: cs.userJourney?.heading ?? 'User Journey', body: e.target.value } })} />
-                  <textarea rows={2} placeholder="User Flow intro" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.userFlow?.body ?? ''}
-                    onChange={(e) => patchCS(p, { userFlow: { ...(cs.userFlow ?? {}), heading: cs.userFlow?.heading ?? 'User Flow', body: e.target.value } })} />
-                  <textarea rows={2} placeholder="Visual Design body" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.visual?.body ?? ''}
-                    onChange={(e) => patchCS(p, { visual: { ...(cs.visual ?? {}), heading: cs.visual?.heading ?? 'Visual Design', body: e.target.value } })} />
-                  <textarea rows={2} placeholder="Design-system typography note" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.designSystem?.typographyNote ?? ''}
-                    onChange={(e) => patchCS(p, { designSystem: { ...(cs.designSystem ?? {}), heading: cs.designSystem?.heading ?? 'Design System', typographyNote: e.target.value } })} />
-                  <textarea rows={2} placeholder="Design-system icons note" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.designSystem?.iconsNote ?? ''}
-                    onChange={(e) => patchCS(p, { designSystem: { ...(cs.designSystem ?? {}), heading: cs.designSystem?.heading ?? 'Design System', iconsNote: e.target.value } })} />
-                  <textarea rows={1} placeholder="Design-system components (comma separated)" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
-                    value={(cs.designSystem?.components ?? []).join(', ')}
-                    onChange={(e) => patchCS(p, { designSystem: { ...(cs.designSystem ?? {}), heading: cs.designSystem?.heading ?? 'Design System', components: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) } })} />
-                  <textarea rows={1} placeholder="Design-system colors hex, comma separated" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
-                    value={(cs.designSystem?.colors ?? []).join(', ')}
-                    onChange={(e) => patchCS(p, { designSystem: { ...(cs.designSystem ?? {}), heading: cs.designSystem?.heading ?? 'Design System', colors: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) } })} />
-                  <textarea rows={2} placeholder="Design-system icons (comma separated svg urls)" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
-                    value={(cs.designSystem?.icons ?? []).map((i) => i.svgUrl).filter(Boolean).join(', ')}
-                    onChange={(e) => patchCS(p, { designSystem: { ...(cs.designSystem ?? {}), heading: cs.designSystem?.heading ?? 'Design System', icons: e.target.value.split(',').map((s) => s.trim()).filter(Boolean).map((svgUrl) => ({ svgUrl })) } })} />
-                  <ImageUploader label="Information Architecture diagram (upload → Zoom In)" value={cs.infoArch?.imageUrl ?? ''} oldPublicId={cs.infoArch?.imagePublicId ?? ''}
-                    onChange={(url, publicId) => patchCS(p, { infoArch: { ...(cs.infoArch ?? {}), heading: cs.infoArch?.heading ?? 'Information Architecture', body: cs.infoArch?.body ?? '', imageUrl: url, imagePublicId: publicId ?? '' } })} />
-                  <ImageUploader label="User Journey image (upload for slide media)" value={cs.userJourney?.imageUrl ?? ''} oldPublicId={cs.userJourney?.imagePublicId ?? ''}
-                    onChange={(url, publicId) => patchCS(p, { userJourney: { ...(cs.userJourney ?? {}), heading: cs.userJourney?.heading ?? 'User Journey', body: cs.userJourney?.body ?? '', rows: cs.userJourney?.rows ?? [], columns: cs.userJourney?.columns ?? [], imageUrl: url, imagePublicId: publicId ?? '' } })} />
-                  <textarea rows={6} placeholder={"Stage | Does | Screens | Helps\nSign in | Enters mobile number and verifies the OTP. | Login, OTP | Timer, resend and edit-number options."} value={(cs.userJourney?.rows ?? []).map((r) => [r.stage, r.does, r.screens, r.helps].join(' | ')).join('\n')}
-                    onChange={(e) => patchCS(p, { userJourney: { ...(cs.userJourney ?? {}), heading: cs.userJourney?.heading ?? 'User Journey', body: cs.userJourney?.body ?? '', rows: e.target.value.split('\n').map((l) => l.trim()).filter(Boolean).map((l, i) => { const [stage, does, screens, helps] = l.split('|').map((s) => s.trim()); return { stage, does, screens, helps, order: i }; }) } })} />
-                  <textarea rows={1} placeholder="Journey columns (pipe separated)" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={(cs.userJourney?.columns ?? []).join(' | ')}
-                    onChange={(e) => patchCS(p, { userJourney: { ...(cs.userJourney ?? {}), heading: cs.userJourney?.heading ?? 'User Journey', body: cs.userJourney?.body ?? '', columns: e.target.value.split('|').map((s) => s.trim()).filter(Boolean) } })} />
-                  <ImageUploader label="User Flow image (upload for slide media)" value={cs.userFlow?.imageUrl ?? ''} oldPublicId={cs.userFlow?.imagePublicId ?? ''}
-                    onChange={(url, publicId) => patchCS(p, { userFlow: { ...(cs.userFlow ?? {}), heading: cs.userFlow?.heading ?? 'User Flow', body: cs.userFlow?.body ?? '', nodes: cs.userFlow?.nodes ?? [], buttonLabel: cs.userFlow?.buttonLabel ?? '', imageUrl: url, imagePublicId: publicId ?? '' } })} />
-                  <input placeholder="User Flow button label" className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={cs.userFlow?.buttonLabel ?? ''}
-                    onChange={(e) => patchCS(p, { userFlow: { ...(cs.userFlow ?? {}), heading: cs.userFlow?.heading ?? 'User Flow', body: cs.userFlow?.body ?? '', nodes: cs.userFlow?.nodes ?? [], buttonLabel: e.target.value } })} />
-                  <textarea rows={6} placeholder={"Login | Mobile Number\nOTP Verify | Enter 4-digit OTP"} className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={(cs.userFlow?.nodes ?? []).map((n) => `${n.title} | ${n.sub}`).join('\n')}
-                    onChange={(e) => patchCS(p, { userFlow: { ...(cs.userFlow ?? {}), heading: cs.userFlow?.heading ?? 'User Flow', body: cs.userFlow?.body ?? '', nodes: e.target.value.split('\n').map((l) => l.trim()).filter(Boolean).map((l) => { const [title, sub] = l.split('|').map((s) => s.trim()); return { title, sub }; }), buttonLabel: cs.userFlow?.buttonLabel ?? '' } })} />
-                  <textarea rows={3} placeholder={"Montserrat | 590 | QistonPe | 48\nPoppins | 400 | QistonPe | 32"} className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={(cs.designSystem?.fonts ?? []).map((f) => [f.family, f.weight, f.text, f.size].join(' | ')).join('\n')}
-                    onChange={(e) => patchCS(p, { designSystem: { ...(cs.designSystem ?? {}), heading: cs.designSystem?.heading ?? 'Design System', typographyNote: cs.designSystem?.typographyNote ?? '', fonts: e.target.value.split('\n').map((l) => l.trim()).filter(Boolean).map((l) => { const [family, weight, text, size] = l.split('|').map((s) => s.trim()); return { family, weight: Number(weight) || 400, text, size: Number(size) || 0 }; }) } })} />
-                  <textarea rows={4} placeholder={"85 | % | For the Stakeholder | Of clients are satisfied...\n40 | + | For The Business | Loan applications disbursed through QistonPe in just one month."} className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={(cs.impact?.stats ?? []).map((s) => [s.value, s.suffix, s.label, s.desc].join(' | ')).join('\n')}
-                    onChange={(e) => patchCS(p, { impact: { heading: cs.impact?.heading ?? 'Impact', stats: e.target.value.split('\n').map((l) => l.trim()).filter(Boolean).map((l, i) => { const [value, suffix, label, desc] = l.split('|').map((s) => s.trim()); return { value, suffix, label, desc, order: i }; }) } })} />
-                </div>
+                <CaseStudyBuilder project={p} onSaved={() => mutate('/api/projects')} />
               </details>
             </div>
           );

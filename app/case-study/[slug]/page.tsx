@@ -6,8 +6,9 @@ import ContactCTA from "@/components/sections/ContactCTA";
 import CaseStudyHero from "@/components/case-study/CaseStudyHero";
 import CaseStudyViewer from "@/components/case-study/CaseStudyViewer";
 import CaseStudyMoreWork from "@/components/case-study/CaseStudyMoreWork";
-import { heroTitle, logoUrl } from "@/components/case-study/helpers";
+import { heroTitle, logoUrl, navTitle } from "@/components/case-study/helpers";
 import { getCaseStudyBySlug } from "@/lib/content";
+import { resolvePanels } from "@/lib/case-study-panels";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -16,9 +17,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const data = await getCaseStudyBySlug(params.slug);
   if (!data) return { title: "Case Study — Avinash Pawar" };
   const title = heroTitle(data.project);
+  const overview = resolvePanels(data.project.caseStudy).find((p) => p.preset === "overview");
   return {
     title: `${title} — Case Study · Avinash Pawar`,
-    description: data.project.caseStudy?.overview?.body?.slice(0, 160) || `Case study: ${title}`,
+    description: overview?.body?.slice(0, 160) || `Case study: ${title}`,
   };
 }
 
@@ -45,7 +47,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
       />
       <main className="cs-page bg-[#0b0b0b]">
         <CaseStudyHero project={projectData} />
-        <CaseStudyViewer project={projectData} logoUrl={navLogo} projectTitle={heroTitle(project, true)} />
+        <CaseStudyViewer project={projectData} logoUrl={navLogo} projectTitle={navTitle(project)} />
         <CaseStudyMoreWork related={related} />
         <ContactCTA content={contactCTA} footer={footer} variant="case-study" />
       </main>

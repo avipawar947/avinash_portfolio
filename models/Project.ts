@@ -42,6 +42,9 @@ const GalleryItem = new Schema(
 
 const CaseStudySchema = new Schema(
   {
+    // Dynamic, admin-built sections (Mixed so every panel type can carry its own fields).
+    panels: { type: [Schema.Types.Mixed], default: [] },
+    navTitle: { type: String, default: '' },
     heroEyebrow: { type: String, default: 'Case Study' },
     heroTitle: { type: String, default: '' },
     heroSubtitle: { type: String, default: '' },

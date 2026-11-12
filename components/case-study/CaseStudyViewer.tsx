@@ -5,14 +5,13 @@ import clsx from "clsx";
 import type { ProjectItem } from "@/types/content";
 import CaseStudyNav from "./CaseStudyNav";
 import { PanelContent, buildPanels } from "./CaseStudySections";
-import { navItems } from "./helpers";
 
 /**
  * The 1920x1570 case-study stage (Figma 1116:2848):
  *   Cards 1591x922 at (164, 452) = 252 nav + 1337 panel
  *   ArtBoard 1281x864 inset 28px inside the panel
- * The 11 slides are stacked in the ArtBoard and crossfade; the nav switches
- * the active one and the URL hash mirrors it (deep-linkable, no scrolling).
+ * The slides (one per admin-created section) are stacked in the ArtBoard and
+ * crossfade; the nav switches the active one and the URL hash mirrors it (deep-linkable, no scrolling).
  */
 export default function CaseStudyViewer({
   project,
@@ -24,8 +23,8 @@ export default function CaseStudyViewer({
   projectTitle: string;
 }) {
   const panels = useMemo(() => buildPanels(project), [project]);
-  const items = useMemo(() => navItems(project), [project]);
-  const [active, setActive] = useState<string>(panels[0]?.id ?? "overview");
+  const items = useMemo(() => panels.map((p) => ({ id: p.id, label: p.label })), [panels]);
+  const [active, setActive] = useState<string>(panels[0]?.id ?? "");
 
   const select = useCallback((id: string) => {
     setActive(id);
@@ -43,6 +42,9 @@ export default function CaseStudyViewer({
     window.addEventListener("hashchange", read);
     return () => window.removeEventListener("hashchange", read);
   }, [panels]);
+
+  // No sections created in the admin yet -> nothing to show.
+  if (!panels.length) return null;
 
   return (
     <section id="case-study" aria-label="Case study sections" className="cs-stage">

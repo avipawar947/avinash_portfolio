@@ -3,9 +3,6 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import clsx from "clsx";
-import { navItems, NAV_ITEMS } from "./helpers";
-
-const FALLBACK_ITEMS: { id: string; label: string }[] = NAV_ITEMS.map((i) => ({ id: i.id, label: i.label }));
 
 /**
  * Case-study section nav.
@@ -65,7 +62,7 @@ export default function CaseStudyNav({
           </span>
         </div>
         <div ref={tabsRef} role="tablist" aria-label="Case study sections" className="cs-tabs">
-          {(items ?? FALLBACK_ITEMS).map((item) => {
+          {(items ?? []).map((item) => {
             const isActive = active === item.id;
             return (
               <a
@@ -99,7 +96,7 @@ export default function CaseStudyNav({
         </div>
         <div className="cs-sidenav-divider" aria-hidden />
         <ul className="cs-sidenav-list m-0 list-none p-0">
-          {(items ?? FALLBACK_ITEMS).map((item) => {
+          {(items ?? []).map((item) => {
             const isActive = active === item.id;
             return (
               <li key={item.id}>

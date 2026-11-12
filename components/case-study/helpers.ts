@@ -1,53 +1,5 @@
 import type { ProjectItem } from "@/types/content";
-
-/**
- * Figma desktop "Cards / Left Side" has 12 rows, but "Sitemaps" is placed on
- * top of "Design System" at the same y (the file kept both layers). The mobile
- * navbar has no Sitemaps row, and there is no standalone Sitemaps slide — it
- * shares the Information Architecture diagram. Dropping it gives exactly the
- * Figma row positions: 152, 196, 240 … 592 (44px pitch).
- */
-export const NAV_ITEMS = [
-  { label: "Overview", id: "overview" },
-  { label: "The Challenges", id: "challenges" },
-  { label: "The Solutions", id: "solutions" },
-  { label: "Information Architecture", id: "info-arch" },
-  { label: "User Journey", id: "user-journey" },
-  { label: "User Flow", id: "user-flow" },
-  { label: "Design System", id: "design-system" },
-  { label: "Wireframe", id: "wireframe" },
-  { label: "Visual Design", id: "visual-design" },
-  { label: "Impact", id: "impact" },
-  { label: "Conclusion", id: "conclusion" },
-] as const;
-
-const KEY_TO_ID: Record<string, string> = {
-  overview: "overview",
-  challenges: "challenges",
-  solutions: "solutions",
-  "information-architecture": "info-arch",
-  "user-journey": "user-journey",
-  "user-flow": "user-flow",
-  "design-system": "design-system",
-  wireframe: "wireframe",
-  "visual-design": "visual-design",
-  impact: "impact",
-  conclusion: "conclusion",
-};
-
-export function legacySections(project: ProjectItem) {
-  const raw = project.caseStudy?.sections;
-  if (!Array.isArray(raw) || !raw.length) return null;
-  const sorted = [...raw].filter((s: any) => s.visible !== false).sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0));
-  return sorted.map((s: any) => ({
-    key: s.key ?? "",
-    id: KEY_TO_ID[s.key ?? ""] ?? (s.key ?? "").replace(/\s+/g, "-").toLowerCase(),
-    label: s.label ?? s.title ?? s.key ?? "",
-    title: s.title ?? s.label ?? "",
-    intro: s.intro ?? "",
-    blocks: Array.isArray(s.blocks) ? s.blocks : [],
-  }));
-}
+import { resolvePanels } from "@/lib/case-study-panels";
 
 export function heroTitle(project: ProjectItem, mobile = false): string {
   const t = project.caseStudy?.heroTitle?.trim() || project.title;
@@ -56,11 +8,18 @@ export function heroTitle(project: ProjectItem, mobile = false): string {
   return t;
 }
 
+/** Left-nav project name: its own CMS field first, then the hero title (no spaces on mobile). */
+export function navTitle(project: ProjectItem): string {
+  const own = project.caseStudy?.navTitle?.trim();
+  return own || heroTitle(project, true);
+}
+
 export function heroSubtitle(project: ProjectItem): string {
   const cs = project.caseStudy ?? {};
   if (cs.heroSubtitle?.trim()) return cs.heroSubtitle.trim();
   if (Array.isArray(cs.tagline) && cs.tagline.length) return cs.tagline.join(" ");
-  return cs.overview?.body?.trim() || `${project.title} — full product design case study.`;
+  const overview = resolvePanels(cs).find((p) => p.preset === "overview" || /overview/i.test(p.label || ""));
+  return overview?.body?.trim() || `${project.title} — full product design case study.`;
 }
 
 export function subtitleLines(project: ProjectItem): string[] {
@@ -134,42 +93,6 @@ export function websiteUrl(project: ProjectItem): string {
 export function wireframeLink(project: ProjectItem): string {
   const cs: any = project.caseStudy ?? {};
   return cs.wireframeUrl?.trim() || cs.wireframe?.link?.trim() || "";
-}
-
-/**
- * Nav labels are CMS-driven: each section id maps to its backend-editable
- * heading (overview, challenges, solutions, infoArch, userJourney, userFlow,
- * designSystem, wireframe, visual, impact, conclusion). Falls back to the
- * canonical design labels only when the CMS has nothing stored yet.
- */
-const NAV_FIELD_BY_ID: Record<string, string> = {
-  overview: "overview",
-  challenges: "challenges",
-  solutions: "solutions",
-  "info-arch": "infoArch",
-  "user-journey": "userJourney",
-  "user-flow": "userFlow",
-  "design-system": "designSystem",
-  wireframe: "wireframe",
-  "visual-design": "visual",
-  impact: "impact",
-  conclusion: "conclusion",
-};
-
-export function navItems(project: ProjectItem): { id: string; label: string }[] {
-  return NAV_ITEMS.map((item) => {
-    const cs: any = project.caseStudy ?? {};
-    const field = NAV_FIELD_BY_ID[item.id] ?? item.id;
-    const stored = cs[field]?.heading?.trim?.() || "";
-    return { id: item.id, label: stored || item.label };
-  });
-}
-
-/** Journey column headers come from the CMS, else the Figma copy. */
-export function journeyColumns(project: ProjectItem): string[] {
-  const cols = (project.caseStudy as any)?.userJourney?.columns;
-  if (Array.isArray(cols) && cols.length) return cols.filter((c) => c?.trim()).map((c) => c.trim());
-  return ["What the dealership does", "Screens", "How the design helps"];
 }
 
 export function sectionBody(s: { heading?: string; body?: string } | undefined, fallback = ""): string {
@@ -292,7 +215,23 @@ export const PANEL_META: Record<string, PanelMeta> = {
     mobileTop: 24,
     mobileGap: 24,
   },
+  // Impact is an uploaded image (same frame as Wireframe / Visual Design, no button).
   impact: {
+    layout: "top",
+    left: 166,
+    top: 48,
+    width: 948,
+    mediaLeft: 137,
+    mediaTop: 128,
+    mediaWidth: 1008,
+    mediaHeight: 598,
+    buttonLeft: 416,
+    buttonTop: 638,
+    mobileTop: 24,
+    mobileGap: 24,
+  },
+  // Stat-card variant of the Impact slide (legacy / custom "stat cards" section).
+  "impact-stats": {
     layout: "top",
     left: 165,
     top: 214,

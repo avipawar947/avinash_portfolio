@@ -87,7 +87,44 @@ export interface CaseStudySectionRich {
   blocks?: CaseStudyBlock[];
 }
 
+/**
+ * Dynamic case-study sections. Each panel becomes one entry in the left nav
+ * and one slide on the right; the admin can add as many as needed.
+ *  - text          title + paragraph                      (Overview, Challenges, Solutions, Conclusion)
+ *  - zoom-image    title + paragraph + draggable/zoomable image (Info Architecture, User Journey, User Flow)
+ *  - image-link    title + paragraph + image (+ optional button) (Wireframe, Visual Design, Impact)
+ *  - design-system icons / fonts / colors / components
+ *  - stats         animated stat cards
+ */
+export type CaseStudyPanelType = 'text' | 'zoom-image' | 'design-system' | 'image-link' | 'stats';
+
+export interface CaseStudyPanel {
+  uid: string;
+  type: CaseStudyPanelType;
+  /** Geometry preset (Figma slide) the panel is laid out with. */
+  preset?: string;
+  /** Text shown in the left nav. */
+  label: string;
+  /** Heading shown on the slide. */
+  title: string;
+  body: string;
+  imageUrl?: string;
+  imagePublicId?: string;
+  /** image-link: optional button. Button is only shown when `link` is set. */
+  link?: string;
+  linkLabel?: string;
+  icons?: { label?: string; svgUrl: string; svgPublicId?: string }[];
+  fonts?: { family: string; weight: number; text: string; size: number }[];
+  colors?: { hex: string; label?: string }[];
+  components?: string[];
+  stats?: { value: string; suffix: string; label: string; desc: string }[];
+}
+
 export interface ProjectCaseStudy {
+  /** Dynamic sections, in display order. Takes priority over the legacy fixed fields below. */
+  panels?: CaseStudyPanel[];
+  /** Left-nav project name (defaults to heroTitle / project title). */
+  navTitle?: string;
   heroEyebrow?: string;
   heroTitle?: string;
   heroSubtitle?: string;
