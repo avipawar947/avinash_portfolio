@@ -21,6 +21,7 @@ export type MaterialIconName =
   | "done"
   | "download"
   | "edit"
+  | "expand_content"
   | "headset_mic"
   | "info"
   | "location_on"
@@ -43,6 +44,7 @@ export type IconDef = { label: string; d: string };
 export const MATERIAL_ICONS: Record<string, IconDef> = {
   "chevron-down": { label: "chevron-down", d: "M16.59 8.59 12 13.17l-4.59-4.58L6 10l6 6 6-6z" },
   edit: { label: "edit", d: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" },
+  expand_content: { label: "expand-content", d: "M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm14 0h2v6h-6v-2h4v-4z" },
   search: { label: "search", d: "M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" },
   headset_mic: { label: "headset_mic", d: "M12 1a9 9 0 0 0-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h4v1h-7v2h6c1.66 0 3-1.34 3-3V10a9 9 0 0 0-9-9z" },
   add: { label: "add", d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" },

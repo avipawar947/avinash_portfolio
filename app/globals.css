@@ -3376,19 +3376,27 @@ body {
   border-color: rgba(255, 255, 255, 0.70);
 }
 
-/* --- IA zoom overlay + media (Figma Zoom In) --------------------------- */
+/* --- IA media frame (Figma 1308:34517) ---------------------------------
+   The outer card (948x555) keeps the screenshot inset with a right gutter;
+   the zoom stack and expand control live in that gutter exactly as drawn. */
 .cs-sitemap-media {
   position: relative;
   width: 100%;
   height: 100%;
   min-height: calc(260 * var(--u));
+  border: calc(1 * var(--u)) solid rgba(187, 187, 187, 0.10);
+  border-radius: calc(8 * var(--u));
+  background: #1d1d1d;
+  overflow: hidden;
 }
 .cs-sitemap-frame {
   position: absolute;
-  inset: 0;
-  border-radius: calc(8 * var(--u));
+  left: calc(80 * var(--u));     /* Figma 81 incl. the 1px frame border */
+  top: calc(36.5 * var(--u));    /* Figma 37.5 incl. border */
+  width: calc(786 * var(--u));
+  height: calc(480 * var(--u));
   overflow: hidden;
-  background: #010101;
+  background: transparent;
 }
 .cs-sitemap-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 .cs-zoom-btn {
@@ -3484,38 +3492,84 @@ body {
   pointer-events: none;
 }
 
-/* Inline slide frame = the same pan/zoom canvas, plus its own control bar. */
+/* Inline slide frame = the same pan/zoom canvas, plus Figma's control stack. */
 .cs-sitemap-frame--pan {
   cursor: grab;
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
-  border: calc(1 * var(--u)) solid rgba(208, 208, 208, 0.20);
 }
 .cs-sitemap-frame--pan[data-dragging="true"] { cursor: grabbing; }
-.cs-zoom-inline-bar {
+
+/* Vertical +/%/− stack, 36x104 at (906, 400.5) inside the 948x555 card. */
+.cs-zoom-stack {
   position: absolute;
-  right: calc(16 * var(--u));
-  bottom: calc(16 * var(--u));
+  right: calc(5 * var(--u));    /* Figma 6 incl. frame border */
+  bottom: calc(49.5 * var(--u));/* Figma 50.5 incl. frame border */
+  z-index: 2;
+  display: grid;
+  grid-template-rows: repeat(3, calc(32 * var(--u)));
+  gap: calc(2 * var(--u));
+  width: calc(36 * var(--u));
+  padding: calc(1 * var(--u));
+  border: calc(1 * var(--u)) solid rgba(176, 176, 176, 0.05);
+  border-radius: calc(4 * var(--u));
+  background: #0b0b0b;
+}
+.cs-zoom-stack .cs-zoom-step,
+.cs-zoom-stack .cs-zoom-pct {
   display: flex;
   align-items: center;
-  gap: calc(8 * var(--u));
-  z-index: 2;
-}
-.cs-zoom-inline-bar button {
-  min-width: calc(40 * var(--u));
-  height: calc(40 * var(--u));
-  padding-inline: calc(14 * var(--u));
-  border: calc(1 * var(--u)) solid rgba(255, 255, 255, 0.40);
-  border-radius: var(--radius-pill);
-  background: rgba(20, 20, 20, 0.85);
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  height: calc(32 * var(--u));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(176, 176, 176, 0.10);
   color: #ffffff;
-  font-size: calc(14 * var(--u));
   line-height: 1;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
-.cs-zoom-inline-bar button:hover { border-color: rgba(255, 255, 255, 0.70); background: rgba(255, 255, 255, 0.18); }
-.cs-zoom-inline-bar .cs-zoom-pct { font-size: calc(13 * var(--u)); }
+.cs-zoom-stack .cs-zoom-step:first-child {
+  border-radius: calc(4 * var(--u)) calc(4 * var(--u)) 0 0;
+}
+.cs-zoom-stack .cs-zoom-step:last-child {
+  border-radius: 0 0 calc(4 * var(--u)) calc(4 * var(--u));
+}
+.cs-zoom-stack .cs-zoom-step:hover,
+.cs-zoom-stack .cs-zoom-pct:hover { background: rgba(176, 176, 176, 0.18); }
+.cs-zoom-stack .cs-zoom-pct {
+  font-size: calc(11 * var(--u));
+  font-weight: 510;
+  letter-spacing: 0;
+}
+.cs-zoom-glyph { width: calc(20 * var(--u)); height: calc(20 * var(--u)); }
+
+/* Expand-content button, 36x36 at the bottom-right of the media card. */
+.cs-zoom-expand {
+  position: absolute;
+  right: calc(5 * var(--u));   /* Figma 6 incl. frame border */
+  bottom: calc(7.5 * var(--u));/* Figma 8.5 incl. frame border */
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(36 * var(--u));
+  height: calc(36 * var(--u));
+  padding: 0;
+  border: calc(1 * var(--u)) solid rgba(176, 176, 176, 0.02);
+  border-radius: calc(4 * var(--u));
+  background: rgba(11, 11, 11, 0.60);
+  box-shadow: inset 0 0 calc(1 * var(--u)) rgba(255, 255, 255, 0.20);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.cs-zoom-expand:hover { background: rgba(28, 28, 28, 0.85); }
+.cs-zoom-expand-glyph { width: calc(24 * var(--u)); height: calc(24 * var(--u)); }
 
 .cs-stats {
   display: grid;
@@ -4064,8 +4118,21 @@ body {
   .cs-ds-h3 { font-size: calc(16 * var(--cs-u)); }
   .cs-chip { font-size: calc(12 * var(--cs-u)); }
   .cs-sitemap-media { height: calc(300 * var(--cs-u)); min-height: 0; }
-  .cs-zoom-inline-bar { right: calc(8 * var(--cs-u)); bottom: calc(8 * var(--cs-u)); gap: calc(4 * var(--cs-u)); }
-  .cs-zoom-inline-bar button { min-width: calc(32 * var(--cs-u)); height: calc(32 * var(--cs-u)); padding-inline: calc(10 * var(--cs-u)); font-size: calc(12 * var(--cs-u)); }
+  /* Narrow card: keep the screenshot clear of the right-hand controls. */
+  .cs-sitemap-frame {
+    left: calc(8 * var(--cs-u));
+    top: calc(8 * var(--cs-u));
+    width: calc(100% - calc(52 * var(--cs-u)));
+    height: calc(100% - calc(16 * var(--cs-u)));
+  }
+  .cs-zoom-stack {
+    right: calc(4 * var(--cs-u));
+    bottom: calc(44 * var(--cs-u));
+  }
+  .cs-zoom-expand {
+    right: calc(4 * var(--cs-u));
+    bottom: calc(4 * var(--cs-u));
+  }
   .cs-embed { height: auto; }
   .cs-frame-link { height: auto; aspect-ratio: 1008 / 598; }
   .cs-embed-btn {

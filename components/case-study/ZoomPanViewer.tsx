@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { createPortal } from "react-dom";
+import { MaterialIcon } from "./CaseStudyIcons";
 
 type View = { x: number; y: number; scale: number };
 const MIN = 0.5;
@@ -184,9 +185,10 @@ export function ZoomModal({ src, alt, onClose }: { src: string; alt: string; onC
 }
 
 /**
- * The in-slide image frame. It is already a pan/zoom canvas (drag, +/−,
- * double-click, Ctrl/⌘ + wheel); the "Zoom In" button opens the same view
- * full screen in {@link ZoomModal}.
+ * The in-slide image frame, rebuilt to Figma 1308:34517: an inset screenshot
+ * on a #1d1d1d card, a vertical +/%/− stack at the right edge, and the
+ * expand-content control at the bottom-right. The stack zooms the screenshot
+ * in place; the percentage resets it; expand opens the same view full screen.
  */
 export default function ZoomImage({ src, alt }: { src: string; alt: string }) {
   const [open, setOpen] = useState(false);
@@ -207,15 +209,47 @@ export default function ZoomImage({ src, alt }: { src: string; alt: string }) {
           <img src={src} alt={alt} draggable={false} />
         </div>
       </div>
-      <div className="cs-zoom-inline-bar">
-        <button type="button" onClick={() => pz.zoomAt(0.8)} aria-label="Zoom out">−</button>
-        <span className="cs-zoom-pct" aria-live="polite">{Math.round(pz.view.scale * 100)}%</span>
-        <button type="button" onClick={() => pz.zoomAt(1.25)} aria-label="Zoom in">+</button>
-        <button type="button" onClick={pz.reset} aria-label="Reset zoom">Reset</button>
-        <button type="button" className="cs-zoom-btn-inline" onClick={() => setOpen(true)}>
-          Zoom In
+
+      <div className="cs-zoom-stack">
+        <button
+          type="button"
+          className="cs-zoom-step"
+          onClick={() => pz.zoomAt(1.25)}
+          aria-label="Zoom in"
+          title="Zoom in"
+        >
+          <MaterialIcon name="add" className="cs-zoom-glyph" />
+        </button>
+        <button
+          type="button"
+          className="cs-zoom-pct"
+          onClick={pz.reset}
+          aria-label="Reset zoom"
+          title="Reset zoom"
+        >
+          {Math.round(pz.view.scale * 100)}%
+        </button>
+        <button
+          type="button"
+          className="cs-zoom-step"
+          onClick={() => pz.zoomAt(0.8)}
+          aria-label="Zoom out"
+          title="Zoom out"
+        >
+          <MaterialIcon name="remove" className="cs-zoom-glyph" />
         </button>
       </div>
+
+      <button
+        type="button"
+        className="cs-zoom-expand"
+        onClick={() => setOpen(true)}
+        aria-label="Expand full screen"
+        title="Expand"
+      >
+        <MaterialIcon name="expand_content" className="cs-zoom-expand-glyph" />
+      </button>
+
       {open ? <ZoomModal src={src} alt={alt} onClose={close} /> : null}
     </div>
   );
