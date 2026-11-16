@@ -346,6 +346,18 @@
   overflow: hidden;
 }
 
+/* The drift below scales .project-media up by 5%. Without this clipping box
+   the scaled media grows over the 8px padding and hides the hairline frame;
+   the clip keeps the photo inside the inset exactly like the Figma card. */
+#work .project-clip {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(7 * var(--fig));
+  overflow: hidden;
+}
+
 #work .project-media {
   display: block;
   position: relative;
@@ -468,6 +480,10 @@
 
   #work .project-media,
   #work .project-media img {
+    border-radius: calc(8 * var(--fig-m));
+  }
+
+  #work .project-clip {
     border-radius: calc(8 * var(--fig-m));
   }
 
@@ -3721,6 +3737,16 @@ body {
   background-image: linear-gradient(180deg, #000000 30.6%, #666666 100%);
   overflow: hidden;
 }
+/* The card's scroll drift scales .project-media past the 7px padding; this
+   clip keeps the photo inside the frame so the border + inset stay visible. */
+.more-work .project-clip {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(7 * var(--fig));
+  overflow: hidden;
+}
 .more-work .project-media {
   display: block;
   position: relative;
@@ -4210,6 +4236,7 @@ body {
     border-radius: calc(8 * var(--cs-u));
   }
   .more-work .project-media { border-radius: calc(7 * var(--cs-u)); }
+  .more-work .project-clip { border-radius: calc(7 * var(--cs-u)); }
   .more-work .project-caption {
     height: calc(24 * var(--cs-u));
     margin-top: calc(12 * var(--cs-u));

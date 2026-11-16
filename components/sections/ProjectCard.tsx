@@ -95,31 +95,33 @@ export default function ProjectCard({ project }: { project: ProjectItem }) {
   return (
     <article ref={root} className="project group">
       <span className="project-image" data-cursor="project">
-        <span className="project-media" data-card-media>
-          {isVideo ? (
-            <video
-              src={project.videoUrl}
-              poster={project.videoPosterUrl || undefined}
-              autoPlay
-              muted
-              loop
-              playsInline
-              aria-label={project.title}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : project.imageUrl ? (
-            <Image
-              src={project.imageUrl}
-              alt={project.title}
-              fill
-              sizes="(max-width: 600px) calc(100vw - 40px), 40vw"
-              className="object-cover"
-              style={{ objectPosition: `center ${project.cropTop ?? 0}%` }}
-            />
-          ) : (
-            <span className="size-full bg-[#131313]" />
-          )}
-          {project.wash && <span aria-hidden="true" className="project-wash" />}
+        <span className="project-clip">
+          <span className="project-media" data-card-media>
+            {isVideo ? (
+              <video
+                src={project.videoUrl}
+                poster={project.videoPosterUrl || undefined}
+                autoPlay
+                muted
+                loop
+                playsInline
+                aria-label={project.title}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : project.imageUrl ? (
+              <Image
+                src={project.imageUrl}
+                alt={project.title}
+                fill
+                sizes="(max-width: 600px) calc(100vw - 40px), 40vw"
+                className="object-cover"
+                style={{ objectPosition: `center ${project.cropTop ?? 0}%` }}
+              />
+            ) : (
+              <span className="size-full bg-[#131313]" />
+            )}
+            {project.wash && <span aria-hidden="true" className="project-wash" />}
+          </span>
         </span>
       </span>
 
