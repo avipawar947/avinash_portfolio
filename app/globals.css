@@ -297,25 +297,26 @@
   color: #373737;
 }
 
-/* Two columns of cards; the right one is dropped 120px. */
+/* Two columns of cards in one row-major grid. The DOM sequence is the
+   reading order (1 left, 2 right, 3 left, …) and every second card is
+   shifted down 120px to keep the designed stagger. Cards are never
+   regrouped by a stored column, so adding or deleting a project cannot
+   reshuffle the rest. */
 #work .projects {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: calc(132 * var(--fig));
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  column-gap: calc(132 * var(--fig));
+  row-gap: calc(121 * var(--fig));
+  /* Reserves the room the dropped right column needs below the last row. */
+  padding-bottom: calc(120 * var(--fig));
   margin-top: calc(68 * var(--fig));
 }
 
-#work .project-column {
-  display: flex;
-  flex: 1 1 0;
-  flex-direction: column;
-  gap: calc(121 * var(--fig));
-  min-width: 0;
-}
-
-#work .project-column + .project-column {
-  margin-top: calc(120 * var(--fig));
+/* `top` rather than a margin: the offset stays visual and does not change
+   the grid's row pitch, so both columns keep the 121px card rhythm. */
+#work .projects > .project:nth-child(even) {
+  top: calc(120 * var(--fig));
 }
 
 /* The whole card is the hit target, so the caption keeps its heading role
@@ -447,19 +448,14 @@
   }
 
   #work .projects {
-    flex-direction: column;
-    gap: calc(24 * var(--fig-m));
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: calc(24 * var(--fig-m));
+    padding-bottom: 0;
     margin-top: calc(40 * var(--fig-m));
   }
 
-  #work .project-column {
-    flex: none;
-    width: 100%;
-    gap: calc(24 * var(--fig-m));
-  }
-
-  #work .project-column + .project-column {
-    margin-top: 0;
+  #work .projects > .project:nth-child(even) {
+    top: 0;
   }
 
   #work .project-image {

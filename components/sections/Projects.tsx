@@ -12,18 +12,21 @@ import type { ProjectItem } from "@/types/content";
  *                 dropped 120px; 121px between cards within a column
  *
  * Laid out in flow rather than absolutely: the composition is a centred
- * header over a two-column stagger, which expressed as flex collapses to
- * a single column on narrow screens without a second composition.
- * Cards come from the CMS; each one's column, crop and wash are read
- * straight off the document.
+ * header over a two-column stagger. The cards are rendered in `order` as a
+ * single row-major grid, so card 1 sits left, card 2 right, card 3 left on
+ * the next row, and so on. The stagger is purely visual (every even card is
+ * nudged down in CSS); it never changes the sequence. Adding or deleting a
+ * project therefore just appends/removes a card in the same rhythm instead
+ * of reshuffling a hand-picked left/right column.
  *
  * Both canvases (1920 desktop, 393 mobile), the supplied grid artwork and
  * every length live in the `#work` block in app/globals.css — this file is
  * structure plus the CMS wiring.
  */
 export default function Projects({ items }: { items: ProjectItem[] }) {
-  const left = items.filter((p) => (p.column ?? "left") === "left");
-  const right = items.filter((p) => (p.column ?? "left") !== "left");
+  // Server already sorts, but sorting here keeps the row-major sequence
+  // correct even if the CMS returns documents in an unexpected order.
+  const projects = [...items].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   return (
     <section
@@ -67,21 +70,13 @@ export default function Projects({ items }: { items: ProjectItem[] }) {
           </p>
         </div>
 
-        <div className="projects flex w-full">
-          <Column projects={left} />
-          <Column projects={right} />
+        <div className="projects w-full">
+          {projects.map((project) => (
+            <ProjectCard key={project._id} project={project} />
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function Column({ projects }: { projects: ProjectItem[] }) {
-  return (
-    <div className="project-column">
-      {projects.map((project) => (
-        <ProjectCard key={project._id} project={project} />
-      ))}
-    </div>
-  );
-}

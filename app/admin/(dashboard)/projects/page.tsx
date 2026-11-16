@@ -52,7 +52,13 @@ export default function ProjectsAdminPage() {
   async function addProject() {
     setAdding(true);
     try {
-      const payload = { ...draft, slug: draft.slug || slugify(draft.title), order: items?.length ?? 0 };
+      // `order` is assigned by the API (max + 1) so a new card always lands
+      // last and the existing sequence keeps its positions.
+      const { order: _order, ...draftWithoutOrder } = draft;
+      const payload = {
+        ...draftWithoutOrder,
+        slug: draft.slug || slugify(draft.title),
+      };
       await apiRequest('/api/projects', 'POST', payload);
       setDraft(EMPTY);
       mutate('/api/projects');
@@ -72,17 +78,66 @@ export default function ProjectsAdminPage() {
     mutate('/api/projects');
   }
 
+  /**
+   * Move a card one slot up/down. The whole sequence is sent to the reorder
+   * endpoint, which re-numbers `order` and revalidates the homepage — so the
+   * frontend grid follows the admin order exactly, columns included.
+   */
+  async function moveProject(id: string, direction: -1 | 1) {
+    if (!items) return;
+    const index = items.findIndex((p) => p._id === id);
+    const target = index + direction;
+    if (index < 0 || target < 0 || target >= items.length) return;
+
+    const next = [...items];
+    [next[index], next[target]] = [next[target], next[index]];
+
+    await apiRequest('/api/projects/reorder', 'POST', {
+      ids: next.map((p) => p._id),
+    });
+    mutate('/api/projects');
+  }
+
   return (
     <div className="max-w-4xl">
       <h1 className="mb-6 text-2xl font-semibold">Projects & Case Studies</h1>
       <p className="mb-6 text-sm text-white/50">
         Card click ab <code>/case-study/[slug]</code> page kholta hai (modal nahi). Media <b>image ya video</b> dono ho sakta hai — hero video hone par card + hero dono video dikhata hai.
+        <br />
+        Sequence badalne ke liye har card ke <b>↑ / ↓</b> buttons use karo — home page ka grid turant usi order me update ho jayega.
       </p>
 
       <div className="space-y-4">
-        {items?.map((p) => {
+        {items?.map((p, index) => {
           return (
             <div key={p._id} className="rounded-xl border border-white/10 bg-[#0D0D0D] p-5">
+              <div className="mb-3 flex items-center justify-between">
+                <span className="text-xs text-white/40">
+                  Position {index + 1} of {items.length}
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => moveProject(p._id, -1)}
+                    disabled={index === 0}
+                    aria-label={`Move ${p.title} up`}
+                    title="Move up"
+                    className="rounded-md border border-white/10 px-2 py-1 text-sm text-white/70 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveProject(p._id, 1)}
+                    disabled={index === items.length - 1}
+                    aria-label={`Move ${p.title} down`}
+                    title="Move down"
+                    className="rounded-md border border-white/10 px-2 py-1 text-sm text-white/70 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-30"
+                  >
+                    ↓
+                  </button>
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <input
                   className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
@@ -146,17 +201,6 @@ export default function ProjectsAdminPage() {
 
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <label className="flex flex-col gap-1 text-xs text-white/60">
-                  Column
-                  <select
-                    className="rounded-lg border border-white/10 bg-black px-3 py-2 text-sm"
-                    value={p.column ?? 'left'}
-                    onChange={(e) => updateProject(p._id, { column: e.target.value as 'left' | 'right' })}
-                  >
-                    <option value="left">Left</option>
-                    <option value="right">Right</option>
-                  </select>
-                </label>
-                <label className="flex flex-col gap-1 text-xs text-white/60">
                   Wash
                   <span className="flex items-center gap-2 pt-1">
                     <input type="checkbox" checked={!!p.wash} onChange={(e) => updateProject(p._id, { wash: e.target.checked })} className="h-4 w-4" />
@@ -200,12 +244,6 @@ export default function ProjectsAdminPage() {
               <option value="video">Video</option>
             </select>
           </FormField>
-          <FormField label="Column">
-            <select className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm" value={draft.column} onChange={(e) => setDraft({ ...draft, column: e.target.value as 'left' | 'right' })}>
-              <option value="left">Left</option>
-              <option value="right">Right</option>
-            </select>
-          </FormField>
           <FormField label="Wash">
             <span className="flex items-center gap-2 pt-2">
               <input type="checkbox" checked={!!draft.wash} onChange={(e) => setDraft({ ...draft, wash: e.target.checked })} className="h-4 w-4" />
@@ -213,6 +251,9 @@ export default function ProjectsAdminPage() {
             </span>
           </FormField>
         </div>
+        <p className="mt-2 text-xs text-white/40">
+          The new card is appended to the end of the grid; its column alternates automatically.
+        </p>
         <button onClick={addProject} disabled={adding || !draft.title} className="mt-3 rounded-full bg-white px-5 py-2 text-sm font-medium text-black disabled:opacity-50">
           {adding ? 'Adding…' : 'Add project'}
         </button>

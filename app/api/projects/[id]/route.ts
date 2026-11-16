@@ -24,6 +24,10 @@ export const PUT = withAdmin(async (req: NextRequest, { params }: { params: { id
   const still = new Set(publicIdsOf(item?.toObject()));
   await deleteAssets(publicIdsOf(prev?.toObject()).filter((id) => !still.has(id)));
 
+  // Home is also statically rendered; a card add/edit/delete must invalidate
+  // it immediately so the case-study grid updates in the same order.
+  revalidatePath('/');
+
   // The case-study page is statically rendered with `revalidate = 60`, so a
   // CMS save must invalidate that exact page or the frontend keeps showing the
   // previous content (including a newly uploaded Information Architecture
@@ -40,6 +44,7 @@ export const DELETE = withAdmin(async (_req: NextRequest, { params }: { params: 
   const prev = await Model.findById(params.id);
   await Model.findByIdAndDelete(params.id);
   await cleanupDocAssets(prev?.toObject());
+  revalidatePath('/');
   if (prev?.slug) revalidatePath(`/case-study/${prev.slug}`);
   return NextResponse.json({ ok: true });
 });

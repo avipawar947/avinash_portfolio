@@ -47,7 +47,7 @@ export async function getHomeContent(): Promise<HomeContent> {
       HeroModel.findOne().lean(),
       NavbarModel.findOne().lean(),
       ClientLogoModel.find().sort("order").lean(),
-      ProjectModel.find().sort("order").lean(),
+      ProjectModel.find().sort({ order: 1, createdAt: 1, _id: 1 }).lean(),
       ProcessStepModel.find().sort("order").lean(),
       ProcessIntroModel.findOne().lean(),
       GalleryImageModel.find().sort("order").lean(),
@@ -131,7 +131,7 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
       };
     }
     const related = await ProjectModel.find({ _id: { $ne: project._id }, slug: { $ne: "" } })
-      .sort("order")
+      .sort({ order: 1, createdAt: 1, _id: 1 })
       .lean();
     return {
       project: project as any,
