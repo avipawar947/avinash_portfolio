@@ -16,7 +16,8 @@ const ContactCTASchema = new Schema(
     email: { type: String, default: 'avipawar947@gmail.com' },
     linkedinUrl: {
       type: String,
-      default: 'https://www.linkedin.com/in/avinashpawar',
+      default:
+        'https://www.linkedin.com/in/%F0%9D%90%80%F0%9D%90%AF%F0%9D%90%A2%F0%9D%90%A7%F0%9D%90%9A%F0%9D%90%AC%F0%9D%90%A1-%F0%9D%90%8F%F0%9D%90%9A%F0%9D%90%B0%F0%9D%90%9A%F0%9D%90%AB-93248120b/',
     },
   },
   { timestamps: true }

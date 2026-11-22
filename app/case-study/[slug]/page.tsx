@@ -44,6 +44,7 @@ export default async function CaseStudyPage({ params }: { params: { slug: string
       <Navbar
         content={navbarContent}
         linkedInUrl={footer.socialLinks.find((s) => s.platform === "linkedin")?.url}
+        resumePdfUrl={data.settings?.resumePdfUrl}
       />
       <main className="cs-page bg-[#0b0b0b]">
         <CaseStudyHero project={projectData} />

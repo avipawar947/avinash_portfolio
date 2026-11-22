@@ -15,7 +15,17 @@ import ContactCTAModel from "@/models/ContactCTA";
 import FooterModel from "@/models/Footer";
 import SettingsModel from "@/models/Settings";
 import { seedContent } from "./seed-data";
+import { LINKEDIN_URL } from "./links";
 import type { HomeContent, ProjectItem } from "@/types/content";
+
+/** Replace stale/placeholder LinkedIn links with the canonical profile. */
+function normalizeLinkedIn(value: unknown): string {
+  const url = typeof value === "string" ? value : "";
+  if (!url || url === "#" || url.toLowerCase().includes("avinashpawar")) {
+    return LINKEDIN_URL;
+  }
+  return url;
+}
 
 /**
  * Fetches every section's content for the homepage in one place.
@@ -81,9 +91,23 @@ export async function getHomeContent(): Promise<HomeContent> {
       // Merge so existing documents without the new contact fields still get
       // the seeded phone/email/LinkedIn defaults.
       contactCTA: contactCTA
-        ? { ...seedContent.contactCTA, ...(contactCTA as any) }
+        ? {
+            ...seedContent.contactCTA,
+            ...(contactCTA as any),
+            linkedinUrl: normalizeLinkedIn((contactCTA as any).linkedinUrl),
+          }
         : seedContent.contactCTA,
-      footer: (footer as any) || seedContent.footer,
+      footer: footer
+        ? {
+            ...(footer as any),
+            socialLinks: ((footer as any).socialLinks || []).map(
+              (link: any) =>
+                link.platform === "linkedin"
+                  ? { ...link, url: normalizeLinkedIn(link.url) }
+                  : link
+            ),
+          }
+        : seedContent.footer,
       settings: (settings as any) || seedContent.settings,
     };
   } catch (err) {

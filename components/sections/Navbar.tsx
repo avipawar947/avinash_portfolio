@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import SocialIcon from "@/components/ui/SocialIcon";
 import type { NavbarContent } from "@/types/content";
+import { LINKEDIN_URL } from "@/lib/links";
 
 /**
  * Navbar — Figma homepage frame, 1920 x 11835.
@@ -27,17 +28,29 @@ import type { NavbarContent } from "@/types/content";
 export default function Navbar({
   content,
   linkedInUrl = "",
+  resumePdfUrl = "",
 }: {
   content: NavbarContent;
   linkedInUrl?: string;
+  /** Cloudinary URL from Settings — takes priority over the legacy navbar URL. */
+  resumePdfUrl?: string;
 }) {
   const [activeId, setActiveId] = useState<string>("home");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   const links = [...content.links].sort((a, b) => a.order - b.order);
   const centers = linkCenters(links.length);
-  const resumeConfigured =
-    content.resumeUrl.trim().length > 0 && content.resumeUrl !== "#";
+  // The uploaded resume (Cloudinary URL from Settings) is the latest one and
+  // wins over the legacy navbar URL. "#" / empty are treated as "not set".
+  const activeResumeUrl = [resumePdfUrl, content.resumeUrl].find(
+    (url) => url && url.trim() !== "" && url !== "#",
+  );
+  const resumeConfigured = Boolean(activeResumeUrl);
+  const activeLinkedInUrl =
+    linkedInUrl && linkedInUrl !== "#" && !linkedInUrl.includes("avinashpawar")
+      ? linkedInUrl
+      : LINKEDIN_URL;
 
   // Map a nav href to the DOM section it scrolls to.
   const sectionId = sectionIdFromHref;
@@ -65,12 +78,63 @@ export default function Navbar({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Auto-hide while scrolling down through sections; reveal on scroll up or
+  // whenever the pointer is near the top of the page. The bar always stays
+  // visible while the mobile menu is open and at the very top of the page.
+  useEffect(() => {
+    if (menuOpen) {
+      setHidden(false);
+      return;
+    }
+
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const update = () => {
+      const y = Math.max(0, window.scrollY);
+      const delta = y - lastY;
+      // Ignore micro-jitter from rubber-band scrolling / tiny wheel ticks.
+      if (Math.abs(delta) > 6) {
+        if (delta > 0 && y > 80) setHidden(true);
+        else if (delta < 0) setHidden(false);
+        lastY = y;
+      }
+      if (y <= 8) {
+        setHidden(false);
+        lastY = y;
+      }
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    // Hovering the top strip brings the bar back even on a pure downward
+    // scroll (e.g. reading with the mouse parked at the top).
+    const onPointerMove = (e: PointerEvent) => {
+      if (e.clientY <= 80) setHidden(false);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pointermove", onPointerMove);
+    };
+  }, [menuOpen]);
+
   // Wordmark is two stacked lines in the design.
   const [first, ...rest] = content.logoText.split(" ");
 
   return (
     <>
-      <header
+      <motion.header
+        animate={{ y: hidden && !menuOpen ? "-100%" : "0%" }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className={clsx(
           "site-header fixed top-0 left-0 w-full border-b",
           // The open menu panel sits under the bar; the bar takes the
@@ -195,7 +259,7 @@ export default function Navbar({
           >
             <SocialIcon
               platform="linkedin"
-              url={linkedInUrl || "#"}
+              url={activeLinkedInUrl}
               className="!h-[calc(48*var(--fig))] !w-[calc(48*var(--fig))]"
             />
           </div>
@@ -203,7 +267,12 @@ export default function Navbar({
           {/* CTA — 188 x 48 at x=1592, node 1:42. Inert until a resume path set. */}
           <motion.a
             {...(resumeConfigured
-              ? { href: content.resumeUrl, download: true }
+              ? {
+                  href: activeResumeUrl,
+                  download: true,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                }
               : { "aria-disabled": true })}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
@@ -275,14 +344,14 @@ export default function Navbar({
             </span>
           </button>
         </nav>
-      </header>
+      </motion.header>
 
       <AnimatePresence>
         {menuOpen && (
           <MobileMenu
             links={links}
-            resumeUrl={resumeConfigured ? content.resumeUrl : ""}
-            linkedInUrl={linkedInUrl}
+            resumeUrl={resumeConfigured ? activeResumeUrl! : ""}
+            linkedInUrl={activeLinkedInUrl}
             onClose={() => setMenuOpen(false)}
             onNavigate={(href) => setActiveId(sectionIdFromHref(href))}
           />
@@ -413,7 +482,12 @@ function MobileMenu({
           )}
           <motion.a
             {...(resumeUrl
-              ? { href: resumeUrl, download: true }
+              ? {
+                  href: resumeUrl,
+                  download: true,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                }
               : { "aria-disabled": true })}
             className="menu-cta"
           >

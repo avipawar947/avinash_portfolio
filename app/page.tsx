@@ -26,6 +26,7 @@ export default async function HomePage() {
         linkedInUrl={
           content.footer.socialLinks.find((s) => s.platform === "linkedin")?.url
         }
+        resumePdfUrl={content.settings?.resumePdfUrl}
       />
       <main>
         <Hero content={content.hero} />

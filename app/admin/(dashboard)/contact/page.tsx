@@ -7,6 +7,7 @@ import FormField from '@/components/admin/FormField';
 import SaveBar from '@/components/admin/SaveBar';
 import ImageUploader from '@/components/admin/ImageUploader';
 import type { ContactCTAContent, ContactCTATab } from '@/types/content';
+import { LINKEDIN_URL } from '@/lib/links';
 
 const DEFAULT_TABS: ContactCTATab[] = [
   { label: 'Desktop', imageUrl: '' },
@@ -33,7 +34,7 @@ export default function ContactAdminPage() {
         phone: data.phone ?? '+91 9325900669',
         email: data.email ?? 'avipawar947@gmail.com',
         linkedinUrl:
-          data.linkedinUrl ?? 'https://www.linkedin.com/in/avinashpawar',
+          data.linkedinUrl ?? LINKEDIN_URL,
       });
     }
   }, [data]);

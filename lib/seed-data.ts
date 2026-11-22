@@ -1,4 +1,5 @@
 import type { HomeContent } from '@/types/content';
+import { LINKEDIN_URL } from './links';
 
 /**
  * Fallback content shown when a collection is empty (e.g. fresh DB, or DB
@@ -16,7 +17,7 @@ export const seedContent: HomeContent = {
       { label: 'About', href: '#about', order: 2 },
       { label: 'Contact', href: '#contact', order: 3 },
     ],
-    resumeUrl: '#',
+    resumeUrl: '',
   },
   hero: {
     name: 'Avinash Pawar',
@@ -233,7 +234,7 @@ export const seedContent: HomeContent = {
     roleTags: ['UI/UX Designer', 'Product Designer'],
     location: 'Mumbai, India',
     socialLinks: [
-      { platform: 'linkedin', url: '#', iconUrl: '', iconPublicId: '' },
+      { platform: 'linkedin', url: LINKEDIN_URL, iconUrl: '', iconPublicId: '' },
       { platform: 'behance', url: '#', iconUrl: '', iconPublicId: '' },
       { platform: 'gmail', url: 'mailto:hello@example.com', iconUrl: '', iconPublicId: '' },
     ],
@@ -246,7 +247,7 @@ export const seedContent: HomeContent = {
     ],
     phone: '+91 9325900669',
     email: 'avipawar947@gmail.com',
-    linkedinUrl: 'https://www.linkedin.com/in/avinashpawar',
+    linkedinUrl: LINKEDIN_URL,
   },
   settings: {
     resumePdfUrl: '',

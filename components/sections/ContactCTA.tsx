@@ -2,6 +2,7 @@ import SocialIcon from "@/components/ui/SocialIcon";
 import GradientText from "@/components/ui/GradientText";
 import ContactTabs from "@/components/sections/ContactTabs";
 import type { ContactCTAContent, FooterContent } from "@/types/content";
+import { LINKEDIN_URL } from "@/lib/links";
 import Image from "next/image";
 
 /**
@@ -31,7 +32,12 @@ export default function ContactCTA({
   const linkedin = footer.socialLinks.find((s) => s.platform === "linkedin");
   const phone = content.phone || "+91 9325900669";
   const email = content.email || "avipawar947@gmail.com";
-  const linkedinUrl = content.linkedinUrl || linkedin?.url;
+  // Prefer the canonical profile; ignore stale/placeholder values from older DB docs.
+  const storedLinkedIn = content.linkedinUrl || linkedin?.url || "";
+  const linkedinUrl =
+    storedLinkedIn && storedLinkedIn !== "#" && !storedLinkedIn.includes("avinashpawar")
+      ? storedLinkedIn
+      : LINKEDIN_URL;
 
   return (
     <section

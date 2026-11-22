@@ -7,9 +7,10 @@ import FormField from '@/components/admin/FormField';
 import SaveBar from '@/components/admin/SaveBar';
 import ImageUploader from '@/components/admin/ImageUploader';
 import type { FooterContent, SocialLink } from '@/types/content';
+import { LINKEDIN_URL } from '@/lib/links';
 
 const PLATFORM_PRESETS: SocialLink[] = [
-  { platform: 'linkedin', url: '#' },
+  { platform: 'linkedin', url: LINKEDIN_URL },
   { platform: 'behance', url: '#' },
   { platform: 'gmail', url: 'mailto:hello@example.com' },
 ];
