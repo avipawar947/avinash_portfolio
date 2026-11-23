@@ -13,8 +13,9 @@ import { resolvePanels } from "@/lib/case-study-panels";
 export const revalidate = 60;
 export const dynamicParams = true;
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const data = await getCaseStudyBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const data = await getCaseStudyBySlug(slug);
   if (!data) return { title: "Case Study — Avinash Pawar" };
   const title = heroTitle(data.project);
   const overview = resolvePanels(data.project.caseStudy).find((p) => p.preset === "overview");
@@ -24,15 +25,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function CaseStudyPage({ params }: { params: { slug: string } }) {
-  const data = await getCaseStudyBySlug(params.slug);
+export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const data = await getCaseStudyBySlug(slug);
   if (!data) notFound();
   const { project, related, navbar, contactCTA, footer } = data;
   const navLogo = logoUrl(project);
 
-  // The hero + viewer are client components; strip Mongoose document
-  // prototypes so only plain JSON crosses the server/client boundary.
-  const projectData = JSON.parse(JSON.stringify(project));
+  // getCaseStudyBySlug returns plain JSON-safe data, so it can be handed
+  // straight to the client components.
+  const projectData = project;
   // Navbar hash links (#work etc.) must go home: /#work
   const navLinks = navbar.links.map((l) =>
     l.href.startsWith("#") ? { ...l, href: `/${l.href}` } : l

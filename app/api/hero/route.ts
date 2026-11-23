@@ -10,7 +10,13 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   await connectDB();
   let doc = await Model.findOne();
-  if (!doc) doc = await Model.create({});
+  if (!doc) {
+    doc = await Model.create({});
+  } else if (!doc.taglineTop || doc.taglineTop === 'PRODUCT') {
+    // Older CMS docs still say "PRODUCT" — backfill to the current "UI/UX".
+    doc.taglineTop = 'UI/UX';
+    await doc.save();
+  }
   return NextResponse.json(doc);
 }
 

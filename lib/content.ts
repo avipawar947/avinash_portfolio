@@ -27,6 +27,22 @@ function normalizeLinkedIn(value: unknown): string {
   return url;
 }
 
+/** The hero's first ghost word is now "UI/UX" (older CMS docs say "PRODUCT"). */
+function normalizeTaglineTop(value: unknown): string {
+  const word = typeof value === "string" ? value : "";
+  return !word || word === "PRODUCT" ? "UI/UX" : word;
+}
+
+/**
+ * Convert Mongoose lean documents into plain JSON-safe values before they are
+ * passed from Server Components to Client Components. `.lean()` still returns
+ * BSON `ObjectId` instances (which have a `toJSON` method) and `Date` objects;
+ * React rejects those across the server/client boundary.
+ */
+function toPlain<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
 /**
  * Fetches every section's content for the homepage in one place.
  * If MongoDB isn't reachable yet (e.g. MONGODB_URI not set during
@@ -71,8 +87,13 @@ export async function getHomeContent(): Promise<HomeContent> {
       SettingsModel.findOne().lean(),
     ]);
 
-    return {
-      hero: (hero as any) || seedContent.hero,
+    return toPlain({
+      hero: hero
+        ? {
+            ...(hero as any),
+            taglineTop: normalizeTaglineTop((hero as any).taglineTop),
+          }
+        : seedContent.hero,
       navbar: (navbar as any) || seedContent.navbar,
       clientLogos: clientLogos?.length
         ? (clientLogos as any)
@@ -109,13 +130,13 @@ export async function getHomeContent(): Promise<HomeContent> {
           }
         : seedContent.footer,
       settings: (settings as any) || seedContent.settings,
-    };
+    });
   } catch (err) {
     console.warn(
       "[content] Falling back to seed content —",
       (err as Error).message,
     );
-    return seedContent;
+    return toPlain(seedContent);
   }
 }
 
@@ -145,37 +166,37 @@ export async function getCaseStudyBySlug(slug: string): Promise<CaseStudyData | 
     if (!project) {
       const seedHit = seedContent.projects.find((p: any) => p.slug === slug || p._id === slug);
       if (!seedHit) return null;
-      return {
+      return toPlain({
         project: seedHit as any,
         related: seedContent.projects.filter((p: any) => p._id !== (seedHit as any)._id) as any,
         navbar: home.navbar,
         contactCTA: home.contactCTA,
         footer: home.footer,
         settings: home.settings,
-      };
+      });
     }
     const related = await ProjectModel.find({ _id: { $ne: project._id }, slug: { $ne: "" } })
       .sort({ order: 1, createdAt: 1, _id: 1 })
       .lean();
-    return {
+    return toPlain({
       project: project as any,
       related: (related?.length ? (related as any) : home.projects.filter((p: any) => p._id !== project._id)) ?? [],
       navbar: home.navbar,
       contactCTA: home.contactCTA,
       footer: home.footer,
       settings: home.settings,
-    };
+    });
   } catch (err) {
     console.warn("[content] Case study fallback —", (err as Error).message);
     const seedHit = seedContent.projects.find((p: any) => p.slug === slug || p._id === slug);
     if (!seedHit) return null;
-    return {
+    return toPlain({
       project: seedHit as any,
       related: seedContent.projects.filter((p: any) => p._id !== (seedHit as any)._id) as any,
       navbar: home.navbar,
       contactCTA: home.contactCTA,
       footer: home.footer,
       settings: home.settings,
-    };
+    });
   }
 }

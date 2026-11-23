@@ -5,8 +5,11 @@ import { seedContent } from '@/lib/seed-data';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(_req: NextRequest, { params }: { params: { slug: string } }) {
-  const { slug } = params;
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await params;
   try {
     await connectDB();
     const bySlug = await Model.findOne({ slug }).lean();

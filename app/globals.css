@@ -56,7 +56,7 @@
   --color-surface: #010101;        /* navbar bar bg, mobile menu */
   --color-text: #ffffff;
   --color-text-inverse: #010101;
-  /* Ghost hero type ("PRODUCT" / "DESIGNER") */
+  /* Ghost hero type ("UI/UX" / "DESIGNER") */
   --color-text-ghost: rgba(224, 224, 224, 0.8);
 
   /* Navbar bottom rule — node 1:34 */
@@ -152,11 +152,10 @@
   --mq-gap: 140;         /* pitch between logos */
   --mq-pad-top: 100;     /* 260px band, logos centred in it */
   --mq-pad-bottom: 100;
-  /* Seconds per design pixel. The design crosses its 3277px strip in 70s;
-     deriving the duration from the measured strip instead of hard-coding
-     70s keeps the logos travelling at exactly that speed however many of
-     them the CMS holds. */
-  --mq-secs-per-px: calc(70 / 3277 * 1s);
+  /* Seconds per design pixel. The 3277px strip crosses in 35s — twice the
+     original 70s pace. Deriving the duration from the measured strip keeps
+     that speed however many logos the CMS holds. */
+  --mq-secs-per-px: calc(35 / 3277 * 1s);
 }
 
 @media (max-width: 600px) {
@@ -167,7 +166,7 @@
     --mq-gap: 72;
     --mq-pad-top: 40;          /* 194px band */
     --mq-pad-bottom: 114;
-    --mq-secs-per-px: calc(60 / 1971 * 1s);
+    --mq-secs-per-px: calc(30 / 1971 * 1s);
   }
 }
 
@@ -188,19 +187,8 @@
   will-change: transform;
 }
 
-/* Hovering (or tabbing to) the strip holds it still, so a logo can be
-   looked at and a keyboard user can stop the motion. Scoped to hover:
-   capable pointers, because :hover sticks on touch. */
-@media (hover: hover) {
-  .marquee-strip:hover .marquee-track {
-    animation-play-state: paused;
-  }
-}
-
-.marquee-strip:focus-within .marquee-track {
-  animation-play-state: paused;
-}
-
+/* The strip scrolls continuously — hovering or focusing it never pauses the
+   animation. The focus ring below is kept for keyboard visibility only. */
 .marquee-strip:focus-visible {
   outline: 1px solid #777;
   outline-offset: -4px;
@@ -586,6 +574,18 @@
   row-gap: max(1rem, calc(24 * var(--fig)));
 }
 
+/* Guide grid — Figma node 765:6532, reproduced exactly: vertical lines at
+   x=160 with a 200px pitch, horizontal lines starting at y=184 with a 184px
+   pitch. Quieter 0.03 alpha than the Case Study canvas' 0.05, but no mask —
+   in the design the vertical rules run from the very top of the section. */
+#journey .why-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px);
+  background-size: calc(200 * var(--fig)) 100%, 100% calc(184 * var(--fig));
+  background-position: calc(160 * var(--fig)) 0, 0 calc(184 * var(--fig));
+}
+
 #journey .why-col {
   gap: max(1rem, calc(24 * var(--fig)));
 }
@@ -700,6 +700,17 @@
   padding-left: 2.979%;
   overflow: hidden;
   border-radius: 0 100px 100px 0;
+}
+
+/* The bar itself grows from the rule; the label above it never scales.
+   Hidden until the plot scrolls into view (`.why-plot--visible`, set by the
+   component's IntersectionObserver), so the reveal is actually seen. */
+.why-bar-fill {
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0.35;
   background-image: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0.1) 55.234%,
@@ -707,7 +718,24 @@
   );
 }
 
+.why-plot--visible .why-bar-fill {
+  animation: why-bar-grow 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes why-bar-grow {
+  from {
+    transform: scaleX(0);
+    opacity: 0.35;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
 .why-bar-label {
+  position: relative;
+  z-index: 1;
   font-size: clamp(0.75rem, 0.9375vw, 1.5rem);
   line-height: 1.78;
   letter-spacing: 0.02em;
@@ -754,12 +782,47 @@
   padding-inline: 4.53%;
 }
 
+/* The row scrolls endlessly: two identical lists in a max-content track,
+   translated by one list's width. The viewport masks the edges so labels
+   fade in and out instead of popping at the card boundary. */
+.why-domains-viewport {
+  width: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+}
+
+.why-domains-track {
+  display: flex;
+  width: max-content;
+  animation: why-domains-scroll 18s linear infinite;
+  will-change: transform;
+}
+
+@keyframes why-domains-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .why-domains-list {
   margin: 0;
-  padding: 0;
+  padding: 0 1.642cqw 0 0;
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 1.642cqw;
 }
@@ -783,6 +846,19 @@
   height: 1.887cqw;
   min-width: 5px;
   min-height: 5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .why-domains-track {
+    animation: none;
+    will-change: auto;
+  }
+
+  .why-bar-fill {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
 }
 
 /* Phone + tablet composition (< `lg`, where the section is one column).
@@ -2312,7 +2388,9 @@
   .hero-m-ghost--product {
     left: calc(50% - 164.5 * var(--hero-u));
     width: calc(124 * var(--hero-u));
-    justify-content: flex-start;
+    /* "UI/UX" is narrower than "PRODUCT" — centre it in the same box so it
+       nudges left from the chip without losing balance with "DESIGNER". */
+    justify-content: center;
   }
 
   .hero-m-ghost--designer {
@@ -2382,17 +2460,20 @@
     height: calc(24 * var(--hero-u));
   }
 
-  /* "Hello": 104 x 24, centre (86, 470). */
+  /* "Hello": 104 x 24, rotated 15deg. Figma's rotated bounds start at
+     (34, 458), i.e. centre (87.33, 483.05) — offset the unrotated box so the
+     rendered bounds land there exactly. */
   .hero-m-pill--hello {
-    left: calc(50% - 162.5 * var(--hero-u));
-    top: calc(471 * var(--hero-u));
+    left: calc(50% - 161.17 * var(--hero-u));
+    top: calc(471.05 * var(--hero-u));
     width: calc(104 * var(--hero-u));
   }
 
-  /* "Open To Work": 96 x 24, centre (123.33, 586.4). */
+  /* "Open To Work": 96 x 24, rotated 17deg. Figma bounds → centre
+     (124.74, 599.91). */
   .hero-m-pill--status {
-    left: calc(50% - 121.17 * var(--hero-u));
-    top: calc(588.4 * var(--hero-u));
+    left: calc(50% - 119.76 * var(--hero-u));
+    top: calc(587.91 * var(--hero-u));
     width: calc(96 * var(--hero-u));
   }
 
@@ -2412,9 +2493,9 @@
       rgba(255, 255, 255, 0.1);
   }
 
-  /* 10px/12px SF Pro, weight 590. The small translate is Figma's own label
-     offset inside each pill (1.31, 1.61) and (7.1, ~3) — the latter leaves
-     room for the status dot. Tweak here if you want to nudge the labels. */
+  /* 10px/12px SF Pro, weight 590. Figma's label offsets inside each pill are
+     (1.31, 1.61) for "Hello" and (7.1, 1.1) for "Open to Work" — the status
+     label's rendered centre lines up with the green dot at (12.12, 12.21). */
   .hero-m-pill-label {
     font-family: var(--font-display);
     font-weight: 590;
@@ -2430,15 +2511,17 @@
   }
 
   .hero-m-pill--status .hero-m-pill-label {
-    transform: translate(calc(7.1 * var(--hero-u)), calc(3 * var(--hero-u)));
+    transform: translate(calc(7.1 * var(--hero-u)), calc(1.1 * var(--hero-u)));
   }
 
-  /* "Group 593": ring 8.1px (1px #33CE0D) at (9.93, 10.12) with a 4.63px
-     filled dot at (12.12, 12.3). */
+  /* "Group 593" — Figma's ring and filled dot are concentric at local
+     (12.12, 12.21) inside the 96 x 24 pill. Both left/top values below are
+     derived from that shared centre (centre minus half the diameter), so the
+     inner dot never drifts inside the ring at any --hero-u scale. */
   .hero-m-dot-ring {
     position: absolute;
-    left: calc(9.93 * var(--hero-u));
-    top: calc(10.12 * var(--hero-u));
+    left: calc(8.07 * var(--hero-u));
+    top: calc(8.16 * var(--hero-u));
     box-sizing: border-box;
     width: calc(8.1 * var(--hero-u));
     height: calc(8.1 * var(--hero-u));
@@ -2448,8 +2531,8 @@
 
   .hero-m-dot {
     position: absolute;
-    left: calc(12.12 * var(--hero-u));
-    top: calc(12.3 * var(--hero-u));
+    left: calc(9.805 * var(--hero-u));
+    top: calc(9.895 * var(--hero-u));
     width: calc(4.63 * var(--hero-u));
     height: calc(4.63 * var(--hero-u));
     border-radius: 50%;

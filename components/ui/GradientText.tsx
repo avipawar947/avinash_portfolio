@@ -7,7 +7,7 @@ export default function GradientText({
   style,
   children,
 }: {
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactNode;

@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import GradientText from "@/components/ui/GradientText";
@@ -11,12 +14,43 @@ import GradientText from "@/components/ui/GradientText";
  * Bar widths arrive from the CMS in the plot's 470px space and are written
  * as a percentage of it, so the chart keeps its shape at any card width.
  * The surrounding lengths are `cqw` of the card (app/globals.css).
+ *
+ * The chart sits well below the fold, so the bars grow in only once the plot
+ * scrolls into view — otherwise the animation would finish off-screen and the
+ * reader would just see static bars. Each bar is staggered slightly for a
+ * smooth, deliberate reveal; the labels stay put and never stretch.
  */
 export default function ProjectMixCard({
   bars,
 }: {
   bars: { label: string; width: number }[];
 }) {
+  const plotRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const plot = plotRef.current;
+    if (!plot) return;
+
+    // Fallback for browsers without IntersectionObserver: show immediately.
+    if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 }
+    );
+    observer.observe(plot);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="why-card why-card-chart">
       <GradientText as="p" className="why-chart-title">
@@ -24,7 +58,7 @@ export default function ProjectMixCard({
       </GradientText>
 
       {/* Plot area (1:318) */}
-      <div className="why-plot">
+      <div ref={plotRef} className={`why-plot${visible ? " why-plot--visible" : ""}`}>
         <div className="why-plot-rule" aria-hidden="true" />
 
         {bars.map((bar, index) => (
@@ -36,6 +70,11 @@ export default function ProjectMixCard({
               width: `${(bar.width / 470) * 100}%`,
             }}
           >
+            <span
+              className="why-bar-fill"
+              aria-hidden="true"
+              style={{ animationDelay: `${index * 140}ms` }}
+            />
             <GradientText className="why-bar-label">{bar.label}</GradientText>
           </div>
         ))}

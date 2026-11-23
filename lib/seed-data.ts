@@ -21,7 +21,7 @@ export const seedContent: HomeContent = {
   },
   hero: {
     name: 'Avinash Pawar',
-    taglineTop: 'PRODUCT',
+    taglineTop: 'UI/UX',
     taglineBottom: 'DESIGNER',
     badgeText: 'Hello, My Name Is',
     statusText: 'Open to Work',
@@ -35,6 +35,23 @@ export const seedContent: HomeContent = {
     { _id: 'c4', name: 'HRX', logoUrl: '', width: 126, luminosity: true, order: 3 },
     { _id: 'c5', name: 'Zango', logoUrl: '', width: 156, order: 4 },
     { _id: 'c6', name: 'Awfis', logoUrl: '', width: 176, order: 5 },
+    { _id: 'c7', name: 'Icici', logoUrl: '', width: 299, order: 6 },
+    { _id: 'c8', name: 'Mswipe', logoUrl: '', width: 392, order: 7 },
+    { _id: 'c9', name: 'Qscan', logoUrl: '', width: 60, order: 8 },
+    {
+      _id: 'c10',
+      name: 'Bharat Billpay',
+      logoUrl: '/images/clients/bharat-billpay.png',
+      width: 168,
+      order: 9,
+    },
+    {
+      _id: 'c11',
+      name: 'Akruti Luxe',
+      logoUrl: '/images/clients/akruti-luxe.png',
+      width: 325,
+      order: 10,
+    },
   ],
   projects: [
     { _id: 'p1', title: 'HRX', slug: 'hrx', tag: 'Case Study', imageUrl: '/images/case-study/hrx/card.webp', mediaType: 'image', column: 'left', cropHeight: 118.12, cropTop: -8.95, wash: true, link: '', order: 0 },

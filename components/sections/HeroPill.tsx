@@ -11,7 +11,9 @@ import { clsx } from "clsx";
  * Shared geometry: 40px tall, radius 100, fill #010101, 1px
  * rgba(255,255,255,0.1) stroke, glow shadow `1px 1px 40px 1px
  * rgba(255,255,255,0.2)`. They differ in stroke style ("Hello" is solid,
- * "Open to Work" dashed), width, label font and rotation.
+ * "Open to Work" dashed), width, rotation and label type: "Hello" is
+ * SF Pro Bold 14 / +0.28, "Open to Work" is Inter Medium 16 / +0.32 —
+ * each matches its own Figma node exactly.
  *
  * Placement mirrors Figma: an absolute wrapper positioned at the node's
  * measured centre (centerX/centerY in 1920x1148 frame coords), and a
@@ -88,7 +90,8 @@ export default function HeroPill({
         <span
           className={clsx(
             "text-center whitespace-nowrap text-[var(--color-text)]",
-            // 1:28 is SF Pro Bold 14; 1:30 is Inter Medium 16.
+            // Figma gives each chip its own label style: "Hello" is
+            // SF Pro Bold 14 / +0.28, "Open to Work" is Inter Medium 16 / +0.32.
             variant === "solid" ? "font-display font-bold" : "font-medium",
             responsive && "text-[0.8125rem] tracking-[0.02em]",
           )}

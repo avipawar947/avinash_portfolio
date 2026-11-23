@@ -3,7 +3,7 @@ import { Schema, model, models } from 'mongoose';
 const HeroSchema = new Schema(
   {
     name: { type: String, default: 'Avinash Pawar' },
-    taglineTop: { type: String, default: 'PRODUCT' },
+    taglineTop: { type: String, default: 'UI/UX' },
     taglineBottom: { type: String, default: 'DESIGNER' },
     badgeText: { type: String, default: 'Hello, My Name Is' },
     statusText: { type: String, default: 'Open to Work' },

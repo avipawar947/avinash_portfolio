@@ -37,16 +37,13 @@ export default function StatsGrid({
         paddingBottom: "var(--section-pad)",
       }}
     >
-      {/* the guide grid, offset exactly as in the design (node 1:274) */}
+      {/* Guide grid — Figma node 765:6532, spanning the full 1375px section. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-0"
+        className="why-grid-bg pointer-events-none absolute left-0 top-0"
         style={{
           width: "calc(1920 * var(--fig))",
-          height: "calc(1190 * var(--fig))",
-          backgroundImage: "url(/svg/hero-grid.svg)",
-          backgroundSize: "100% 100%",
-          backgroundRepeat: "no-repeat",
+          height: "calc(1375 * var(--fig))",
         }}
       />
 

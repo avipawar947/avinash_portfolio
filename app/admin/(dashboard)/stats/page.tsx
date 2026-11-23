@@ -261,7 +261,7 @@ export default function StatsAdminPage() {
           </button>
         </div>
         <p className="mb-3 mt-1 text-sm text-white/50">
-          Width is the bar's pixel width against a 447px axis labelled 0–100.
+          Width is the bar&apos;s pixel width against a 447px axis labelled 0–100.
         </p>
         <div className="space-y-2">
           {(config?.projectMix ?? []).map((bar, i) => (

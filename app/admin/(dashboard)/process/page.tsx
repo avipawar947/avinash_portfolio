@@ -103,7 +103,7 @@ export default function ProcessAdminPage() {
       <h1 className="mb-1 text-2xl font-semibold">Process — How I Work</h1>
       <p className="mb-6 text-sm text-white/50">
         Desktop pills are positioned absolutely inside a fixed-size table. Left / top / width are Figma px
-        from the table's top-left corner (1640 × 645). The gradient white-stop (%) keeps the fade land consistent.
+        from the table&apos;s top-left corner (1640 × 645). The gradient white-stop (%) keeps the fade land consistent.
       </p>
 
       {/* Intro copy */}

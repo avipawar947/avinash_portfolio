@@ -15,7 +15,7 @@ import type { HeroContent } from "@/types/content";
  *    scaled and centred.
  *
  * Mobile layer order (back to front) = Figma order:
- *   bg -> grey-gradient-abstract -> Grid -> PRODUCT / DESIGNER ghost type ->
+ *   bg -> grey-gradient-abstract -> Grid -> UI/UX / DESIGNER ghost type ->
  *   Character -> Rectangle 6 fade -> "Avinash" / "Pawar" -> pills.
  */
 export default function Hero({ content }: { content: HeroContent }) {
@@ -48,7 +48,7 @@ export default function Hero({ content }: { content: HeroContent }) {
         {/* Grid — 100px cells, 1px rgba(208,208,208,0.05) */}
         <div className="hero-m-grid" />
 
-        {/* PRODUCT / DESIGNER ghost type — behind the character */}
+        {/* UI/UX / DESIGNER ghost type — behind the character */}
         {content.taglineTop && (
           <span className="hero-m-ghost hero-m-ghost--product">
             {content.taglineTop}
@@ -148,9 +148,11 @@ export default function Hero({ content }: { content: HeroContent }) {
           }}
         />
 
-        {/* 1:22 / 1:23 — ghost type */}
+        {/* 1:22 / 1:23 — ghost type. "UI/UX" is much narrower than the old
+            "PRODUCT", so its centre is nudged towards the character to keep
+            the word hugging the image the way the design does. */}
         {content.taglineTop && (
-          <GhostWord word={content.taglineTop} centerX={604} widthPx={486} />
+          <GhostWord word={content.taglineTop} centerX={704} widthPx={486} />
         )}
         {content.taglineBottom && (
           <GhostWord
@@ -210,8 +212,8 @@ export default function Hero({ content }: { content: HeroContent }) {
         {/* 1:27 / 1:29 */}
         <HeroPill
           label={content.badgeText || "Hello, My Name Is"}
-          centerX={435}
-          centerY={826}
+          centerX={438.48}
+          centerY={825.54}
           widthPx={158}
           rotate={13.22}
           variant="solid"
@@ -235,7 +237,7 @@ export default function Hero({ content }: { content: HeroContent }) {
 }
 
 /**
- * 1:22 / 1:23 — "PRODUCT" and "DESIGNER" (desktop only).
+ * 1:22 / 1:23 — "UI/UX" and "DESIGNER" (desktop only).
  * 100px SF Pro Bold, +2 tracking, rgba(224,224,224,0.8) at 20% opacity.
  */
 function GhostWord({
