@@ -12,10 +12,16 @@ export default function ToolsGrid({ items }: { items: ToolItem[] }) {
       aria-labelledby="tools-heading"
       className="relative w-full overflow-hidden rounded-[16px] bg-[var(--color-bg)]"
     >
+      {/* ── Desktop backdrop ─────────────────────────────────────────────
+          The 1920px frame's shared guide grid, behind the heading only: in
+          Figma it fades in from the top and ends just before the constellation. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
+        <div className="tools-grid-desktop" />
+      </div>
+
       {/* ── Mobile / tablet backdrop ─────────────────────────────────────
           The 393px frame's 100px grid, with the three Rectangle 6/7/8 fades
-          washing its edges out. Desktop (the 1920px frame) has no backdrop,
-          so the whole layer is dropped at `lg`. */}
+          washing its edges out. */}
       <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden">
         <div className="tools-grid tools-grid-top" />
         <div className="tools-grid tools-grid-bottom" />

@@ -33,9 +33,11 @@ export default function ToolTile({
   tool: ToolItem;
   variant?: 'desktop' | 'mobile';
 }) {
-  const sizeRatio = ((tool.iconSize || 60) / TOOL_TILE) * 100;
-  const leftRatio = ((tool.iconLeft || 17) / TOOL_TILE) * 100;
-  const topRatio = ((tool.iconTop || 17) / TOOL_TILE) * 100;
+  /* Figma centres the same 45x45 glyph box in every tile; `contain` keeps
+     uploaded/non-square logos inside that box without stretching them. */
+  const sizeRatio = ((tool.iconSize || 45) / TOOL_TILE) * 100;
+  const leftRatio = ((tool.iconLeft || 24.5) / TOOL_TILE) * 100;
+  const topRatio = ((tool.iconTop || 24.5) / TOOL_TILE) * 100;
 
   const tileStyle: React.CSSProperties = {
     backgroundImage:
@@ -67,9 +69,9 @@ export default function ToolTile({
         <Image
           src={tool.iconUrl}
           alt={tool.name}
-          width={tool.iconSize || 60}
-          height={tool.iconSize || 60}
-          className="absolute"
+          width={tool.iconSize || 45}
+          height={tool.iconSize || 45}
+          className="absolute object-contain"
           style={{
             width: `${sizeRatio}%`,
             height: `${sizeRatio}%`,

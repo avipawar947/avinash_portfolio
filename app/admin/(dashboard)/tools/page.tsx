@@ -16,9 +16,9 @@ const EMPTY: Omit<ToolItem, '_id'> = {
   iconPublicId: '',
   left: 0,
   top: 0,
-  iconSize: 60,
-  iconLeft: 17,
-  iconTop: 17,
+  iconSize: 45,
+  iconLeft: 24.5,
+  iconTop: 24.5,
   order: 0,
 };
 
@@ -215,7 +215,7 @@ export default function ToolsAdminPage() {
                 <input
                   type="number"
                   className="w-full rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
-                  value={editDraft.iconSize ?? 60}
+                  value={editDraft.iconSize ?? 45}
                   onChange={(e) =>
                     setEditDraft((d) => ({
                       ...d,
@@ -228,7 +228,7 @@ export default function ToolsAdminPage() {
                 <input
                   type="number"
                   className="w-full rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
-                  value={editDraft.iconLeft ?? 17}
+                  value={editDraft.iconLeft ?? 24.5}
                   onChange={(e) =>
                     setEditDraft((d) => ({
                       ...d,
@@ -241,7 +241,7 @@ export default function ToolsAdminPage() {
                 <input
                   type="number"
                   className="w-full rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
-                  value={editDraft.iconTop ?? 17}
+                  value={editDraft.iconTop ?? 24.5}
                   onChange={(e) =>
                     setEditDraft((d) => ({
                       ...d,

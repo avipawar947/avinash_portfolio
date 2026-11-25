@@ -11,11 +11,11 @@ const ToolSchema = new Schema(
     // 1416 x 485 plot (Figma px).
     left: { type: Number, default: 0 },
     top: { type: Number, default: 0 },
-    // The glyph's own box inside the 94x94 tile (Figma px; most are
-    // 60x60 inset 17px, but Claude, Magnific and LottieFiles differ).
-    iconSize: { type: Number, default: 60 },
-    iconLeft: { type: Number, default: 17 },
-    iconTop: { type: Number, default: 17 },
+    // The glyph's own box inside the 94x94 tile. Figma uses one uniform
+    // 45x45 box centred in every tile (24.5px inset), regardless of logo.
+    iconSize: { type: Number, default: 45 },
+    iconLeft: { type: Number, default: 24.5 },
+    iconTop: { type: Number, default: 24.5 },
     order: { type: Number, default: 0 },
   },
   { timestamps: true }

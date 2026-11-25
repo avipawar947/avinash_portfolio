@@ -37,7 +37,7 @@ export default async function HomePage() {
         <Gallery items={content.gallery} />
         <MyJourney content={content.journey} />
         <ToolsGrid items={content.tools} />
-        <ContactCTA content={content.contactCTA} footer={content.footer} />
+        <ContactCTA content={content.contactCTA} footer={content.footer} variant="case-study" />
         <LifeBehindText items={content.lifeBehindText} />
       </main>
       <Footer footer={content.footer} navbar={content.navbar} />

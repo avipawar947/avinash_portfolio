@@ -1331,6 +1331,33 @@
   padding-block: var(--section-pad);
 }
 
+/* Desktop (1920px frame): the same guide grid used by the other sections —
+   verticals at x=160 on a 200px pitch, horizontals at y=183 on a 184px pitch,
+   0.03 alpha. Figma runs it behind the heading only: it fades in from the top
+   and the layer ends at y=477, just before the constellation starts. */
+#tools .tools-grid-desktop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: calc(477 * var(--fig));
+  background-image:
+    linear-gradient(to right, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px);
+  background-size: calc(200 * var(--fig)) 100%, 100% calc(184 * var(--fig));
+  background-position: calc(160 * var(--fig)) 0, 0 calc(183 * var(--fig));
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+}
+
 #tools .tools-eyebrow {
   padding: calc(10 * var(--fig));
   font-size: max(0.75rem, calc(16 * var(--fig)));

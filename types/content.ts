@@ -289,7 +289,7 @@ export interface ToolItem {
   left: number;
   /** Offset from the plot's top edge, Figma px. */
   top: number;
-  /** The glyph box inside the 94x94 tile — most are 60x60 inset 17px. */
+  /** Uniform 45x45 glyph box centred in the 94x94 tile (24.5px inset). */
   iconSize: number;
   iconLeft: number;
   iconTop: number;
