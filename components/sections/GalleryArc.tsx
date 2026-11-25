@@ -3,83 +3,60 @@
 import Image from 'next/image';
 import { useRef } from 'react';
 
-import { gsap, ScrollTrigger } from '@/lib/animations';
-import { useIsomorphicLayoutEffect } from '@/lib/hooks/useIsomorphicLayoutEffect';
-import { usePrefersReducedMotion } from '@/lib/hooks/usePrefersReducedMotion';
 import type { GalleryImageItem } from '@/types/content';
+import { desktopMarquee, useGalleryMarquee } from './use-gallery-marquee';
 
-const TILE_WIDTH = 287;
-
+/**
+ * The desktop Gallery arc — a continuous loop where every card bends onto
+ * the design's curve via a perspective matrix as it travels left.
+ */
 export default function GalleryArc({ items }: { items: GalleryImageItem[] }) {
-  const root = useRef<HTMLUListElement>(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
+  const stage = useRef<HTMLUListElement>(null);
+  const cards = useRef<Array<HTMLLIElement | null>>([]);
+  useGalleryMarquee(items, stage, cards, desktopMarquee);
 
-  useIsomorphicLayoutEffect(() => {
-    const el = root.current;
-    if (!el || prefersReducedMotion) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el,
-        { x: '6%' },
-        {
-          x: '-6%',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-          },
-        },
-      );
-    }, root);
-
-    return () => {
-      ctx.revert();
-      ScrollTrigger.refresh();
-    };
-  }, [prefersReducedMotion]);
+  if (!items.length) return null;
+  const base = items.length;
+  const count = base * Math.ceil(10 / base);
 
   return (
     <ul
-      ref={root}
+      ref={stage}
       className="pointer-events-none absolute inset-0 m-0 hidden list-none p-0 lg:block"
     >
-      {items.map((tile, index) => (
-        <li
-          key={tile._id}
-          className="absolute overflow-hidden"
-          style={{
-            left: `calc(${tile.left} * var(--fig))`,
-            top: `calc(${tile.top} * var(--fig))`,
-            width: `calc(${TILE_WIDTH} * var(--fig))`,
-            height: `calc(${tile.height} * var(--fig))`,
-          }}
-        >
-          {tile.imageUrl ? (
-            <Image
-              src={tile.imageUrl}
-              alt={tile.caption || `Creative work sample ${index + 1}`}
-              width={TILE_WIDTH * 2}
-              height={tile.height * 2}
-              sizes="(max-width: 1023px) 62vw, 15vw"
-              className="absolute left-0 top-0 h-full w-full max-w-none object-cover"
-            />
-          ) : (
-            <div className="h-full w-full bg-[#131313]" />
-          )}
-          {tile.link ? (
-            <a
-              href={tile.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="gallery-tile-link"
-              aria-label={tile.caption || `Open live site ${index + 1}`}
-            />
-          ) : null}
-        </li>
-      ))}
+      {Array.from({ length: count }, (_, index) => {
+        const tile = items[index % base];
+        return (
+          <li
+            key={`${tile._id}-${index}`}
+            ref={(el) => {
+              cards.current[index] = el;
+            }}
+            className="gal-marquee-card"
+          >
+            {tile.imageUrl ? (
+              <Image
+                src={tile.imageUrl}
+                alt={tile.caption || `Creative work sample ${(index % base) + 1}`}
+                fill
+                sizes="15vw"
+                className="object-cover"
+              />
+            ) : (
+              <div className="h-full w-full bg-[#131313]" />
+            )}
+            {tile.link ? (
+              <a
+                href={tile.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="gallery-tile-link"
+                aria-label={tile.caption || `Open live site ${(index % base) + 1}`}
+              />
+            ) : null}
+          </li>
+        );
+      })}
     </ul>
   );
 }

@@ -1125,24 +1125,17 @@
   overflow: hidden;
 }
 
-/* Full-width layer the scroll animation scrubs; the strip is centred inside
-   it with a `left` calc rather than a translate, so GSAP owns the transform. */
-.gallery-arc-mover {
+/* Each card is anchored at the stage centre; the continuous-loop hook sets
+   its width/height/transform so both edges ride the curve. */
+.gal-marquee-card {
   position: absolute;
-  inset: 0;
-}
-
-.gallery-arc-track {
-  position: absolute;
-  top: 0;
-  height: 100%;
-}
-
-.gallery-arc-tile {
-  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: 0 50%;
   overflow: hidden;
-  border-radius: 0.5rem;
   background-color: #131313;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* The optional live-site link sits above the image. The parent arc disables
