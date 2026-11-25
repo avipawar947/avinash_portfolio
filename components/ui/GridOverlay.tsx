@@ -1,33 +1,21 @@
 /**
- * Faint background grid lines used behind the Gallery section.
- * Purely decorative — sits absolutely inside a `relative` parent section.
+ * Faint guide grid used behind the Gallery section.
  *
- * Desktop (`≥ lg`) divides the section into `cols` × `rows` cells, which is
- * how the 1920 design is laid out. Below `lg` the section is taller and much
- * narrower, so that same division would squash the cells into slivers; the
- * mobile frame instead uses a fixed ~100px square cell (25.45vw at 393px),
- * which is the grid the design shows on small screens.
+ * Desktop (`≥ lg`) reproduces the Figma guide grid shared by "Why Choose Me"
+ * and "Our Process": vertical lines at x=160 on a 200px pitch, horizontal
+ * lines at y=183 on a 184px pitch. Below `lg` the section re-bases onto the
+ * design's ~100px square cell (`--grid-cell`), which is the grid the small
+ * screens show.
+ *
+ * Both layers sit inside `.gallery-grid-bg`, whose mask fades the rules into
+ * the background at the top and bottom — the same soft seam as the Case Study
+ * stage — so the grid never hits the section edges hard.
  */
-export default function GridOverlay({ rows = 5, cols = 9 }: { rows?: number; cols?: number }) {
-  const line = 'rgba(208,208,208,0.05)';
+export default function GridOverlay() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden opacity-100" aria-hidden>
-      <div
-        className="absolute inset-0 hidden lg:block"
-        style={{
-          backgroundImage:
-            `repeating-linear-gradient(90deg, ${line} 0px, ${line} 1px, transparent 1px, transparent calc(100% / ${cols})),` +
-            `repeating-linear-gradient(0deg, ${line} 0px, ${line} 1px, transparent 1px, transparent calc(100% / ${rows}))`,
-        }}
-      />
-      <div
-        className="absolute inset-0 lg:hidden"
-        style={{
-          backgroundImage:
-            `repeating-linear-gradient(90deg, ${line} 0px, ${line} 1px, transparent 1px, transparent var(--grid-cell)),` +
-            `repeating-linear-gradient(0deg, ${line} 0px, ${line} 1px, transparent 1px, transparent var(--grid-cell))`,
-        }}
-      />
+    <div className="gallery-grid-bg pointer-events-none absolute inset-0" aria-hidden>
+      <div className="gallery-grid-desktop absolute inset-0 hidden lg:block" />
+      <div className="gallery-grid-mobile absolute inset-0 lg:hidden" />
     </div>
   );
 }

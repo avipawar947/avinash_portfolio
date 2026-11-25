@@ -1,5 +1,10 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 import GradientText from "@/components/ui/GradientText";
 import type { ProcessStepItem } from "@/types/content";
+import { pillVariants } from "./process-motion";
 
 /**
  * A single process step pill — Figma nodes 1:192, 1:194, 1:196.
@@ -8,7 +13,9 @@ import type { ProcessStepItem } from "@/types/content";
  * to rgba(176,176,176,0.01), label inset 20px at 18px Regular.
  *
  * `positioned` switches between the desktop table layout (absolute,
- * positioned by Figma coordinates) and the narrow-screen stack.
+ * positioned by Figma coordinates) and the narrow-screen stack. The
+ * `motion.li` inherits the variant label from the phase list, so each pill
+ * slides in with the stagger defined in process-motion.ts.
  */
 export default function ProcessPill({
   step,
@@ -18,12 +25,13 @@ export default function ProcessPill({
   positioned?: boolean;
 }) {
   return (
-    <li
+    <motion.li
       className={
         positioned
           ? "absolute flex items-center overflow-hidden rounded-[4px]"
           : "flex w-full items-center overflow-hidden rounded-[4px]"
       }
+      variants={pillVariants}
       style={{
         ...(positioned
           ? {
@@ -48,6 +56,6 @@ export default function ProcessPill({
       >
         {step.label}
       </GradientText>
-    </li>
+    </motion.li>
   );
 }

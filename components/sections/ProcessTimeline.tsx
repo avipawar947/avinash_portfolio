@@ -1,8 +1,17 @@
+"use client";
+
 import { Fragment } from "react";
+import { motion } from "framer-motion";
 
 import GradientText from "@/components/ui/GradientText";
 import type { ProcessStepItem, ProcessIntroContent } from "@/types/content";
 import ProcessPill from "./ProcessPill";
+import {
+  pillListVariants,
+  pillVariants,
+  phaseVariants,
+  tableVariants,
+} from "./process-motion";
 
 /**
  * "Our Process" — Figma node 1:163 (1920 x 1366).
@@ -11,7 +20,13 @@ import ProcessPill from "./ProcessPill";
  * border, a solid vertical rule at x=252, dashed rules at y=217 and y=435.
  * Each phase labels its column; its steps cascade rightward as pills.
  * Narrow screens show a flat stacked list instead.
+ *
+ * The table is the scroll trigger: each phase (Discover / Define / Deliver)
+ * fades up in sequence, and the pills inside a phase follow with a small
+ * stagger. The mobile stack uses the same variants so both compositions
+ * animate identically.
  */
+
 export default function ProcessTimeline({
   items,
   intro,
@@ -35,6 +50,13 @@ export default function ProcessTimeline({
         paddingBottom: "var(--section-pad)",
       }}
     >
+      {/* Guide grid — same Figma grid as "Why Choose Me", faded at both
+          seams so the rules dissolve into the section background. */}
+      <div
+        aria-hidden="true"
+        className="process-grid-bg pointer-events-none absolute inset-0"
+      />
+
       <div
         className="relative mx-auto w-full"
         style={{
@@ -95,13 +117,18 @@ export default function ProcessTimeline({
           </div>
         </div>
 
-        {/* Desktop table (1:185) */}
-        <div
-          className="relative hidden border border-[rgba(208,208,208,0.2)] lg:block"
+        {/* Desktop table (1:185). Opaque fill keeps the guide grid from
+            showing through the table, as in the design. */}
+        <motion.div
+          className="relative hidden border border-[rgba(208,208,208,0.2)] bg-[var(--color-bg)] lg:block"
           style={{
             marginTop: "calc(40 * var(--fig))",
             height: "calc(645 * var(--fig))",
           }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={tableVariants}
         >
           {/* Solid rule separating labels from steps (1:186) */}
           <div
@@ -134,7 +161,7 @@ export default function ProcessTimeline({
               ? Math.min(...phase.steps.map((s) => s.top)) + 21
               : 50;
             return (
-              <div key={phase.name}>
+              <motion.div key={phase.name} variants={phaseVariants}>
                 <GradientText
                   as="h3"
                   className="absolute m-0 font-semibold capitalize"
@@ -149,45 +176,61 @@ export default function ProcessTimeline({
                 >
                   {phase.name}
                 </GradientText>
-                <ul className="m-0 list-none p-0">
+                <motion.ul
+                  className="m-0 list-none p-0"
+                  variants={pillListVariants}
+                >
                   {phase.steps.map((step) => (
                     <ProcessPill key={step._id} step={step} />
                   ))}
-                </ul>
-              </div>
+                </motion.ul>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Phone + tablet composition (< lg) — the design's 393px "How I
             Work" frame: one bordered card holding the three phases, each with
             its label, a full-bleed dashed rule and a cascading set of step
             pills that step rightward one indent per row. */}
-        <div className="process-mobile lg:hidden">
+        <motion.div
+          className="process-mobile lg:hidden"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={tableVariants}
+        >
           <div className="process-mobile-box">
             {grouped.map((phase, phaseIndex) => (
               <Fragment key={phase.name}>
-                <div className="process-mobile-phase">
+                <motion.div
+                  className="process-mobile-phase"
+                  variants={phaseVariants}
+                >
                   <GradientText as="h3" className="process-mobile-label">
                     {phase.name}
                   </GradientText>
 
                   <span className="process-mobile-dash" aria-hidden="true" />
 
-                  <ul className="process-mobile-list">
+                  <motion.ul
+                    className="process-mobile-list"
+                    variants={pillListVariants}
+                  >
                     {phase.steps.map((step, stepIndex) => (
-                      <li
+                      <motion.li
                         key={step._id}
                         className="process-mobile-pill"
                         style={{ marginLeft: `calc(${stepIndex} * 1.75rem)` }}
+                        variants={pillVariants}
                       >
                         <GradientText className="process-mobile-pill-label">
                           {step.label}
                         </GradientText>
-                      </li>
+                      </motion.li>
                     ))}
-                  </ul>
-                </div>
+                  </motion.ul>
+                </motion.div>
 
                 {phaseIndex < grouped.length - 1 && (
                   <span className="process-mobile-sep" aria-hidden="true" />
@@ -195,7 +238,7 @@ export default function ProcessTimeline({
               </Fragment>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

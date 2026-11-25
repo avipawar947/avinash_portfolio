@@ -230,6 +230,8 @@ export interface GalleryImageItem {
   imageUrl: string;
   imagePublicId?: string;
   caption: string;
+  /** Live website opened when the tile is clicked. */
+  link?: string;
   /** Figma left offset within the 1920 frame. */
   left: number;
   /** Figma top offset within the 1099-tall frame. */

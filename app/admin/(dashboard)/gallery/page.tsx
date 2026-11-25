@@ -13,6 +13,7 @@ const EMPTY: Omit<GalleryImageItem, '_id'> = {
   imageUrl: '',
   imagePublicId: '',
   caption: '',
+  link: '',
   left: 0,
   top: 0,
   height: 240,
@@ -70,6 +71,7 @@ export default function GalleryAdminPage() {
       imageUrl: item.imageUrl,
       imagePublicId: item.imagePublicId,
       caption: item.caption,
+      link: item.link ?? '',
       left: item.left,
       top: item.top,
       height: item.height,
@@ -154,6 +156,14 @@ export default function GalleryAdminPage() {
                   onChange={(e) => setEditDraft((d) => ({ ...d, caption: e.target.value }))}
                 />
               </FormField>
+              <FormField label="Live URL">
+                <input
+                  className="w-full rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
+                  placeholder="https://…"
+                  value={editDraft.link ?? ''}
+                  onChange={(e) => setEditDraft((d) => ({ ...d, link: e.target.value }))}
+                />
+              </FormField>
               <FormField label="Left (Figma px)">
                 <input
                   type="number"
@@ -228,6 +238,14 @@ export default function GalleryAdminPage() {
               className="w-full rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
               value={draft.caption}
               onChange={(e) => setDraft((d) => ({ ...d, caption: e.target.value }))}
+            />
+          </FormField>
+          <FormField label="Live URL">
+            <input
+              className="w-full rounded border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
+              placeholder="https://…"
+              value={draft.link}
+              onChange={(e) => setDraft((d) => ({ ...d, link: e.target.value }))}
             />
           </FormField>
           <FormField label="Left (Figma px)">

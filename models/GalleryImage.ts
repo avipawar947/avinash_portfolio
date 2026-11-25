@@ -6,6 +6,7 @@ const GalleryImageSchema = new Schema(
     imageUrl: { type: String, default: '' },
     imagePublicId: { type: String, default: '' },
     caption: { type: String, default: '' },
+    link: { type: String, default: '' },
     left: { type: Number, default: 0 },
     top: { type: Number, default: 0 },
     height: { type: Number, default: 240 },

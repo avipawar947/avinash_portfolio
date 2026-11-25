@@ -574,16 +574,52 @@
   row-gap: max(1rem, calc(24 * var(--fig)));
 }
 
-/* Guide grid — Figma node 765:6532, reproduced exactly: vertical lines at
-   x=160 with a 200px pitch, horizontal lines starting at y=184 with a 184px
-   pitch. Quieter 0.03 alpha than the Case Study canvas' 0.05, but no mask —
-   in the design the vertical rules run from the very top of the section. */
-#journey .why-grid-bg {
+/* Guide grid — Figma node 765:6532, reused by "Why Choose Me" (#journey),
+   "Our Process" (#process) and the Gallery: vertical lines at x=160 with a
+   200px pitch, horizontal lines starting at y=183 with a 184px pitch.
+   Quieter 0.03 alpha than the Case Study canvas' 0.05. */
+#journey .why-grid-bg,
+#process .process-grid-bg,
+.gallery-grid-desktop {
   background-image:
     linear-gradient(to right, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
     linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px);
   background-size: calc(200 * var(--fig)) 100%, 100% calc(184 * var(--fig));
-  background-position: calc(160 * var(--fig)) 0, 0 calc(184 * var(--fig));
+  background-position: calc(160 * var(--fig)) 0, 0 calc(183 * var(--fig));
+}
+
+/* Seams fade like the Case Study stage instead of running hard into the
+   section edges: the design keeps the first ~6% and last ~4% of the section
+   clear, ramps the rules in by ~16% and back out from ~85%, so the grid
+   dissolves into the background at the top and bottom. */
+#journey .why-grid-bg,
+#process .process-grid-bg,
+.gallery-grid-bg {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 6%,
+    #000 16%,
+    #000 85%,
+    transparent 96%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 6%,
+    #000 16%,
+    #000 85%,
+    transparent 96%
+  );
+}
+
+/* Below `lg` the Gallery re-bases onto the design's ~100px square cell; the
+   fade above still softens its seams. */
+.gallery-grid-mobile {
+  background-image:
+    linear-gradient(to right, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px);
+  background-size: var(--grid-cell) var(--grid-cell);
 }
 
 #journey .why-col {
@@ -1107,6 +1143,15 @@
   overflow: hidden;
   border-radius: 0.5rem;
   background-color: #131313;
+}
+
+/* The optional live-site link sits above the image. The parent arc disables
+   pointer events, so re-enable them here — hover/focus never stops the drift. */
+.gallery-tile-link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: auto;
 }
 
 /* Hero portrait scaled up past the viewport, with the design's fade washing

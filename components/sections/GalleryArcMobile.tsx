@@ -98,6 +98,15 @@ export default function GalleryArcMobile({ items }: { items: GalleryImageItem[] 
               ) : (
                 <div className="h-full w-full bg-[#131313]" />
               )}
+              {tile.link ? (
+                <a
+                  href={tile.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="gallery-tile-link"
+                  aria-label={tile.caption || `Open live site ${index + 1}`}
+                />
+              ) : null}
             </div>
           ))}
         </div>
