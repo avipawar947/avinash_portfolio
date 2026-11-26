@@ -4094,8 +4094,10 @@ body {
   padding: calc(7 * var(--fig));
   border: calc(1 * var(--fig)) solid rgba(208, 208, 208, 0.20);
   border-radius: calc(8 * var(--fig));
-  background-color: #010101;
-  background-image: linear-gradient(180deg, #000000 30.6%, #666666 100%);
+  /* Same as the hero mockup frame (857:30972): Figma 857:31015/31019 keep
+     both the solid fill and the grey gradient hidden, so the card frame is
+     transparent and only the image shows through. */
+  background: transparent;
   overflow: hidden;
 }
 /* The card's scroll drift scales .project-media past the 7px padding; this
@@ -4126,10 +4128,9 @@ body {
 .more-work .project:hover .project-media img,
 .more-work .project:hover .project-media video { scale: 1.025; }
 .more-work .project-wash {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.20) 30.6%, rgba(102, 102, 102, 0.20) 100%);
+  /* Figma's More Work card gradient (857:31015/31019) is visible:false.
+     The hero mockup fix removed the same hidden fill — keep the image clean. */
+  display: none;
 }
 .more-work .project-caption {
   display: flex;
