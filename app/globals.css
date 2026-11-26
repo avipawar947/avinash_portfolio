@@ -580,7 +580,8 @@
    Quieter 0.03 alpha than the Case Study canvas' 0.05. */
 #journey .why-grid-bg,
 #process .process-grid-bg,
-.gallery-grid-desktop {
+.gallery-grid-desktop,
+.life-grid-desktop {
   background-image:
     linear-gradient(to right, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
     linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px);
@@ -594,7 +595,8 @@
    dissolves into the background at the top and bottom. */
 #journey .why-grid-bg,
 #process .process-grid-bg,
-.gallery-grid-bg {
+.gallery-grid-bg,
+.life-grid-desktop {
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0%,
@@ -1987,6 +1989,19 @@
   top: 2.15054%;
   width: 87.36842%;
   height: 95.69892%;
+}
+
+/* Monochrome at rest. Hovering a frame pauses the strip (GSAP) and brings
+   the photo's original colours back. */
+#life-behind .life-photo img {
+  filter: grayscale(1);
+  mix-blend-mode: luminosity;
+  transition: filter 300ms ease;
+}
+
+#life-behind .life-card:hover .life-photo img {
+  filter: grayscale(0);
+  mix-blend-mode: normal;
 }
 
 /* Sprocket 16px of the 380px card. */

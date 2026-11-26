@@ -32,6 +32,7 @@ export default function LifeBehindText({
   items: LifeBehindTextItemContent[];
 }) {
   const track = useRef<HTMLDivElement>(null);
+  const tween = useRef<ReturnType<typeof gsap.to> | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
 
   const photos = (items ?? []).filter((it) => it.imageUrl);
@@ -43,7 +44,7 @@ export default function LifeBehindText({
     const ctx = gsap.context(() => {
       const distance = el.scrollWidth / 2;
       const SPEED = 50; // px per second
-      gsap.to(el, {
+      tween.current = gsap.to(el, {
         x: -distance,
         duration: distance / SPEED,
         ease: "none",
@@ -51,8 +52,10 @@ export default function LifeBehindText({
       });
     }, track);
 
-    return () => ctx.revert();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      tween.current = null;
+      ctx.revert();
+    };
   }, [prefersReducedMotion]);
 
   return (
@@ -61,10 +64,17 @@ export default function LifeBehindText({
       aria-labelledby="life-heading"
       className="relative w-full overflow-hidden bg-[var(--color-bg)]"
     >
+      {/* ── Desktop backdrop ─────────────────────────────────────────────
+          Figma's shared guide grid behind the 1920px frame: verticals at
+          x=160 on a 200px pitch, horizontals from y=183 on a 184px pitch,
+          softly faded at both seams. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
+        <div className="life-grid-desktop absolute inset-0" />
+      </div>
+
       {/* ── Phone + tablet backdrop ─────────────────────────────────────
           The 393px frame's 100px grid (verticals at x=100, horizontals
-          from y=80) and its three fades, Rectangle 6/7/9. Desktop has no
-          backdrop, so the whole layer is dropped at `lg`. */}
+          from y=80) and its three fades, Rectangle 6/7/9. */}
       <div aria-hidden className="pointer-events-none absolute inset-0 lg:hidden">
         <div className="life-grid" />
         <div className="life-fade life-fade-top" />
@@ -95,7 +105,12 @@ export default function LifeBehindText({
 
       {/* Film-strip track — two copies for seamless loop */}
       {photos.length > 0 && (
-        <div ref={track} className="life-track relative flex w-max">
+        <div
+          ref={track}
+          className="life-track relative flex w-max"
+          onPointerEnter={() => tween.current?.pause()}
+          onPointerLeave={() => tween.current?.resume()}
+        >
           <FilmStrip photos={photos} />
           <FilmStrip photos={photos} aria-hidden />
         </div>
@@ -130,7 +145,6 @@ function FilmStrip({
               src={photo.imageUrl}
               alt=""
               className="h-full w-full object-cover"
-              style={{ mixBlendMode: "luminosity" }}
               loading="lazy"
             />
           </div>
