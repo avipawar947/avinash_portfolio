@@ -1604,19 +1604,13 @@
     max(1.25rem, calc(32 * var(--fig)));
 }
 
-/* "Let's Talk" white pill — same hover motion as the footer social buttons:
-   smooth scale on the shared ease-out curve, brighter glow, 0.96 snap-back. */
+/* "Let's Talk" white pill — smooth hover, no scale. */
 #contact .contact-cta {
-  transition: transform 400ms var(--ease-out), box-shadow 400ms var(--ease-out);
+  transition: box-shadow 400ms ease-in-out, border-color 400ms ease-in-out;
 }
 
 #contact .contact-cta:hover {
-  transform: scale(1.06);
   box-shadow: 1px 1px 48px 1px rgba(255, 255, 255, 0.28);
-}
-
-#contact .contact-cta:active {
-  transform: scale(0.96);
 }
 
 /* SocialIcon ships `h-12 w-12`; this wins on specificity and pins the
@@ -1646,7 +1640,43 @@
   line-height: 1.2102;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  transition: transform 300ms linear;
+  transition:
+    border-color 400ms ease-in-out,
+    box-shadow 400ms ease-in-out;
+}
+
+#contact .cs-contact-phone,
+#contact .cs-contact-email,
+#contact .cs-contact-linkedin {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Soft top-light wash — same hover language as footer social buttons. */
+#contact .cs-contact-phone::before,
+#contact .cs-contact-email::before,
+#contact .cs-contact-linkedin::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    120% 120% at 50% 0%,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.06) 45%,
+    rgba(255, 255, 255, 0) 78%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease-in-out;
+}
+
+#contact .cs-contact-phone > *,
+#contact .cs-contact-email > *,
+#contact .cs-contact-linkedin > * {
+  position: relative;
+  z-index: 1;
 }
 
 #contact .cs-contact-phone {
@@ -1673,13 +1703,35 @@
 }
 
 #contact .cs-contact-phone:hover,
-#contact .cs-contact-email:hover {
-  transform: scale(1.02);
+#contact .cs-contact-email:hover,
+#contact .cs-contact-linkedin:hover {
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
-#contact .cs-contact-phone:active,
-#contact .cs-contact-email:active {
-  transform: scale(0.95);
+#contact .cs-contact-phone:hover {
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.28),
+    0 0 24px rgba(255, 255, 255, 0.18);
+}
+
+#contact .cs-contact-email:hover,
+#contact .cs-contact-linkedin:hover {
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.35),
+    0 0 22px rgba(255, 255, 255, 0.1);
+}
+
+#contact .cs-contact-phone:hover::before,
+#contact .cs-contact-email:hover::before,
+#contact .cs-contact-linkedin:hover::before {
+  opacity: 1;
+}
+
+#contact .cs-contact-phone:focus-visible,
+#contact .cs-contact-email:focus-visible,
+#contact .cs-contact-linkedin:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 3px;
 }
 
 #contact .cs-contact-icon {
@@ -1691,10 +1743,8 @@
 /* Case-study LinkedIn: the frame's 48px dark gradient circle, not the
    homepage's white radial pill. */
 #contact .cs-contact-linkedin {
-  position: relative;
   width: calc(48 * var(--fig));
   height: calc(48 * var(--fig));
-  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   background: linear-gradient(
@@ -1703,7 +1753,6 @@
     rgba(44, 44, 44, 0.1) 100%
   );
   box-shadow: none;
-  transition: transform 400ms linear;
 }
 
 #contact .cs-contact-linkedin svg {
@@ -1712,14 +1761,28 @@
   fill: #ffffff;
 }
 
-/* Figma's 10% multitone noise over the circle. */
+/* Figma's 10% multitone noise over the circle. Kept on ::after; the hover
+   wash lives on ::before so both can coexist. */
 #contact .cs-contact-linkedin::after {
   position: absolute;
   inset: 0;
-  content: '';
+  z-index: 1;
+  content: "";
   pointer-events: none;
   opacity: 0.1;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #contact .contact-cta,
+  #contact .cs-contact-phone,
+  #contact .cs-contact-email,
+  #contact .cs-contact-linkedin,
+  #contact .cs-contact-phone::before,
+  #contact .cs-contact-email::before,
+  #contact .cs-contact-linkedin::before {
+    transition-duration: 1ms;
+  }
 }
 
 /* ── Device tabs (desktop parity) ──────────────────────────────────────── */
@@ -2264,9 +2327,8 @@
     rgba(44, 44, 44, 0.1) 100%
   );
   transition:
-    transform 400ms var(--ease-out),
-    border-color 400ms var(--ease-out),
-    box-shadow 400ms var(--ease-out);
+    border-color 400ms ease-in-out,
+    box-shadow 400ms ease-in-out;
 }
 
 /* Soft top-light wash that fades in on hover. Gradient opacity is animated
@@ -2284,11 +2346,10 @@
   );
   opacity: 0;
   pointer-events: none;
-  transition: opacity 400ms var(--ease-out);
+  transition: opacity 400ms ease-in-out;
 }
 
 .social-ghost:hover {
-  transform: scale(1.06);
   border-color: rgba(255, 255, 255, 0.22);
   box-shadow:
     0 8px 22px rgba(0, 0, 0, 0.35),
@@ -2297,10 +2358,6 @@
 
 .social-ghost:hover::after {
   opacity: 1;
-}
-
-.social-ghost:active {
-  transform: scale(0.96);
 }
 
 .social-ghost:focus-visible {
@@ -2312,12 +2369,6 @@
 .social-ghost .social-glyph-img {
   position: relative;
   z-index: 1;
-  transition: transform 400ms var(--ease-out);
-}
-
-.social-ghost:hover .social-glyph,
-.social-ghost:hover .social-glyph-img {
-  transform: scale(1.05);
 }
 
 .social-ghost .social-glyph {
@@ -2327,17 +2378,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .social-ghost,
-  .social-ghost::after,
-  .social-ghost .social-glyph,
-  .social-ghost .social-glyph-img {
+  .social-ghost::after {
     transition-duration: 1ms;
-  }
-
-  .social-ghost:hover,
-  .social-ghost:active,
-  .social-ghost:hover .social-glyph,
-  .social-ghost:hover .social-glyph-img {
-    transform: none;
   }
 }
 
