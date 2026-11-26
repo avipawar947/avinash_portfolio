@@ -89,7 +89,13 @@ export default function Navbar({
       const el = document.getElementById(hash);
       if (!el) return false;
       setActiveId(hash);
-      el.scrollIntoView({ behavior, block: "start" });
+      const lenis = (window as any).__lenis;
+      if (lenis) {
+        const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+        lenis.scrollTo(el, { immediate: behavior !== "smooth", offset: -margin });
+      } else {
+        el.scrollIntoView({ behavior, block: "start" });
+      }
       return true;
     };
 
@@ -413,7 +419,9 @@ function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
 
   if (!href || href === "/") {
     e.preventDefault();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const lenis = (window as any).__lenis;
+    if (lenis) lenis.scrollTo(0);
+    else window.scrollTo({ top: 0, behavior: "smooth" });
   }
 }
 
@@ -450,11 +458,15 @@ function MobileMenu({
   useEffect(() => {
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
+    const lenis = (window as any).__lenis;
+    lenis?.stop();
     const onKeyDown = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKeyDown);
     return () => {
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
+      const l = (window as any).__lenis;
+      l?.start();
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [onClose]);

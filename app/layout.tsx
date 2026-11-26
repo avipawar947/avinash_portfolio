@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import LenisProvider from '@/components/providers/LenisProvider';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -13,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body suppressHydrationWarning className={`${inter.variable} font-sans antialiased`}         style={{ ['--font-display' as any]: "'SF Pro Display', -apple-system, BlinkMacSystemFont, Arial, sans-serif" }}>
-        {children}
+        <LenisProvider>{children}</LenisProvider>
       </body>
     </html>
   );
