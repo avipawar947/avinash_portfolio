@@ -78,6 +78,32 @@ export default function Navbar({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // When landing on home with a hash (e.g. /#work from case study), scroll to
+  // that section after mount and sync the active nav link.
+  useEffect(() => {
+    if (typeof window === "undefined" || window.location.pathname !== "/") return;
+    const hash = window.location.hash.replace(/^#/, "");
+    if (!hash) return;
+
+    const scrollToHash = (behavior: ScrollBehavior) => {
+      const el = document.getElementById(hash);
+      if (!el) return false;
+      setActiveId(hash);
+      el.scrollIntoView({ behavior, block: "start" });
+      return true;
+    };
+
+    // Immediate attempt, then retry after layout settles (images/fonts/animations).
+    scrollToHash("auto");
+    const raf1 = window.requestAnimationFrame(() => scrollToHash("auto"));
+    const t1 = window.setTimeout(() => scrollToHash("auto"), 250);
+
+    return () => {
+      window.cancelAnimationFrame(raf1);
+      window.clearTimeout(t1);
+    };
+  }, []);
+
   // Auto-hide while scrolling down through sections; reveal on scroll up or
   // whenever the pointer is near the top of the page. The bar always stays
   // visible while the mobile menu is open and at the very top of the page.
@@ -361,26 +387,31 @@ export default function Navbar({
   );
 }
 
-/** `#hash` links smooth-scroll via CSS; `/` is a same-page link so it only
-    scrolls to the top instead of triggering a full navigation. On subpages
-    (e.g. /case-study/[slug]) a bare "#work" has no target, so it becomes
-    "/#work" — still a normal navigation, no preventDefault. */
-function navHref(href: string) {
-  if (!href || href === "/") return href || "/";
-  if (href.startsWith("#") && typeof window !== "undefined" && window.location.pathname !== "/") {
-    return `/${href}`;
-  }
-  return href;
-}
-
+/** Navigate navbar links. On the home page, "/" scrolls to top and hash links
+    use native smooth scrolling. On subpages (e.g. /case-study/[slug]), hash
+    links must go to the home page section ("/#work"), and "/" must navigate
+    home instead of scrolling to the top of the current page. */
 function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
-  const target = navHref(href);
-  // Rewrite hrefs like "#work" on subpages so the browser goes home first.
-  if (href.startsWith("#") && target !== href) {
-    (e.currentTarget as HTMLAnchorElement).setAttribute("href", target);
+  const onHome =
+    typeof window !== "undefined" && window.location.pathname === "/";
+  const hash = href.includes("#") ? href.split("#")[1] : "";
+
+  if (!onHome) {
+    if (hash) {
+      const target = href.startsWith("#") ? `/${href}` : href.startsWith("/") ? href : `/#${hash}`;
+      if (e.currentTarget.getAttribute("href") !== target) {
+        e.currentTarget.setAttribute("href", target);
+      }
+      return;
+    }
+    if (!href || href === "/" || href === "/#") {
+      e.currentTarget.setAttribute("href", "/");
+      return;
+    }
     return;
   }
-  if (target === "/") {
+
+  if (!href || href === "/") {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
