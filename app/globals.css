@@ -3245,12 +3245,31 @@ body {
   background: #0b0b0b;
 }
 .cs-stage-grid {
+  /* Figma 1116:2849: verticals at x=160 + 200n, but horizontals exist only
+     inside the two masked bands (80/264/448 and 1378/1562). A full-height
+     184px repeat would draw four lines in the clear middle of the stage. */
   background-image:
     linear-gradient(to right, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
     linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px);
-  background-size: calc(200 * var(--fig)) 100%, 100% calc(184 * var(--fig));
-  background-position: calc(160 * var(--fig)) 0, 0 calc(80 * var(--fig));
-  background-repeat: repeat;
+  background-size:
+    calc(200 * var(--fig)) 100%,
+    100% 1px,
+    100% 1px,
+    100% 1px,
+    100% 1px,
+    100% 1px;
+  background-position:
+    calc(160 * var(--fig)) 0,
+    0 calc(80 * var(--fig)),
+    0 calc(264 * var(--fig)),
+    0 calc(448 * var(--fig)),
+    0 calc(1378 * var(--fig)),
+    0 calc(1562 * var(--fig));
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
 }
 .cs-stage-fade {
   background-image: linear-gradient(180deg, rgba(11, 11, 11, 0) 44.39%, #0b0b0b 100%);
@@ -3258,6 +3277,17 @@ body {
 .cs-stage-fade--top {
   top: 0;
   height: calc(448 * var(--fig));
+  /* Figma 1116:2871 keeps the stage grid hidden behind the hero buttons and
+     dissolves it IN below them (line visible ~y1820, full by ~y1980). The
+     base .cs-stage-fade gradient runs the other way, so override it here;
+     the bottom fade keeps the base gradient. */
+  background-image: linear-gradient(
+    180deg,
+    #0b0b0b 0%,
+    #0b0b0b 15%,
+    rgba(11, 11, 11, 0) 65%,
+    rgba(11, 11, 11, 0) 100%
+  );
 }
 .cs-stage-fade--bottom {
   top: calc(1378 * var(--fig));
@@ -3972,12 +4002,40 @@ body {
   background: #0b0b0b;
 }
 .more-work-grid {
+  /* Figma 857:30991: verticals at x=160 + 200n; horizontals at 184 + 184n.
+     A repeating tile would also paint a line at y=0, which the design does
+     not have, so each horizontal is placed explicitly. */
   background-image:
     linear-gradient(to right, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px),
     linear-gradient(to bottom, rgba(208, 208, 208, 0.05) 0 1px, transparent 1px);
-  background-size: calc(200 * var(--fig)) 100%, 100% calc(184 * var(--fig));
-  background-position: calc(160 * var(--fig)) 0, 0 0;
-  background-repeat: repeat;
+  background-size:
+    calc(200 * var(--fig)) 100%,
+    100% 1px,
+    100% 1px,
+    100% 1px,
+    100% 1px,
+    100% 1px,
+    100% 1px,
+    100% 1px,
+    100% 1px;
+  background-position:
+    calc(160 * var(--fig)) 0,
+    0 calc(184 * var(--fig)),
+    0 calc(368 * var(--fig)),
+    0 calc(552 * var(--fig)),
+    0 calc(736 * var(--fig)),
+    0 calc(920 * var(--fig)),
+    0 calc(1104 * var(--fig) - 1px),
+    0 calc(1288 * var(--fig)),
+    0 calc(1472 * var(--fig));
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
 }
 .more-work-fade { z-index: 3; }
 .more-work-fade--top { display: none; }
@@ -4239,16 +4297,41 @@ body {
     margin-top: 0;
   }
   .cs-stage-grid {
+    /* Figma 1181:4121: verticals at x=100 + 100n; horizontals only at
+       y=46/146 in the top band (and 994/1094 in the off-stage band). */
     background-image:
       linear-gradient(to right, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px),
       linear-gradient(to bottom, rgba(208, 208, 208, 0.03) 0 1px, transparent 1px);
-    background-size: calc(100 * var(--cs-u)) 100%, 100% calc(100 * var(--cs-u));
-    background-position: 0 0, 0 calc(80 * var(--cs-u));
+    background-size:
+      calc(100 * var(--cs-u)) 100%,
+      100% 1px,
+      100% 1px,
+      100% 1px,
+      100% 1px;
+    background-position:
+      calc(100 * var(--cs-u)) 0,
+      0 calc(46 * var(--cs-u)),
+      0 calc(146 * var(--cs-u)),
+      0 calc(994 * var(--cs-u)),
+      0 calc(1094 * var(--cs-u));
+    background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
   }
   .cs-stage-fade { background-image: linear-gradient(180deg, rgba(11, 11, 11, 0) 30%, #0b0b0b 90%); }
   .cs-stage-fade--top {
     top: 0;
     height: calc(146 * var(--cs-u));
+    /* Figma 1181:7070: same inverted dissolve as desktop — the grid is hidden
+       at the section edge and fades in below the mobile hero actions. */
+    background-image: linear-gradient(
+      180deg,
+      #0b0b0b 0%,
+      #0b0b0b 10%,
+      rgba(11, 11, 11, 0) 70%,
+      rgba(11, 11, 11, 0) 100%
+    );
   }
   .cs-stage-fade--bottom { display: none; }
   .cs-cards {
