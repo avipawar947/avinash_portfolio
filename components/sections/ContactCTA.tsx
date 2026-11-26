@@ -135,7 +135,7 @@ export default function ContactCTA({
                 <div className="contact-actions flex items-center justify-start">
                   <a
                     href="#"
-                    className="contact-cta inline-flex shrink-0 items-center justify-center rounded-[100px] border border-white/10 bg-btn-gradient text-[#010101] glow-shadow transition-transform hover:scale-[1.02] active:scale-95"
+                    className="contact-cta inline-flex shrink-0 items-center justify-center rounded-[100px] border border-white/10 bg-btn-gradient text-[#010101] glow-shadow"
                   >
                     Contact Us
                   </a>

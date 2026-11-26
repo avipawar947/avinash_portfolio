@@ -1604,6 +1604,21 @@
     max(1.25rem, calc(32 * var(--fig)));
 }
 
+/* "Let's Talk" white pill — same hover motion as the footer social buttons:
+   smooth scale on the shared ease-out curve, brighter glow, 0.96 snap-back. */
+#contact .contact-cta {
+  transition: transform 400ms var(--ease-out), box-shadow 400ms var(--ease-out);
+}
+
+#contact .contact-cta:hover {
+  transform: scale(1.06);
+  box-shadow: 1px 1px 48px 1px rgba(255, 255, 255, 0.28);
+}
+
+#contact .contact-cta:active {
+  transform: scale(0.96);
+}
+
 /* SocialIcon ships `h-12 w-12`; this wins on specificity and pins the
    frame's 40px circle, then scales it to the mobile frame's 48 below. */
 #contact .contact-linkedin {
@@ -1648,7 +1663,7 @@
 }
 
 #contact .cs-contact-email {
-  width: calc(270 * var(--fig));
+  /* width: calc(270 * var(--fig)); */
   background: linear-gradient(
     180deg,
     rgba(19, 19, 19, 0.1) 0%,
