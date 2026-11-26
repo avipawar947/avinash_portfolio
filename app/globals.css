@@ -3054,17 +3054,15 @@ body {
   background-image: var(--gradient-cta);
   box-shadow: var(--shadow-glow);
   color: #010101;
-  font-size: calc(16 * var(--fig));
+  font-size: calc(18 * var(--fig));
   line-height: 1;
   font-weight: 500;
-  letter-spacing: calc(0.32 * var(--fig));
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  letter-spacing: calc(0.36 * var(--fig));
+  transition: box-shadow 0.25s ease;
 }
 .cs-btn-white:hover {
-  transform: scale(1.03);
   box-shadow: 1px 1px 48px 1px rgba(255, 255, 255, 0.28);
 }
-.cs-btn-white:active { transform: scale(0.98); }
 
 .cs-btn-ghost {
   display: inline-flex;
@@ -3082,14 +3080,12 @@ body {
   line-height: 1;
   font-weight: 400;
   letter-spacing: calc(0.36 * var(--fig));
-  transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+  transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
 }
 .cs-btn-ghost:hover {
-  transform: scale(1.03);
   border-color: rgba(255, 255, 255, 0.70);
   box-shadow: 1px 1px 48px 1px rgba(255, 255, 255, 0.28);
 }
-.cs-btn-ghost:active { transform: scale(0.98); }
 
 /* --- hero (857:30934, 1920x1124) ------------------------------------------ */
 /* The hero box grows with its copy (height auto); the background stays a
@@ -3182,8 +3178,7 @@ body {
   padding: calc(7 * var(--fig));
   border: calc(1 * var(--fig)) solid rgba(208, 208, 208, 0.20);
   border-radius: calc(8 * var(--fig));
-  background-color: #010101;
-  background-image: linear-gradient(180deg, #000000 30.6%, #666666 100%);
+  background: transparent;
 }
 .cs-main-media {
   border-radius: calc(7 * var(--fig));
@@ -3672,8 +3667,7 @@ body {
   padding: calc(7 * var(--u));
   border: calc(1 * var(--u)) solid rgba(208, 208, 208, 0.20);
   border-radius: calc(8 * var(--u));
-  background-color: #010101;
-  background-image: linear-gradient(180deg, #000000 30.6%, #666666 100%);
+  background: transparent;
   overflow: hidden;
 }
 .cs-frame-media { border-radius: calc(7 * var(--u)); overflow: hidden; }
@@ -3695,10 +3689,9 @@ body {
   line-height: 1;
   font-weight: 400;
   letter-spacing: calc(0.36 * var(--u));
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  transition: border-color 0.25s ease;
 }
 .cs-embed-btn:hover {
-  transform: scale(1.03);
   border-color: rgba(255, 255, 255, 0.70);
 }
 
@@ -4227,8 +4220,8 @@ body {
     min-width: calc(140 * var(--cs-u));
     height: calc(48 * var(--cs-u));
     padding-inline: calc(18 * var(--cs-u));
-    font-size: calc(14 * var(--cs-u));
-    letter-spacing: calc(0.28 * var(--cs-u));
+    font-size: calc(16 * var(--cs-u));
+    letter-spacing: calc(0.32 * var(--cs-u));
     box-shadow: calc(1 * var(--cs-u)) calc(1 * var(--cs-u)) calc(40 * var(--cs-u)) calc(1 * var(--cs-u)) rgba(255, 255, 255, 0.2);
   }
   .cs-btn-ghost {
@@ -4476,7 +4469,7 @@ body {
     margin-top: calc(24 * var(--cs-u));
     min-width: calc(176 * var(--cs-u));
     height: calc(48 * var(--cs-u));
-    font-size: calc(18 * var(--cs-u));
+    font-size: calc(16 * var(--cs-u));
   }
   .cs-stats {
     grid-template-columns: 1fr;
