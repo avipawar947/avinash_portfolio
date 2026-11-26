@@ -17,8 +17,9 @@ const paths: Record<string, string> = {
  * variant="solid" (default) -> white radial-gradient fill + glow shadow,
  *   used in Navbar / Hero pills / Contact CTA.
  * variant="ghost" -> dark subtle-gradient fill + hairline border, used in
- *   the Footer (Figma: 54x54, bg rgba(19,19,19,0.1)->rgba(44,44,44,0.1),
- *   border 1px rgba(255,255,255,0.05) — visually distinct from the CTA style).
+ *   the Footer (Figma: 54x54 circle, 27x27 glyph, bg
+ *   rgba(19,19,19,0.1)->rgba(44,44,44,0.1), border 1px rgba(255,255,255,0.1)
+ *   — visually distinct from the CTA style).
  */
 export default function SocialIcon({
   platform,
@@ -45,10 +46,12 @@ export default function SocialIcon({
       target="_blank"
       rel="noopener noreferrer"
       className={clsx(
-        "inline-flex items-center justify-center rounded-full transition-transform hover:scale-105",
-        variant === "solid" && "h-12 w-12 bg-btn-gradient shadow-glow",
-        variant === "ghost" &&
-          "social-ghost border border-white/5 bg-gradient-to-b from-[rgba(19,19,19,0.1)] to-[rgba(44,44,44,0.1)]",
+        "inline-flex items-center justify-center rounded-full",
+        variant === "solid" &&
+          "h-12 w-12 bg-btn-gradient shadow-glow transition-transform hover:scale-105",
+        // Ghost circle styling (size, border, gradient, hover motion) lives in
+        // app/globals.css so the gradient overlay can be cross-faded smoothly.
+        variant === "ghost" && "social-ghost",
         className,
       )}
       aria-label={platform}

@@ -2235,15 +2235,95 @@
   height: max(0.25rem, calc(4 * var(--fig)));
 }
 
-/* Social circle (ghost variant) + glyph — Figma 54x54, glyph 27x27. */
+/* Social circle (ghost variant) + glyph — Figma 54x54 circle, 27x27 glyph,
+   1px rgba(255,255,255,0.1) border over the dark vertical gradient. */
 .social-ghost {
+  position: relative;
+  isolation: isolate;
   width: max(2.5rem, calc(54 * var(--fig)));
   height: max(2.5rem, calc(54 * var(--fig)));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-image: linear-gradient(
+    180deg,
+    rgba(19, 19, 19, 0.1) 0%,
+    rgba(44, 44, 44, 0.1) 100%
+  );
+  transition:
+    transform 400ms var(--ease-out),
+    border-color 400ms var(--ease-out),
+    box-shadow 400ms var(--ease-out);
+}
+
+/* Soft top-light wash that fades in on hover. Gradient opacity is animated
+   on a pseudo-element because background-image itself cannot transition. */
+.social-ghost::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    120% 120% at 50% 0%,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(255, 255, 255, 0) 78%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms var(--ease-out);
+}
+
+.social-ghost:hover {
+  transform: scale(1.06);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.35),
+    0 0 22px rgba(255, 255, 255, 0.1);
+}
+
+.social-ghost:hover::after {
+  opacity: 1;
+}
+
+.social-ghost:active {
+  transform: scale(0.96);
+}
+
+.social-ghost:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 3px;
+}
+
+.social-ghost .social-glyph,
+.social-ghost .social-glyph-img {
+  position: relative;
+  z-index: 1;
+  transition: transform 400ms var(--ease-out);
+}
+
+.social-ghost:hover .social-glyph,
+.social-ghost:hover .social-glyph-img {
+  transform: scale(1.05);
 }
 
 .social-ghost .social-glyph {
-  width: max(0.875rem, calc(19 * var(--fig)));
-  height: max(0.875rem, calc(19 * var(--fig)));
+  width: max(1rem, calc(27 * var(--fig)));
+  height: max(1rem, calc(27 * var(--fig)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-ghost,
+  .social-ghost::after,
+  .social-ghost .social-glyph,
+  .social-ghost .social-glyph-img {
+    transition-duration: 1ms;
+  }
+
+  .social-ghost:hover,
+  .social-ghost:active,
+  .social-ghost:hover .social-glyph,
+  .social-ghost:hover .social-glyph-img {
+    transform: none;
+  }
 }
 
 .social-glyph-img {
