@@ -1,44 +1,86 @@
+"use client"; // hooks + refs ke liye ab client component hai
+
+import { useRef } from "react";
+
 import ProjectCard from "@/components/sections/ProjectCard";
+import { gsap, ScrollTrigger } from "@/lib/animations";
+import { useIsomorphicLayoutEffect } from "@/lib/hooks/useIsomorphicLayoutEffect";
+import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
 import type { ProjectItem } from "@/types/content";
 
 /**
- * Case studies — Figma node 1:127 (1920 x 2028).
+ * Case studies — sticky heading + cards scrolling OVER it.
  *
- * Measured from the design:
- *   eyebrow       y=142, 122x41, centred
- *   "Case Study"  160px SF Pro Medium, +3.2 tracking, y=203
- *   subtitle      two 32px lines at y=395 and y=443
- *   cards         754x484, left column x=140, right column x=1026 and
- *                 dropped 120px; 121px between cards within a column
+ * The heading sticks at ~24vh from the viewport top. The card grid sits
+ * later in the DOM with a higher z-index, so it paints over the heading
+ * as it scrolls. A scrubbed GSAP timeline blurs/dims the heading while
+ * the cards cross it and un-blurs it after they leave — matching the
+ * supplied video.
  *
- * Laid out in flow rather than absolutely: the composition is a centred
- * header over a two-column stagger. The cards are rendered in `order` as a
- * single row-major grid, so card 1 sits left, card 2 right, card 3 left on
- * the next row, and so on. The stagger is purely visual (every even card is
- * nudged down in CSS); it never changes the sequence. Adding or deleting a
- * project therefore just appends/removes a card in the same rhythm instead
- * of reshuffling a hand-picked left/right column.
- *
- * Both canvases (1920 desktop, 393 mobile), the supplied grid artwork and
- * every length live in the `#work` block in app/globals.css — this file is
- * structure plus the CMS wiring.
+ * NOTE: the section must NOT have `overflow-hidden` — any overflow
+ * ancestor between a sticky element and the scroll container breaks
+ * `position: sticky`. The card drift is already clipped by each card's
+ * own `.project-clip`, so it is safe to remove.
  */
 export default function Projects({ items }: { items: ProjectItem[] }) {
-  // Server already sorts, but sorting here keeps the row-major sequence
-  // correct even if the CMS returns documents in an unexpected order.
+  const headingRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   const projects = [...items].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+  useIsomorphicLayoutEffect(() => {
+    const heading = headingRef.current;
+    const grid = gridRef.current;
+    if (!heading || !grid || prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      // blur in → hold while cards cross → blur out. Durations are
+      // proportions of the scrubbed range, not seconds.
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: grid,
+          start: "top bottom",   // cards enter the viewport
+          end: "bottom top",     // last card has left
+          scrub: true,
+        },
+      });
+
+      tl.fromTo(
+        heading,
+        { filter: "blur(0px)", opacity: 1 },
+        { filter: "blur(12px)", opacity: 0.35, ease: "power1.in", duration: 0.35 }
+      )
+        .to(heading, { duration: 0.3 }) // hold the blur while cards cover it
+        .to(heading, {
+          filter: "blur(0px)",
+          opacity: 1,
+          ease: "power1.out",
+          duration: 0.35,
+        });
+    });
+
+    return () => {
+      ctx.revert();
+      ScrollTrigger.refresh();
+    };
+  }, [prefersReducedMotion]);
 
   return (
     <section
       id="work"
       aria-labelledby="work-heading"
-      className="relative w-full overflow-hidden bg-[var(--color-bg)]"
+      className="relative w-full bg-[var(--color-bg)]" // overflow-hidden REMOVED
     >
       <div
         className="relative mx-auto flex w-full flex-col items-center"
         style={{ maxWidth: "var(--container-max)", paddingInline: "var(--gutter)" }}
       >
-        <div className="section-heading flex w-full flex-col items-center">
+        <div
+          ref={headingRef}
+          className="section-heading sticky z-[1] flex w-full flex-col items-center"
+          style={{ top: "24vh", willChange: "filter, opacity" }}
+        >
           <span className="eyebrow inline-flex items-center justify-center font-semibold text-[var(--color-text)]">
             Recent Work
           </span>
@@ -51,8 +93,6 @@ export default function Projects({ items }: { items: ProjectItem[] }) {
           </h2>
 
           <p className="m-0 text-center font-display">
-            {/* The mobile sheet re-breaks the same sentence, so the second
-                line is not orphaned. */}
             <span className="work-copy-desktop">
               <span className="case-study-intro">
                 Every Screen Here Started As A Question,
@@ -70,7 +110,7 @@ export default function Projects({ items }: { items: ProjectItem[] }) {
           </p>
         </div>
 
-        <div className="projects w-full">
+        <div ref={gridRef} className="projects relative z-[2] w-full">
           {projects.map((project) => (
             <ProjectCard key={project._id} project={project} />
           ))}
@@ -79,4 +119,3 @@ export default function Projects({ items }: { items: ProjectItem[] }) {
     </section>
   );
 }
-
